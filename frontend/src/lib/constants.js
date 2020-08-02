@@ -1,0 +1,44 @@
+export default {
+  TITLE: "SSAFY 개발블로그",
+  baseUrl:
+    "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
+  LS_KEY: {
+    USER_TOKEN: "userToken",
+  },
+  ERROR: {
+    FRONT_ERROR: "FE00",
+  },
+  URL_TYPE: {
+    MAIN : "mainpage",
+    USER: {
+      SIGNUP: "signup",
+      PROFILE: "profile",
+      MEMBERPROFILE:"memberprofile",
+      CONFIRM: "confirm",
+      FINDPASSWORD: "findPassword",
+    },
+    POST: {
+      MAIN: "main",
+      POSTCREATE: "postCreate",
+      POSTDETAIL: "postDetail",
+      POSTDETAIL2: "postDetail2",
+      POSTUPDATE: "postUpdate",
+    },
+    STUDY: {
+      STUDYMAIN: "studymain",
+      DAILYCREATE: "dailycreate",
+      DAILYDETAIL: "dailydetail",
+      DAILYUPDATE: "dailyupdate",
+    },
+    BOARD: {
+      BOARDMAIN: "boardmain",
+      BOARDCREATE: "boardcreate",
+      BOARDDETAIL: "boarddetail",
+      BOARDUPDATE: "boardupdate",
+    },
+    ERROR: {
+      PAGENOTFOUND: "pagenotfound",
+      ERRORPAGE: "errorpage",
+    },
+  },
+};

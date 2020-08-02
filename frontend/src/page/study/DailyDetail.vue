@@ -1,0 +1,147 @@
+<template>
+  <div class="row p-0">
+    <div class="main-table d-none d-md-block col-md-3 border bg-light" style="height: 100vw;">
+      <div class="m-5">
+        <div v-if="!profileInfo.profile_image">
+          <img class="rounded-circle" src="../../assets/img/defualt_image.png" />
+        </div>
+        <div v-else>
+          <img class="rounded-circle" :src="profileInfo.profile_image" />
+        </div>
+        <p class="m-0">{{ profileInfo.nickname }}님의 정보</p>
+        <div v-for="studylist of studyLists" :key="studylist.id">
+          <small
+            v-if="studylist.empId.study.tmp==1"
+            class="clickstudy mt-3 text-primary"
+            @click="goStudyMain(studylist.pid)"
+          >{{studylist.empId.study.title}}</small>
+        </div>
+      </div>
+    </div>
+    <div class="main-table col-12 col-md-9 border">
+      <div class="container p-5">
+        <h1>DETAIL</h1>
+        <div class="card text-left">
+          <div class="card-header">
+            {{dailyDetailData.title}}<br/>
+            {{dailyDetailData.writer}}<br/>
+            {{dailyDetailData.posttime}}
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{dailyDetailData.body}}</p>
+          </div>
+        </div>
+        <div v-if="profileInfo.uid === dailyDetailData.uid">
+          <button type="button" @click="dailyUpdate(dailyDetailData.did)" class="m-2 btn btn-outline-primary btn-rounded waves-effect">수정</button>
+          <button type="button" @click="dailyDelete(dailyDetailData.did)" class="m-2 btn btn-outline-danger btn-rounded waves-effect">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import constants from "../../lib/constants";
+
+const SERVER_URL = "http://localhost:8080";
+
+export default {
+  name: 'dailydetail',
+    data: () => {
+    return {
+      profileInfo: [],
+      studyLists: [],
+      dailyDetailData: [],
+    };
+  },
+  mounted() {
+    this.detailData()
+  },
+  created() {
+    this.addprofileInfo();
+  },
+  methods: {
+    addprofileInfo() {
+      if (this.$cookies.isKey("Auth-Token")) {
+        const token = this.$cookies.get("Auth-Token");
+        axios
+          .get(SERVER_URL + "/account/profile", {
+            params: {
+              Token: token,
+            },
+          })
+          .then((res) => {
+            this.profileInfo = res.data.object;
+            this.addStudyList();
+          })
+          .catch((err) => {
+            this.$router.push({
+              name: constants.URL_TYPE.ERROR.ERRORPAGE,
+              params: { code: err.response.data },
+            });
+          });
+      }
+    },
+    addStudyList() {
+      axios
+        .post(SERVER_URL + "/account/studylist", {
+          email: this.profileInfo.email,
+          nickname: this.profileInfo.nickname,
+          password: "1234qwer",
+        })
+        .then((res) => {
+          this.studyLists = res.data.object;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    goStudyMain(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: post_id },
+      });
+    },
+    detailData() {
+      axios
+        .get(SERVER_URL + "/diary/details", { params: { did: this.$route.params.daily_id } })
+        .then((res) => {
+          this.dailyDetailData = res.data.object
+        })
+        .catch((err) => console.log(err.data));
+    },
+    dailyUpdate(daily_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.DAILYUPDATE,
+        params: { post_id: this.$route.params.post_id, daily_id: daily_id }
+      })
+    },
+    dailyDelete(daily_id) {
+      const deleteData = {
+        did: this.$route.params.daily_id,
+        uid: this.profileInfo.uid 
+      }
+      axios
+        .post(SERVER_URL + "/diary/delete", deleteData)
+        .then((res) => {
+          console.log(res)
+          alert("삭제되었습니다.")
+          this.$router.push({
+            name: constants.URL_TYPE.STUDY.STUDYMAIN,
+            params: { post_id: this.$route.params.post_id },
+          });
+        })
+        .catch((err) => {
+          console.log(err.data)
+        });
+    },
+  },
+}
+</script>
+
+<style>
+.clickstudy {
+  cursor: pointer;
+}
+</style>
