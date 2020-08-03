@@ -1,39 +1,40 @@
-
-package com.web.blog.model.diary;
+package com.web.blog.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Expectdo {
-
+public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer eid;
+    private Integer no;
 
     private Integer pid;
 
-    private Integer uid;
+    private Integer target;
 
-    private String doplace;
 
-    private String assignment;
-
-    private String assignment_file;
-
-    private LocalDateTime dodate;
+    private String reason;
+    
+    @JsonIgnore
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime createDate;
 
 }
