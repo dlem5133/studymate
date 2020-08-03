@@ -61,14 +61,13 @@
             <p class="float-left text-left pr-3">{{postData.data}}</p>
           </div>
           <div class="blog-tags">
-            <li>
               <a
                 class="float-left mr-1 mt-1"
                 variant="warning"
                 v-for="tag in tagData"
                 :key="tag.tid"
               >#{{tag.tagname}}</a>
-            </li>
+  
           </div>
         </div>
       </div>
