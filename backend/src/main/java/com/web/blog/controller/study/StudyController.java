@@ -86,7 +86,6 @@ public class StudyController {
     public Object details(@RequestParam(required = true) int pid) {
         Study study = studyDao.findStudyByPid(pid);
         ResponseEntity < Object > response = null;
-        System.out.println(pid);
         List < Reply > reply = replyDao.findReplyByPid(pid);
         List < Studytag > tag = studyTagDao.findStudytagByPid(pid);
         List < Studylikep > studylikep = studylikepDao.findStudylikepByPid(pid);
@@ -97,7 +96,6 @@ public class StudyController {
         studyAndreply.add(tag);
         studyAndreply.add(studylikep);
         studyAndreply.add(user);
-        System.out.println(tag);
         if (study != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
@@ -150,7 +148,6 @@ public class StudyController {
     public Object search(@Valid @RequestBody StudyRequest request) {
         ResponseEntity < Object > response = null;
         BasicResponse result = new BasicResponse();
-        System.out.println(request);
         
         if (request.getTmp() == 1) {
             // 타이틀
@@ -164,17 +161,20 @@ public class StudyController {
             // 지역
             List<Sido> sido = sidoCodeDao.findBySidonameLike("%" + request.getTitle() + "%");
             ArrayList < Study > studylist = new ArrayList<Study>();
+
             for(int i = 0;i<sido.size();i++)
             {
                 List < Study > tmp = studyDao.findStudyBySidocodeOrderByPosttimeAsc(sido.get(i).getSidocode());
                 studylist.addAll(tmp);
             }
+
             List<Gugun> gugun = gugunCodeDao.findByGugunnameLike("%" + request.getTitle() + "%");
             for(int i = 0;i<gugun.size();i++)
             {
                 List < Study > tmp = studyDao.findStudyBySigungucodeOrderByPosttimeAsc(gugun.get(i).getGuguncode());
                 studylist.addAll(tmp);
             }
+
             result.status = true;
             result.data = "지역 검색";
             result.object = studylist;
@@ -192,10 +192,14 @@ public class StudyController {
             result.object = responses;
         } else {
             ArrayList < StudyResponse > responses = new ArrayList < > ();
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             List < Study > studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
-            System.out.println(studylist);
-
+            
+            /*
+            List<Integer> cnt = indvstudylstDao.countByPidAndIsjoin(request.getPid(),1);
+            System.out.println("++++++++++++" +cnt);
+            studylist.add(cnt);
+            */
+            
             result.status = true;
             result.data = "검색할 키워드가 없어 모두 검색 완료";
             result.object = studylist;
@@ -264,7 +268,6 @@ public class StudyController {
     @PostMapping("/study/update")
     @ApiOperation(value = "스터디 수정")
     public Object update(@Valid @RequestBody StudyRequest request) {
-        System.out.println(request);
         // Study find_pid = studyDao.findStudyByPid(request.getPid());
         // 이메일로 id 확인
         ResponseEntity < Object > response = null;
@@ -285,7 +288,6 @@ public class StudyController {
         study.setSigungucode(request.getSigungu_code());
         Study savedStudy = this.studyDao.save(study);
         int pid = savedStudy.getPid();
-        System.out.println(request.getTag());
         List < Studytag > taglist = studyTagDao.findStudytagByPid(pid);
         for (int i = 0; i < taglist.size(); i++) {
             studyTagDao.delete(taglist.get(i));
@@ -311,7 +313,6 @@ public class StudyController {
     @PostMapping("/study/daysupdate")
     @ApiOperation(value = "스터디 요일 수정")
     public Object daysupdate(@Valid @RequestBody StudytagRequest request) {
-        System.out.println(request);
 
         ResponseEntity < Object > response = null;
         Study study = new Study();
