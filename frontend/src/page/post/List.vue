@@ -101,7 +101,7 @@
                         class="infopplbindo"
                         src="../../assets/img/navi.png"
                       />
-                      {{ list.sidocode }} {{list.sigungucode}}
+                      {{ list.sido.sidoname }} {{list.gugun.gugunname}}
                     </div>
                   </div>
                 </div>

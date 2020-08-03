@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -50,10 +51,18 @@ public class Study {
 
     private Integer bindo;
 
-    @Column(name = "sido_code")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sido_code")
+    private Sido sido;
+
+    @Column(insertable = false, updatable = false, name = "sido_code")
     private Integer sidocode;
 
-    @Column(name = "sigungu_code")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sigungu_code")
+    private Gugun gugun;
+
+    @Column(insertable = false, updatable = false,name = "sigungu_code")
     private Integer sigungucode;
 
     @Column(name = "start_date")
