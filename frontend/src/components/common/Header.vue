@@ -3,19 +3,102 @@
     <b-navbar id="navbar" toggleable="lg" type="light" variant="light" class="px-auto sticky-top row shadow">
       <b-navbar-brand tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}" class="ml-3 font-weight-bold text-monospace">StudyMate</b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto">
-          <div v-if="!isLoggedIn" class="d-flex inline justify-content-center">
-            <b-nav-item @click="openModal" class="login-btn  mx-3">Login</b-nav-item>
-            <LoginModal v-if="loginmodal" @close="closeModal" />
-            <b-nav-item @click="goSignup" class="login-btn mx-3 ">Signup</b-nav-item>
-          </div>
-          <div v-if="isLoggedIn" class="d-flex inline justify-content-center">
-            <b-nav-item tag="router-link" to="/user/profile" class="login-btn mx-3">프로필</b-nav-item>
-            <b-nav-item tag="router-link" to="/post/create" class="login-btn mx-3">모집생성</b-nav-item>
-            <!-- <b-nav-item tag="router-link" :to="{name:constants.URL_TYPE.USER.UPDATE}" class="login-btn mx-3">회원수정</b-nav-item>
-            <b-nav-item tag="router-link" :to="{name:constants.URL_TYPE.USER.DELETE}" class="login-btn mx-3">회원탈퇴</b-nav-item> -->
-            <b-nav-item @click="logout" class="mx-3 login-btn">Logout</b-nav-item>
-          </div>
+
         </b-navbar-nav>
+
+        <b-dropdown size="lg" dropleft variant="link" toggle-class="text-decoration-none" no-caret>
+          <template v-slot:button-content>
+            <i class="far fa-user-circle iconcss"></i>
+          </template>
+
+          <div class="text-center">
+            <div v-if="isLoggedIn">
+              <div v-if="!profileInfo.profile_image">
+                <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/>
+              </div>
+              <div v-else>
+                <img class="border rounded-circle" :src="profileInfo.profile_image" width="70" height="70"/>
+              </div>
+              <div class="name">{{ profileInfo.nickname }}</div>
+              <small>{{ profileInfo.email }}</small>
+              <b-list-group-item class="listitem" tag="router-link" to="/user/profile">프로필</b-list-group-item>
+              <b-list-group-item class="listitem" @click="logout">로그아웃</b-list-group-item>
+            </div>
+            <div v-if="!isLoggedIn">
+              <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/>
+              <b-list-group-item class="listitem" variant="warning" @click="openModal">로그인</b-list-group-item>
+              <LoginModal v-if="loginmodal" @close="closeModal" />
+              <b-list-group-item class="listitem" variant="warning" @click="goSignup">회원가입</b-list-group-item>
+            </div>
+          </div>
+
+        </b-dropdown>
+
+
+        <b-dropdown v-if="isLoggedIn" size="lg" dropleft variant="link" toggle-class="text-decoration-none" no-caret>
+          <template v-slot:button-content>
+            <i class="fas fa-book-reader iconcss"></i>
+          </template>
+
+          <div class="text-center text-nowrap" style="width: auto;">
+            <b-list-group-item class="listitem" tag="router-link" to="/post/create">모집생성</b-list-group-item>
+            <hr>
+            <div class="text-left">
+              <small class="text-success font-weight-bold pl-3">진행중 스터디</small>
+              <div
+                v-for="list in readyLists"
+                :key="list.id"
+                class="card m-2 px-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="">
+                  <small class="text-left">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in leaderListsTmp0"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="danger">진행중&팀장</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in unleaderLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">신청완료</b-badge>
+                </div>
+              </div>
+              <hr />
+
+              <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
+              <div
+                v-for="list in leaderListsTmp1"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="warning">모집중&팀장</b-badge>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </b-dropdown>
+
     </b-navbar>
   </div>
 </template>   
@@ -37,6 +120,7 @@ export default {
   watch: {},
   created() {
     this.tokencheck();
+    this.addprofileInfo();
   },
   methods: {
     logout() {
@@ -56,13 +140,76 @@ export default {
     },
     goSignup() {
       this.$router.push({name: constants.URL_TYPE.USER.SIGNUP})
-    }
+    },
+    addprofileInfo() {
+      if (this.$cookies.isKey("Auth-Token")) {
+        const token = this.$cookies.get("Auth-Token");
+        axios.get(SERVER_URL + "/account/profile", {params: {Token: token}})
+        .then((res) => {
+          this.profileInfo = res.data.object
+          console.log("pro", this.profileInfo)
+          this.addReadyList() 
+          this.addStudyList()
+        })
+        .catch((err) => {
+          console.log(err)
+          // this.$router.push({
+          //   name: constants.URL_TYPE.ERROR.ERRORPAGE,
+          //   params: { code: err.response.data },
+          // });
+        });
+      }
+    },
+    addStudyList() {
+      axios
+        .post(SERVER_URL + "/account/studylist", this.profileInfo)
+        .then((res) => {
+          this.leaderLists = res.data.object.filter(
+            (item) => item.isleader != 0
+          );
+          this.leaderListsTmp0 = this.leaderLists.filter(
+            (item) => item.empId.study.tmp == 0
+          );
+          this.leaderListsTmp1 = this.leaderLists.filter(
+            (item) => item.empId.study.tmp == 1
+          );
+
+          this.unleaderLists = res.data.object.filter(
+            (item) => item.isleader == 0
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    addReadyList() {
+      axios
+        .post(SERVER_URL + "/account/readylist", this.profileInfo)
+        .then((res) => {
+          this.readyLists = res.data.object;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    goStudyMain(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: post_id },
+      });
+    },
   },
   data: function() {
     return {
       constants,
+      profileInfo: {},
       loginmodal: false,
-      isLoggedIn: false
+      isLoggedIn: false,
+      readyLists: [],
+      leaderLists: [],
+      unleaderLists: [],
+      leaderListsTmp1: [],
+      leaderListsTmp0: [],
     };
   }
 };
@@ -73,5 +220,12 @@ export default {
   margin: 0;
   padding: 10px;
   /* height:60px; */
-  }
+}
+.iconcss {
+  font-size: 30px;
+  color: orange;
+}
+.listitem {
+  background-color: #ffb74d;
+}
 </style>
