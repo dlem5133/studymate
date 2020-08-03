@@ -16,4 +16,8 @@ public class ReportRequest {
     int target;
 
     @ApiModelProperty(required = true)
-    String reason;}
+    int reporter;
+    @ApiModelProperty(required = true)
+    String reason;
+
+}

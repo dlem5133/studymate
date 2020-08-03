@@ -1,11 +1,20 @@
 package com.web.blog.controller.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
+import com.web.blog.dao.study.IndvstudylstDao;
 import com.web.blog.dao.study.StudyDao;
+import com.web.blog.dao.user.ReportDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.study.Indvstudylst;
 import com.web.blog.model.study.Study;
+import com.web.blog.model.user.Report;
+import com.web.blog.model.user.ReportRequest;
 import com.web.blog.model.user.User;
 
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
@@ -33,6 +43,12 @@ public class AdminController {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    ReportDao reportDao;
+
+    @Autowired
+    IndvstudylstDao indvStudylstDao;
+
     @PostMapping("/admin/allUser")
     @ApiOperation(value = "모든 회원 조회")
     public Object findAllUser() {
@@ -47,7 +63,7 @@ public class AdminController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
-        
+
     }
 
     @PostMapping("/admin/allStudy")
@@ -64,7 +80,57 @@ public class AdminController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
-        
+
     }
 
+    @PostMapping("/admin/report")
+    @ApiOperation(value = "3회 이상 신고받은 유저 리스트")
+    public Object searchReportUser() {
+        ResponseEntity<Object> response = null;
+        List<Indvstudylst> check = indvStudylstDao.findAll();
+        BasicResponse result = new BasicResponse();
+        ArrayList<List<Report>> myset = new ArrayList<>();
+        // HashMap<Integer, Integer> myset = new HashMap<>();
+        for (int i = 0; i < check.size(); i++) {
+            int reportuser = reportDao.countByPidAndTarget(check.get(i).getPid(), check.get(i).getUid());
+            if (reportuser > indvStudylstDao.countByPid((int) Math.round((double) check.get(i).getPid()) / 2)) {
+                System.out.println(check.get(i).getPid());
+                //여러개일때는 어떻게하나.....
+                myset.add(reportDao.findByPidAndTarget(check.get(i).getPid(), check.get(i).getUid()));
+            }
+        }
+
+        result.status = true;
+        result.data = "모든 회원 조회 완료";
+        result.object= myset;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @Transactional
+    @PostMapping("/admin/givepenalty")
+    @ApiOperation(value = "패널티 부여")
+    public Object givePenalty(@Valid @RequestBody ReportRequest request) {
+
+        ResponseEntity<Object> response =null;
+        
+        User user = userDao.findUserByUid(request.getTarget());
+        user.setPenalty(user.getPenalty()+1);
+        userDao.save(user);
+
+        //패널티 부여시, 해당 신고내역은 삭제
+        reportDao.deleteByPidAndTarget(request.getPid(), request.getTarget());
+
+        BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "패널티 부여 및 해당 스터디의 target 신고 내역 완료";
+        result.object= user;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+
+    }
 }
