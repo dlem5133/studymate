@@ -151,7 +151,7 @@ public class StudyController {
         ResponseEntity < Object > response = null;
         BasicResponse result = new BasicResponse();
         System.out.println(request);
-
+        
         if (request.getTmp() == 1) {
             // 타이틀
             List < Study > studylist = studyDao.findStudyByTitleLikeAndCategoryLikeAndTmpOrderByPosttimeAsc(
@@ -192,8 +192,9 @@ public class StudyController {
             result.object = responses;
         } else {
             ArrayList < StudyResponse > responses = new ArrayList < > ();
-
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             List < Study > studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
+            System.out.println(studylist);
 
             result.status = true;
             result.data = "검색할 키워드가 없어 모두 검색 완료";
