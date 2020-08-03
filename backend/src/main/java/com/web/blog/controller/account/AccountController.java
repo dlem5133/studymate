@@ -293,18 +293,28 @@ public class AccountController {
     @ApiOperation(value = "팀원 신고")
     public Object report(@Valid @RequestBody final ReportRequest request) {
 
+        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(), request.getTarget());
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+
+        if(report_check != null){
+            result.status = true;
+            result.data = "해당 유저는 이미 신고됨."; 
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
         Report report = new Report();
         report.setPid(request.getPid());
         report.setTarget(request.getTarget());
         report.setReason(request.getReason());
+        report.setReporter(request.getReporter());
 
+        
         reportDao.save(report);
-        ResponseEntity<Object> response = null;
 
-        final BasicResponse result = new BasicResponse();
         result.status = true;
         result.data = "유저 신고완료"; 
         response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         return response;
     }

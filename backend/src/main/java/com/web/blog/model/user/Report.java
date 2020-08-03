@@ -29,12 +29,13 @@ public class Report {
     private Integer pid;
 
     private Integer target;
+    private Integer reporter;
 
 
     private String reason;
     
     @JsonIgnore
     @Column(insertable = false, updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime report_date;
 
 }
