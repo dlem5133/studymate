@@ -6,12 +6,15 @@ import javax.validation.Valid;
 
 import com.web.blog.dao.study.IndvstudylstDao;
 import com.web.blog.dao.study.StudyDao;
+import com.web.blog.dao.user.ReportDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.mail.MailHandler;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.study.StudyRequest;
 import com.web.blog.model.study.Indvstudylst;
+import com.web.blog.model.user.Report;
+import com.web.blog.model.user.ReportRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
@@ -50,8 +53,12 @@ public class AccountController {
 
     @Autowired
     StudyDao studyDao;
+
     @Autowired
     IndvstudylstDao indvstudylstDao;
+
+    @Autowired
+    ReportDao reportDao;
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -278,6 +285,26 @@ public class AccountController {
         } else {
             response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+
+        return response;
+    }
+
+    @PostMapping("/account/report")
+    @ApiOperation(value = "팀원 신고")
+    public Object report(@Valid @RequestBody final ReportRequest request) {
+
+        Report report = new Report();
+        report.setPid(request.getPid());
+        report.setTarget(request.getTarget());
+        report.setReason(request.getReason());
+
+        reportDao.save(report);
+        ResponseEntity<Object> response = null;
+
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "유저 신고완료"; 
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }

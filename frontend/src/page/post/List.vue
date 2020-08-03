@@ -48,7 +48,11 @@
               <!-- -->
               <div class="input-group md-form form-sm form-2 pl-0">
                 <input class="form-control my-0 py-1 amber-border" v-model="selectCategory.optionstext" type="text" placeholder="검색어를 입력해주세요" aria-label="Search">
+                          <span class="input-group-text purple lighten-3" id="basic-text1">
+          <mdbIcon icon="search"/>
+        </span>
                   <div class="input-group-append">
+                  
                     <button class="input-group-text" id="addon-wrapping"  @click="categorySubmit"><img class="col-9 col-md-9"src="../../assets/img/search_icon.png"/></button>                  
                   </div>
               </div>
@@ -101,7 +105,12 @@
                         class="infopplbindo"
                         src="../../assets/img/navi.png"
                       />
-                      {{ list.sido.sidoname }} {{list.gugun.gugunname}}
+                      <span v-if="list.sido.sidoname=='온라인'">
+                      {{list.sido.sidoname}}</span>
+                      <span v-if="list.sido.sidoname!='온라인' && list.gugun.gugunname != '선택안함'">
+                      {{ list.sido.sidoname }} {{list.gugun.gugunname}}</span>
+                      <span v-if="list.sido.sidoname!='온라인' && list.gugun.gugunname == '선택안함'">
+                      {{ list.sido.sidoname }} (미정) </span>
                     </div>
                   </div>
                 </div>
