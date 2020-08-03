@@ -23,36 +23,36 @@
 
           <!-- =======================================아래 수정====================================================  -->
 
-          <form class="input-group flex-nowrap py-4 d-flex justify-content-center">
-            <div class="serach-selectbox ">
+                     <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
+            <div class="serach-selectbox">            
               <select
                 v-model="studyLists"
-                class="form-control"
-                             @click="sendOption"            >
+                class="form-control" @click="sendOption">
                 <option value="all" selected> 전체 </option>
                 <option value="title"> 스터디명 </option>
                 <option value="area"> 지역</option>
                 <option value="tag"> 태그</option>
               </select>
             </div>
+
+            
             <div class="search">
-              <div class="serach-input">
+              <!--<div class="serach-input">
                 <input
                   v-model="selectCategory.optionstext"
                   class="form-control"
                   type="text"
                   placeholder="검색어를 입력해주세요"
                 />
+              </div>-->
+              <!-- -->
+              <div class="input-group md-form form-sm form-2 pl-0">
+                <input class="form-control my-0 py-1 amber-border" v-model="selectCategory.optionstext" type="text" placeholder="검색어를 입력해주세요" aria-label="Search">
+                  <div class="input-group-append">
+                    <button class="input-group-text" id="addon-wrapping"  @click="categorySubmit"><img class="col-9 col-md-9"src="../../assets/img/search_icon.png"/></button>                  
+                  </div>
               </div>
-              <div class="input-group-prepend">
-                <button
-                  class="input-group-text"
-                  id="addon-wrapping"
-                  @click="categorySubmit"
-                >
-                  검색
-                </button>
-              </div>
+        
             </div>
           </form>
         <!-- ======================================= 카드====================================================  -->
@@ -129,12 +129,14 @@ import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
 import LoginModal from "../../modal/LoginModal";
 import constants from "../../lib/constants";
+import { mdbIcon } from 'mdbvue';
 
 const SERVER_URL = "http://localhost:8080";
 
 export default {
   name: "",
   components: {
+    mdbIcon,
     constants,
     LoginModal,
     VueperSlides,
@@ -348,7 +350,7 @@ export default {
     },
     handleScroll() {
       var d = document.documentElement;
-      var offset = d.scrollTop + window.innerHeight - 16;
+      var offset = d.scrollTop + window.innerHeight + 40;
       var height = d.offsetHeight;
 
       if (offset >= height) {
@@ -436,10 +438,11 @@ label::before {
 }
 
 .input-group {
-  border-bottom: 2px solid #ffb74d;
   padding-bottom: 20px;
 }
-
+.input-groups {
+  border-bottom: 2px solid #ffb74d;
+}
 .search {
   width: 50%;
 }
@@ -458,5 +461,22 @@ label::before {
 #addon-wrapping {
   background: #ffb74d;
   border: #ffb74d;
+}
+.input-group.md-form.form-sm.form-2 input {
+      border: 1px solid #bdbdbd;
+      /* border-bottom: 1px solid #bdbdbd; */
+
+      /* border-top: none; */
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
+  }
+.input-group.md-form.form-sm.form-2 input.amber-border  {
+  /* border-bottom: 1px solid #ffca28; */
+    border: 1px solid #ffca28;
+
+}
+
+select.form-control{
+  border: 1px solid #ffca28;
 }
 </style>
