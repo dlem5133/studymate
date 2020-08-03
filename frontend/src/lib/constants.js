@@ -26,6 +26,7 @@ export default {
     },
     STUDY: {
       STUDYMAIN: "studymain",
+      STUDYLEADERMAIN: "studyleadermain",
       DAILYCREATE: "dailycreate",
       DAILYDETAIL: "dailydetail",
       DAILYUPDATE: "dailyupdate",

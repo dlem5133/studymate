@@ -18,6 +18,7 @@ import PostDetail2 from "../page/post/PostDetail2.vue";
 
 // 진행
 import StudyMain from "../page/study/StudyMain";
+import StudyLeaderMain from "../page/study/StudyLeaderMain";
 import DailyDetail from "../page/study/DailyDetail";
 import DailyCreate from "../page/study/DailyCreate";
 import DailyUpdate from "../page/study/DailyUpdate";
@@ -93,6 +94,11 @@ export default new Router({
       path: "/study/:post_id",
       name: constants.URL_TYPE.STUDY.STUDYMAIN,
       component: StudyMain,
+    },
+    {
+      path: "/study/leader/:post_id",
+      name: constants.URL_TYPE.STUDY.STUDYLEADERMAIN,
+      component: StudyLeaderMain,
     },
     {
       path: "/study/:post_id/:daily_id/detail",
