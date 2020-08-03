@@ -120,9 +120,10 @@ public class StudyDetailController {
 
         return response;
     }
-    @GetMapping("/study/detail/delete_list")
+    @GetMapping("/study/detail/deleteList")
     @ApiOperation(value = "회원탈퇴 대기 목록")
-    public Object delete_list(@RequestParam(required = true) int pid) {
+    public Object deleteList(@RequestParam(required = true) int pid) {
+        System.out.println("@@@@@@@@@@@test@@@@@@@@@@@@@@@@@@@"+pid);
         List < Indvstudylst > indv_list = indvstudylstDao.findByPidAndIsjoin(pid, 2);
         ArrayList < User > user_list = new ArrayList < > ();
         for (int i = 0; i < indv_list.size(); i++) {
@@ -191,10 +192,13 @@ public class StudyDetailController {
     public Object delegation(@Valid @RequestBody DelegationRequest request) {
         Indvstudylst leader_indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getLeader());
         Indvstudylst member_indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getMember());
+        Study study = studyDao.findStudyByPid(request.getPid());
         leader_indv.setIsleader(0);
         member_indv.setIsleader(1);
+        study.setUid(request.getMember());
         indvstudylstDao.save(leader_indv);
         indvstudylstDao.save(member_indv);
+        studyDao.save(study);
         ResponseEntity < Object > response = null;
         if (member_indv != null) {
             BasicResponse result = new BasicResponse();
