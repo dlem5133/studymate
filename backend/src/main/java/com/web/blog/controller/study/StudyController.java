@@ -445,9 +445,12 @@ public class StudyController {
         ResponseEntity < Object > response = null;
         BasicResponse result = new BasicResponse();
         List < Indvstudylst > Indv = indvstudylstDao.findByPidAndIsjoin(request.getPid(), 1);
+        List < Indvstudylst > Indv2 = indvstudylstDao.findByPidAndIsjoin(request.getPid(), 2);
+        Indv.addAll(Indv2);
         result.status = true;
         result.data = "스터디 멤버 리스트 조회 완료";
         result.object = Indv;
+        
         response = new ResponseEntity < > (result, HttpStatus.OK);
 
         return response;
@@ -584,5 +587,6 @@ public class StudyController {
 
         return response;
     }
+
 
 }

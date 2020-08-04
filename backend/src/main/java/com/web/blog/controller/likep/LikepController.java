@@ -1,5 +1,7 @@
 package com.web.blog.controller.likep;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.web.blog.dao.likep.StudylikepDao;
@@ -10,10 +12,14 @@ import com.web.blog.model.likep.Studylikep;
 import com.web.blog.model.likep.StudylikepRequest;
 
 import org.springframework.web.bind.annotation.RestController;
+
+
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.swagger.annotations.ApiResponse;
@@ -21,6 +27,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
         @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
@@ -62,6 +69,26 @@ public class LikepController {
             result.data = "좋아요 취소";
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
+        return response;
+    }
+
+    @GetMapping("/likep/list")
+    @ApiOperation(value = "좋아요 전체 목록")
+    // 전체 글 가져오기
+    public Object likeplist(@RequestParam(required = true) int pid) {
+        List < Studylikep > likelist = studylikeDao.findStudylikepByPid(pid);
+        ResponseEntity < Object > response = null;
+        if (likelist != null) {
+
+            BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.data = "좋아요 전체 목록 조회 완료";
+            result.object = likelist;
+            response = new ResponseEntity < > (result, HttpStatus.OK);
+        } else {
+            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+        }
+
         return response;
     }
 
