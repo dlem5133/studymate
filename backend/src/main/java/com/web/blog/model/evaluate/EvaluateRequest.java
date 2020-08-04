@@ -22,7 +22,13 @@ public class EvaluateRequest {
     int target_uid;
 
     @ApiModelProperty(required = true)
-    double score;
+    double score1;
+
+    @ApiModelProperty(required = true)
+    double score2;
+
+    @ApiModelProperty(required = true)
+    double score3;
 
     @ApiModelProperty(required = true)
     String sentence;
