@@ -21,4 +21,10 @@ public interface IndvstudylstDao extends JpaRepository<Indvstudylst, EmpId> {
 	public List<Integer> countByPidAndIsjoin(int pid, int i);
 
 	Integer countByPid(int pid);
+
+	public void deleteByUid(Integer uid);
+
+	public List<Indvstudylst> findByPidOrderByJoinDate(Integer pid);
+
+	public List<Indvstudylst> findByPidOrderByJoin_date(Integer pid);
 }
