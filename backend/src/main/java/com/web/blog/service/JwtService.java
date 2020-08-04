@@ -28,8 +28,8 @@ public class JwtService {
 	private ObjectMapper objectMapper;
 
 	public String createLoginToken(User userOpt) {
-		User userPT;
-		userPT.setEmail(userOpt.getEmail());
+		//User userPT;
+		//userPT.setEmail(userOpt.getEmail());
 		
 		long curTime = System.currentTimeMillis();
 		return Jwts.builder().setHeaderParam("typ", "JWT").setExpiration(new Date(curTime + 3600000))
