@@ -44,4 +44,6 @@ public class User {
 
     private Integer penalty;
 
+    private Integer mileage;
+
 }
