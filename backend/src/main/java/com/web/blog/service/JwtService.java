@@ -28,12 +28,12 @@ public class JwtService {
 	private ObjectMapper objectMapper;
 
 	public String createLoginToken(User userOpt) {
-		User userPT;
+		User userPT = new User();
 		userPT.setEmail(userOpt.getEmail());
-		
+		userPT.setPassword(userOpt.getPassword());
 		long curTime = System.currentTimeMillis();
 		return Jwts.builder().setHeaderParam("typ", "JWT").setExpiration(new Date(curTime + 3600000))
-				.setIssuedAt(new Date(curTime)).claim(DATA_KEY, userOpt)
+				.setIssuedAt(new Date(curTime)).claim(DATA_KEY, userPT)
 				.signWith(SignatureAlgorithm.HS256, this.generateKey()).compact();
 	}
 

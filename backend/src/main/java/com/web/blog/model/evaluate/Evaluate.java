@@ -54,7 +54,11 @@ public class Evaluate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int target_uid;
 
-    private double score;
+    private double score1;
+
+    private double score2;
+
+    private double score3;
 
     private String sentence;
 
