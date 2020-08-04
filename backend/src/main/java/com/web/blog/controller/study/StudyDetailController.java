@@ -15,18 +15,11 @@ import com.web.blog.dao.study.StudyTagDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 
-import com.web.blog.model.post.Reply;
-import com.web.blog.model.likep.Studylikep;
-import com.web.blog.model.study.EmpId;
-import com.web.blog.model.study.Gugun;
+
 import com.web.blog.model.study.Study;
-import com.web.blog.model.study.StudyRequest;
-import com.web.blog.model.study.StudyResponse;
-import com.web.blog.model.study.Studytag;
-import com.web.blog.model.study.StudytagRequest;
+
 import com.web.blog.model.study.Indvstudylst;
 import com.web.blog.model.study.IndvstudylstRequest;
-import com.web.blog.model.study.Sido;
 import com.web.blog.model.user.DelegationRequest;
 import com.web.blog.model.user.User;
 

@@ -1,7 +1,8 @@
 <template>
   <div id="header" v-if="isHeader">
     <b-navbar id="navbar" toggleable="lg" type="light" variant="light" class="px-auto sticky-top row shadow">
-      <b-navbar-brand tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}" class="ml-3 font-weight-bold text-monospace">StudyMate</b-navbar-brand>
+      <b-navbar-brand tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}" class="ml-3 font-weight-bold text-monospace"> 
+      <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/></b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto">
 
         </b-navbar-nav>
@@ -19,13 +20,14 @@
               <div v-else>
                 <img class="border rounded-circle" :src="profileInfo.profile_image" width="70" height="70"/>
               </div>
-              <div class="name">{{ profileInfo.nickname }}</div>
-              <small>{{ profileInfo.email }}</small>
+              <div class="nameandemail">{{ profileInfo.nickname }}<br>
+              <small  class="email">{{ profileInfo.email }}</small>
+              </div>
               <b-list-group-item class="listitem" tag="router-link" to="/user/profile">프로필</b-list-group-item>
               <b-list-group-item class="listitem" @click="logout">로그아웃</b-list-group-item>
             </div>
             <div v-if="!isLoggedIn">
-              <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/>
+              <!-- <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/> -->
               <b-list-group-item class="listitem" variant="warning" @click="openModal">로그인</b-list-group-item>
               <LoginModal v-if="loginmodal" @close="closeModal" />
               <b-list-group-item class="listitem" variant="warning" @click="goSignup">회원가입</b-list-group-item>
@@ -41,8 +43,7 @@
           </template>
 
           <div class="text-center text-nowrap" style="width: auto;">
-            <b-list-group-item class="listitem" tag="router-link" to="/post/create">모집생성</b-list-group-item>
-            <hr>
+            
             <div class="text-left">
               <small class="text-success font-weight-bold pl-3">진행중 스터디</small>
               <div
@@ -95,6 +96,8 @@
                 </div>
               </div>
             </div>
+            <hr>
+            <b-list-group-item class="listitem" tag="router-link" to="/post/create"><i class="fas fa-plus plusstudy" style="color: white"></i> <i class="fas fa-book-open plusstudy" style="color: white"></i></b-list-group-item>
           </div>
 
         </b-dropdown>
@@ -228,4 +231,13 @@ export default {
 .listitem {
   background-color: #ffb74d;
 }
+
+.listitem:hover{
+  background-color: lightgray;
+}
+.nameandemail{
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
 </style>
