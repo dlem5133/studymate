@@ -53,7 +53,7 @@ public class AdminController {
     @ApiOperation(value = "모든 회원 조회")
     public Object findAllUser() {
         List<User> user = userDao.findAll();
-
+        
         ResponseEntity<Object> response = null;
         BasicResponse result = new BasicResponse();
         result.status = true;

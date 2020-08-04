@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 import constants from "../lib/constants";
 import Mainpage from "../page/main.vue";
+import AdminPage from "../page/AdminPage.vue";
 // 유저
 import Profile from "../page/user/Profile.vue";
 import JoinConfirm from "../page/user/JoinConfirm.vue";
@@ -14,7 +15,6 @@ import List from "../page/post/List.vue";
 import PostCreate from "../page/post/PostCreate.vue";
 import PostDetail from "../page/post/PostDetail.vue";
 import PostUpdate from "../page/post/PostUpdate.vue";
-import PostDetail2 from "../page/post/PostDetail2.vue";
 
 // 진행
 import StudyMain from "../page/study/StudyMain";
@@ -41,6 +41,11 @@ export default new Router({
       path: "/main",
       name: constants.URL_TYPE.MAIN,
       component: Mainpage,
+    },
+    {
+      path: "/admin",
+      name: constants.URL_TYPE.ADMIN,
+      component: AdminPage,
     },
     // 로그인/가입
     {
@@ -78,11 +83,6 @@ export default new Router({
       path: "/post/:post_id",
       name: constants.URL_TYPE.POST.POSTDETAIL,
       component: PostDetail,
-    },
-    {
-      path: "/post2/:post_id",
-      name: constants.URL_TYPE.POST.POSTDETAIL2,
-      component: PostDetail2,
     },
     {
       path: "/post/update/:post_id",

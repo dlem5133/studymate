@@ -220,10 +220,8 @@ export default {
     },
 
     categorySubmit() {
-      console.log("hi");
-        this.selectCategory.title = this.selectCategory.optionstext;
+      this.selectCategory.title = this.selectCategory.optionstext;
       if (this.selectCategory.options == "title") {
-        console.log("title");
         this.selectCategory.tmp = 1
         this.selectCategory.sido_code = null;
         this.selectCategory.tag = null;
@@ -238,7 +236,6 @@ export default {
       axios
         .post(SERVER_URL + "/study/search", this.selectCategory)
         .then((res) => {
-          console.log(res.data.object)
           this.searchList = res.data.object;
         })
         .catch((err) => {
