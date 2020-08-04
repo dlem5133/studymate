@@ -211,8 +211,19 @@ export default {
       this.$router.push({name: constants.URL_TYPE.POST.POSTUPDATE,params: { post_id: post_id },});
     },
     onChangeImages(e) {
-      const file = e.target.files[0];
-      this.updateData.profile_image = URL.createObjectURL(file);
+      const selectedImage = e.target.files[0];
+      this.createBase64Image(selectedImage);
+    },
+    createBase64Image(fileObject) {
+      this.updateData.profile_image = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.updateData.profile_image = e.target.result;
+      };
+      reader.readAsDataURL(fileObject);
+
+      // const file = e.target.files[0];
+      // this.updateData.profile_image = URL.createObjectURL(file);
     },
     removeImage: function (e) {
       this.updateData.profile_image = '';
