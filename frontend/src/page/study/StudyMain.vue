@@ -11,10 +11,10 @@
                   <small class="float-left">{{ userData.nickname }},</small><br>
                   <small class="d-flex inline">{{postData.start_date}} ~ {{postData.end_date}}</small>
                 </div>
-                <div class="ml-auto">
+                <div class="ml-auto my-auto float-right">
                   <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
-                    <template v-slot:button-content>
-                      <b-icon icon="gear" variant="dark"></b-icon>
+                    <template v-slot:button-content class=" float-right">
+                      <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
                     </template>
                     <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                     <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
@@ -27,14 +27,34 @@
                     <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                     <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
                   </b-dropdown> -->
-                  <b-button v-b-modal.modal-2 size="sm" class="border-0" variant="link">
-                    <b-icon icon="people" variant="warning"></b-icon>
+                  <b-button v-b-modal.modal-2 size="sm" class="border-0 float-right" variant="link">
+                    <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
                   </b-button>
                   <!-- 팀원 모달 -->
                   <div>
                     <b-modal id="modal-2" title="팀원" hide-footer>
                       <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
-                        <li v-if="per.isjoin" class="list-group-item d-flex">
+                        <li v-if="per.empId.user.uid==profileInfo.uid" class="list-group-item d-flex">
+                          <div class="d-flex">
+                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            {{ per.empId.user.nickname }}
+                            </div>
+                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                              <b-icon scale="0.8" icon="person" ></b-icon>
+                            </div>
+                          </div>
+                          <div v-if="profileInfo.uid!=postData.uid" class="ml-auto">
+                            <b-button v-if="per.isjoin==2" class="btn-sm" variant="outline-danger" @click="deleteMemberCancel(per.uid)">취소</b-button>
+                            <b-button v-else class="btn-sm" variant="outline-danger" @click="deleteMember(per.uid)">탈퇴</b-button>
+                            
+                          </div>
+                          <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
+                          <!-- <div class="ml-auto">
+                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
+                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
+                          </div> -->
+                        </li>
+                        <li v-else class="list-group-item d-flex">
                           <div class="d-flex">
                             <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
                             {{ per.empId.user.nickname }}
@@ -52,7 +72,7 @@
                     </b-modal>
                   </div>
 
-                <b-modal id="modal-5" title="스터디원 탈퇴 목록" hide-footer>
+                <b-modal id="modal-5" title="스터디원 탈퇴 대기 목록" hide-footer>
                   <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
                     <li class="list-group-item d-flex">
                       <div class="d-flex">
@@ -71,15 +91,15 @@
                   </ul>
                 </b-modal>
 
-                  <b-button @click="goBoard(postData.pid)" size="sm" class="border-0" variant="link">
-                    <b-icon icon="file-text" variant="dark"></b-icon>
+                  <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 float-right" variant="link">
+                    <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;"> BOARD</small>
                   </b-button>
-                  <b-button size="sm" class="border-0" variant="link">
+                  <b-button size="sm" class="border-0" variant="link"
+                    @click="goPostMain(postData.pid)">
                   <b-icon style="cursor:pointer;"
                     variant="dark"
-                    @click="goPostMain(postData.pid)"
                     icon="house-door"
-                  ></b-icon>
+                  ></b-icon><small style="color:black;"> HOME</small>
                   </b-button>
                 </div>
               </div>
@@ -97,7 +117,7 @@
               <div class="ml-auto">
                 <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
                   <template v-slot:button-content>
-                    <b-icon icon="gear" variant="dark"></b-icon>
+                    <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
                   </template>
                   <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
                   <b-dropdown-item v-b-modal.modal-4>수정</b-dropdown-item>
@@ -222,7 +242,6 @@
         updateData: {
           study: [],
           tag: []
-
         },
         expectDataList: [],
         selectedDay: [],
@@ -236,12 +255,15 @@
         readyLists: [],
         leaderLists: [],
         unleaderLists: [],
-
+        indvData:{},
         leaderListsTmp1: [],
 
         DeleteMemberListData: [],
         leaderListsTmp0: [],
-
+        deleteData:{
+          pid:"",
+          uid:"",
+        }
       };
     },
     created() {
@@ -254,21 +276,51 @@
       this.getPostTime()
     },
     methods: {
-      goPostMain(post_id){
-        this.$router.push({
-          name: constants.URL_TYPE.POST.POSTDETAIL,
-          params: {
-            post_id: post_id
-          },
-        });
+      deleteMember(user_id){
+        this.deleteData.pid = this.$route.params.post_id
+        this.deleteData.uid = user_id
+        axios.post(SERVER_URL+"/study/detail/delete_request",this.deleteData)
+        .then(res=>{
+          console.log(res.data.object)
+          this.memberList()
+        })
+        .catch(err=>console.log(err))
       },
-      goLeader(post_id){
-        this.$router.push({
-          name: constants.URL_TYPE.STUDY.STUDYLEADERMAIN,
-          params: {
-            post_id: post_id
-          },
-        });
+      DeleteApply(memberid){
+        this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.indvData)
+        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
+          .then((res) => {
+            console.log(res);
+            this.DeleteMemberList()
+          })
+          .catch((err) => console.log(err));
+      },
+      DeleteCancel(memberid){
+        this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.delegationData)
+        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
+          .then((res) => {
+            console.log(res);
+            this.DeleteMemberList()
+          })
+          .catch((err) => console.log(err));
+      },
+      deleteMemberCancel(user_id){
+        this.deleteData.pid = this.$route.params.post_id
+        this.deleteData.uid = user_id
+        axios.post(SERVER_URL+'/study/detail/delete_cancel', this.deleteData)
+        .then(res=>{
+          console.log(res.data.object)
+          this.memberList()
+        })
+        .catch(err=>console.log(err))
       },
       DeleteMemberList(){
         axios.get(SERVER_URL + '/study/detail/deleteList', { params:{
@@ -287,32 +339,7 @@
         axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
           .then((res) => {
             console.log(res);
-          })
-
-          .catch((err) => console.log(err));
-      },
-      deleteApply(memberid){
-        this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        console.log(this.indvData)
-        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
-          .then((res) => {
-            console.log(res);
-          })
-
-          .catch((err) => console.log(err));
-      },
-      deleteCancel(memberid){
-          this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        console.log(this.delegationData)
-        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
-          .then((res) => {
-            console.log(res);
+            this.getDetail()
           })
 
           .catch((err) => console.log(err));
@@ -381,6 +408,22 @@
             });
         }
       },
+      goPostMain(post_id){
+        this.$router.push({
+          name: constants.URL_TYPE.POST.POSTDETAIL,
+          params: {
+            post_id: post_id
+          },
+        });
+      },
+      goLeader(post_id){
+        this.$router.push({
+          name: constants.URL_TYPE.STUDY.STUDYLEADERMAIN,
+          params: {
+            post_id: post_id
+          },
+        });
+      },
       goMemberProfile(user_id) {
         this.$router.push({
           name: constants.URL_TYPE.USER.MEMBERPROFILE,
@@ -421,6 +464,7 @@
             pid: this.$route.params.post_id
           })
           .then(res => {
+            console.log(res.data.object)
             this.memberListData = res.data.object
           })
       },
