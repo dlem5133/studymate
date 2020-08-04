@@ -52,6 +52,6 @@ public interface StudyDao extends JpaRepository<Study, String> {
 
 	public List<Study> findStudyBySigungucodeOrderByPosttimeAsc(Integer integer);
 
-	public List<Study> findstudyByUid(Integer uid);
+	public List<Study> findStudyByUid(Integer uid);
 
 }
