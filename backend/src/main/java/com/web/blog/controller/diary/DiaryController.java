@@ -130,9 +130,9 @@ public class DiaryController {
         diary.setPid(request.getPid());
         diary.setUid(request.getUid());
         diary.setTmp(request.getTmp());
-
         Diary savedDiary = this.diaryDao.save(diary);
         BasicResponse result = new BasicResponse();
+        user.setMileage(user.getMileage()+10);
         result.status = true;
         result.data = "일지 작성 완료";
         result.object = savedDiary;
