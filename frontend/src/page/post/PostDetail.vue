@@ -442,7 +442,7 @@ export default {
           title: '친구가 스터디 "' + this.postData.title + '"를 공유했습니다 !',
 
           //이미지와 버튼 링크 다르게 생성 가능
-          //프로필 버튼 누르면 메인으로 가게끔 설정해놓음
+          //프로필 버튼 누르면 메인으로 가게끔 설정해놓음 
           description: "",
           imageUrl:
             "https://cdn.a1news.co.kr/news/photo/202003/5196_6089_1728.png",
