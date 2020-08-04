@@ -67,7 +67,6 @@ public class DiaryController {
         List<Diary> diarylist = diaryDao.findDiaryByPidAndTmp(pid, tmp);
         ResponseEntity<Object> response = null;
         List<Expectdo> expectdo = expectdoDao.findByPid(pid);
-        System.out.println(expectdo);
         // 다가올 스터디 중 가장 빠른 스터디 찾는 부분
         long dday = 1000;
         Expectdo latestExpectdo = new Expectdo();
@@ -79,7 +78,6 @@ public class DiaryController {
                 latestExpectdo = expectdo.get(i);
             }
         }
-        System.out.println(latestExpectdo);
         ArrayList<Object> diaryLstAndExpect = new ArrayList<>();
         diaryLstAndExpect.add(diarylist);
         diaryLstAndExpect.add(latestExpectdo);
@@ -196,7 +194,6 @@ public class DiaryController {
         expectdo.setDodate(request.getDodate());
         expectdo.setAssignment(request.getAssignment());
         expectdo.setAssignment_file(request.getAssignment_file());
-        System.out.println(request);
         expectdoDao.save(expectdo);
 
         ResponseEntity<Object> response = null;
