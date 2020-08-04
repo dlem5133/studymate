@@ -18,6 +18,7 @@
                     </template>
                     <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                     <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                    <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
                   </b-dropdown>
                   <!-- <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
                     <template v-slot:button-content>
@@ -43,17 +44,35 @@
                             </div>
                           </div>
                           <div class="ml-auto">
-                            <b-icon icon="trash" variant="danger"></b-icon>
+                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
+                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
                           </div>
                         </li>
                       </ul>
                     </b-modal>
                   </div>
+
+                <b-modal id="modal-5" title="스터디원 탈퇴 목록" hide-footer>
+                  <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
+                    <li class="list-group-item d-flex">
+                      <div class="d-flex">
+                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                        {{ per.nickname }}
+                        </div>
+                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                          <b-icon scale="0.8" icon="person" ></b-icon>
+                        </div>
+                      </div>
+                      <div class="ml-auto">
+                        <b-button class="btn-sm mr-2 float-right " variant="outline-success" @click="DeleteApply(per.uid)"> 승인 </b-button>
+                        <b-button class="btn-sm mr-2 float-right " variant="outline-danger" @click="DeleteCancel(per.uid)"> 취소 </b-button>
+                      </div>
+                    </li>
+                  </ul>
+                </b-modal>
+
                   <b-button @click="goBoard(postData.pid)" size="sm" class="border-0" variant="link">
                     <b-icon icon="file-text" variant="dark"></b-icon>
-                  </b-button>
-                  <b-button @click="goLeader(postData.pid)" size="sm" class="border-0" variant="link">
-                    <b-icon icon="person-fill" variant="dark"></b-icon>
                   </b-button>
                   <b-button size="sm" class="border-0" variant="link">
                   <b-icon style="cursor:pointer;"
@@ -209,13 +228,18 @@
         selectedDay: [],
         week: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
         days: [],
-
+        delegationData: {
+          leader: "",
+          member: "",
+          pid: 0
+        },
         readyLists: [],
         leaderLists: [],
         unleaderLists: [],
 
         leaderListsTmp1: [],
 
+        DeleteMemberListData: [],
         leaderListsTmp0: [],
 
       };
@@ -224,6 +248,7 @@
       this.addprofileInfo();
       this.memberList()
       this.getDetail()
+      this.DeleteMemberList()
     },
     mounted() {
       this.getPostTime()
@@ -244,6 +269,53 @@
             post_id: post_id
           },
         });
+      },
+      DeleteMemberList(){
+        axios.get(SERVER_URL + '/study/detail/deleteList', { params:{
+            pid: this.$route.params.post_id
+          }})
+          .then(res => {
+            console.log(res.data.object)
+            this.DeleteMemberListData = res.data.object
+          }).catch(err=>console.log(err))
+      },
+      delegation(memberid){
+        this.delegationData.pid = this.postData.pid;
+        this.delegationData.leader = this.postData.uid;
+        this.delegationData.member = memberid;
+        console.log(this.delegationData)
+        axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
+      },
+      deleteApply(memberid){
+        this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.indvData)
+        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
+      },
+      deleteCancel(memberid){
+          this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.delegationData)
+        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
       },
       handleOk() {
         let dayString = []
@@ -361,10 +433,6 @@
             }
           })
           .then((res) => {
-            
-            console.log(res);
-            console.log(res.data)
-            console.log(res.data.object)
             this.postData = res.data.object[0];
             this.tagData = res.data.object[2]
             this.userData = res.data.object[4];
@@ -439,8 +507,6 @@
           })
           .then(res => {
             this.expectTodo = res.data.object[1]
-            console.log(res.data.object);
-            console.log(this.expectTodo);
             var today = new Date()
             var count = new Date(res.data.object[1].dodate)
             var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
@@ -479,7 +545,6 @@
         });
       },
       expectOk() {
-        console.log(this.expectData);
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/create", this.expectData)
@@ -490,11 +555,9 @@
           .catch((err) => console.log(err));
       },
       expectUpdate() {
-        console.log(this.expectTodo);
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
-        console.log(this.expectData)
         axios.post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
 
@@ -508,7 +571,6 @@
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
-        console.log(this.expectData)
         axios.post(SERVER_URL + "/upcoming/delete", this.expectData)
           .then((res) => {
 
