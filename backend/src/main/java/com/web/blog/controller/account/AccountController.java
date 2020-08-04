@@ -167,7 +167,7 @@ public class AccountController {
         User user = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
-        List<Study> studylist = studyDao.findstudyByUid(user.getUid());
+        List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         indvstudylstDao.deleteByUid(user.getUid());
         for(int i = 0;i<studylist.size();i++)
