@@ -62,20 +62,18 @@
         <small class="formtitle ml-3 float-left">내용</small>
         <b-form-textarea v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
       </b-col>
-    <b-col>
-    <!-- <div>
-      <div v-if="!postCreateDate.background_image">
-        <small class="formtitle  ml-3 float-left">Background Image</small>
-        <input type="file" @change="onFileChange" />
-      </div>
-      <div v-else>
-        <img :src="postCreateDate.background_image" class="w-25"/>
-        <button @click="removeImage">Remove image</button>
-      </div>
-    </div> -->
-    <div class="d-flex inline justify-content-center mt-2 mb-5">
+    </b-row>
+    <div v-if="!postCreateDate.background_image">
+      <small>스터디 커버사진을 선택해주세요</small><br>
+      <input class="justify-content-center" type="file" @change="onFileChange" />
+    </div>
+    <div v-else>
+      <img :src="postCreateDate.background_image" ;/>
+      <button @click="removeImage">파일 삭제</button>
+    </div>
+    <div class="d-flex inline justify-content-center">
       <div class="p-3">
-        <div @click="postCreate(postCreateDate.tmp=1)" class="btn btn-outline-warning btn-sm">SUBMIT</div>
+        <div @click="postCreate(postCreateDate.tmp=1)" class="btn btn-warning btn-sm">스터디 생성</div>
       </div>
     </div>
     </b-col>

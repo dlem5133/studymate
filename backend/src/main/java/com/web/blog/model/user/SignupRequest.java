@@ -23,7 +23,7 @@ public class SignupRequest {
     String password;
 
     @ApiModelProperty(required = true)
-    @NotNull
+
     String nickname;
     @ApiModelProperty(required = true)
     String intro;
