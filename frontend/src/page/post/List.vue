@@ -3,7 +3,7 @@
     <div class="row row-cols-2">
       <div class="main-table col-12 col-md-12 border">
         <div class="container logoimg">
-          <img src="../../assets/img/logo.png" />
+          <img class="main-table col-12 col-md-6" src="../../assets/img/owl_logo.png" />
         </div>
 
         <!-- ===========================================================================================  -->
@@ -23,7 +23,7 @@
 
           <!-- =======================================아래 수정====================================================  -->
 
-                     <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
+          <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
             <div class="serach-selectbox">            
               <select
                 v-model="studyLists"
@@ -404,6 +404,7 @@ label::before {
 }
 input[type="radio"] + label::before {
   border-radius: 1em;
+  
 }
 /* Checked */
 input[type="radio"]:checked + label {
@@ -483,4 +484,6 @@ label::before {
 select.form-control{
   border: 1px solid #ffca28;
 }
+
+
 </style>

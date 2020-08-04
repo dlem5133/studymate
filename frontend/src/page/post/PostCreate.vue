@@ -5,12 +5,6 @@
     <h1><img src="https://image.flaticon.com/icons/svg/2231/2231677.svg" class="m-5 w-25" alt=""></h1>
     <b-row class="m-3">
       <b-col sm="12" class="px-1">
-        <small class="formtitle ml-3 float-left">제목</small>
-        <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
-      </b-col>
-
-
-      <b-col sm="12" class="px-1">
         <label>제목</label>
         <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
       </b-col>
@@ -57,16 +51,16 @@
       </b-col>
     </b-row>
     <div v-if="!postCreateDate.background_image">
-      <h2>Select an image</h2>
-      <input type="file" @change="onFileChange" />
+      <small>스터디 커버사진을 선택해주세요</small><br>
+      <input class="justify-content-center" type="file" @change="onFileChange" />
     </div>
     <div v-else>
-      <img :src="postCreateDate.background_image" />
-      <button @click="removeImage">Remove image</button>
+      <img :src="postCreateDate.background_image" ;/>
+      <button @click="removeImage">파일 삭제</button>
     </div>
     <div class="d-flex inline justify-content-center">
       <div class="p-3">
-        <div @click="postCreate(postCreateDate.tmp=1)" class="btn btn-warning btn-sm">SUBMIT</div>
+        <div @click="postCreate(postCreateDate.tmp=1)" class="btn btn-warning btn-sm">스터디 생성</div>
       </div>
     </div>
   </div>

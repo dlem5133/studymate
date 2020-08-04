@@ -20,7 +20,7 @@
               v-model="password"
               type="password"
               id="password"
-              placeholder="영문, 숫자 혼용 8자 이상"
+              placeholder="영문 + 숫자 8자 이상"
             />
           </div>
           <b-button class="btn btn-dark m-3 w-25 mx-auto" @click="doLogin">Login</b-button>

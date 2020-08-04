@@ -6,9 +6,7 @@
         <div class="col-12 col-sm-12 col-md-12">
           <div class="blog-header">
             <div class="blog-cover">
-              <div class="blog-author d-flex flex-row bd-highlight mb-3" >
-                <h4>{{ userData.nickname }}</h4>
-              </div>
+              <img class="" :src="postData.background_image" width="770px" height="240px"/>
             </div>
           </div>
           <div class="d-flex justify-content-end">
@@ -61,14 +59,12 @@
             <p class="float-left text-left pr-3">{{postData.data}}</p>
           </div>
           <div class="blog-tags">
-            <li>
               <a
                 class="float-left mr-1 mt-1"
                 variant="warning"
                 v-for="tag in tagData"
                 :key="tag.tid"
               >#{{tag.tagname}}</a>
-            </li>
           </div>
         </div>
       </div>
