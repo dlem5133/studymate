@@ -87,14 +87,16 @@ public class AdminController {
     @ApiOperation(value = "3회 이상 신고받은 유저 리스트")
     public Object searchReportUser() {
         ResponseEntity<Object> response = null;
-        List<Indvstudylst> check = indvStudylstDao.findAll();
+        List<Indvstudylst> check = indvStudylstDao.findByIsjoin(1);
+
         BasicResponse result = new BasicResponse();
         ArrayList<List<Report>> myset = new ArrayList<>();
+
         // HashMap<Integer, Integer> myset = new HashMap<>();
+
         for (int i = 0; i < check.size(); i++) {
             int reportuser = reportDao.countByPidAndTarget(check.get(i).getPid(), check.get(i).getUid());
-            if (reportuser > indvStudylstDao.countByPid((int) Math.round((double) check.get(i).getPid()) / 2)) {
-                // 여러개일때는 어떻게하나.....
+            if (reportuser >= (int) Math.round(indvStudylstDao.countByPid(check.get(i).getPid()))/(double) 2) {
                 myset.add(reportDao.findByPidAndTarget(check.get(i).getPid(), check.get(i).getUid()));
             }
         }
