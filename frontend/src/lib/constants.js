@@ -10,6 +10,7 @@ export default {
   },
   URL_TYPE: {
     MAIN : "mainpage",
+    ADMIN : "adminpage",
     USER: {
       SIGNUP: "signup",
       PROFILE: "profile",

@@ -167,7 +167,23 @@ public class AccountController {
         User user = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
+        List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
+        indvstudylstDao.deleteByUid(user.getUid());
+        for(int i = 0;i<studylist.size();i++)
+        {
+            List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
+            if(indvstudylsts!=null)
+            {
+                //indv 리더 설정
+                Indvstudylst tmp = indvstudylsts.get(0);
+                tmp.setIsleader(1);
+                indvstudylstDao.save(tmp);
+                //study uid 설정
+                tmp.getEmpId().getStudy().setUid(tmp.getUid());
+                studyDao.save(tmp.getEmpId().getStudy());
+            }
+        }
         userDao.delete(user);
         result.status = true;
         result.data = "회원 탈퇴 완료";

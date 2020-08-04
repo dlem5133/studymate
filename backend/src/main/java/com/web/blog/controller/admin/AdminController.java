@@ -53,7 +53,7 @@ public class AdminController {
     @ApiOperation(value = "모든 회원 조회")
     public Object findAllUser() {
         List<User> user = userDao.findAll();
-
+        
         ResponseEntity<Object> response = null;
         BasicResponse result = new BasicResponse();
         result.status = true;
@@ -104,7 +104,7 @@ public class AdminController {
 
         result.status = true;
         result.data = "모든 회원 조회 완료";
-        result.object= myset;
+        result.object = myset;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -116,23 +116,44 @@ public class AdminController {
     @ApiOperation(value = "패널티 부여")
     public Object givePenalty(@Valid @RequestBody ReportRequest request) {
 
-        ResponseEntity<Object> response =null;
-        
+        ResponseEntity<Object> response = null;
+
         User user = userDao.findUserByUid(request.getTarget());
-        user.setPenalty(user.getPenalty()+1);
+        user.setPenalty(user.getPenalty() + 1);
         userDao.save(user);
 
-        //패널티 부여시, 해당 신고내역은 삭제
+        // 패널티 부여 시, 해당 신고내역은 삭제
         reportDao.deleteByPidAndTarget(request.getPid(), request.getTarget());
+
+        // 패널티 부여 시, 해당 유저는 해당 스터디에서 추방
+        indvStudylstDao.deleteByPidAndUid(request.getPid(), request.getTarget());
 
         BasicResponse result = new BasicResponse();
         result.status = true;
         result.data = "패널티 부여 및 해당 스터디의 target 신고 내역 완료";
-        result.object= user;
+        result.object = user;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
 
     }
+
+    @PostMapping("/admin/banlist")
+    @ApiOperation(value = "벤 목록 조회")
+    public Object searchban() {
+        ResponseEntity<Object> response = null;
+        List<User> user = userDao.findByPenaltyGreaterThan(3);
+
+        BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "벤 목록 조회 완료";
+        result.object = user;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+
+    }
+
 }

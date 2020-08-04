@@ -9,8 +9,6 @@ public interface EvaluateDao extends JpaRepository<Evaluate, String> {
 
 
 
-
-
 	// public Diary findDiaryByDid(int did);
 
 	// public List<Diary> findDiaryByPid(int pid);

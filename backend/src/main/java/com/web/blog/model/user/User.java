@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -45,5 +46,15 @@ public class User {
     private Integer penalty;
 
     private Integer mileage;
+
+    @NotNull
+    private double score1;
+    
+    @NotNull
+    private double score2;
+    
+    @NotNull
+    private double score3;
+
 
 }
