@@ -2,107 +2,152 @@
   <div class="container">
     <div class="main-table">
       <div class="container p-2">
-        <div class="ml-auto text-right p-1 " v-if="profileInfo.uid==postData.uid">
-                <b-button size="sm" class="mr-2 font-weight-bold" @click="postUpdate(postData.pid)"
-                   variant="outline-primary">수정</b-button>
-                <b-button size="sm" class="font-weight-bold" @click="postDelete"
-                  variant="outline-danger">삭제</b-button>
-              </div>
-        <div class="card shadow p-3">
-          
+        <div class="card p-3">
           <div class="card-body">
-            <div class="row">
-
-              <div class="col-8 col-md-6 col-sm-4">
-                
+            <div>
+              <div class="d-flex">
                 <div>
-
-                  
-                  <b-modal id="modal-2" title="팀원 보기">
-                    <form ref="form">
-                      <b-form-group>
-                        <div v-for="per in memberListData" :key="per.uid">
-                          <div @click="goMemberProfile(per.uid)" v-if="per.isjoin" class="p-3 d-flex inline">
-                            <p class="px-2 m-0 col-xs-4 col-sm-7">{{ per.empId.user.nickname }} </p>
-                            <div v-if="per.empId.user.uid == postData.uid">팀장</div>
-                            <div v-else> 팀원</div>
-
-                          </div>
-                          <hr class="m-0" />
-                        </div>
-                      </b-form-group>
-                    </form>
-                  </b-modal>
-
+                  <h3 class="text-left font-weight-bold">{{ postData.title }} </h3>
+                  <small class="float-left">{{ userData.nickname }},</small><br>
+                  <small class="d-flex inline">{{postData.start_date}} ~ {{postData.end_date}}</small>
                 </div>
-                <h3 class="text-left font-weight-bold">{{ postData.title }} </h3>
-                <small class="float-left">{{ userData.nickname }},</small><br>
-                <small class="d-flex inline">{{postData.start_date}} ~ {{postData.end_date}}</small>
-                <br>
-                <b-button class="btn-sm mr-2 float-left " variant="primary" @click="goBoard(postData.pid)">게시판 </b-button>
-                <b-button class="btn-sm float-left" variant="success" v-b-modal.modal-2>스터디원 </b-button>
+                <div class="ml-auto">
+                  <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                    <template v-slot:button-content>
+                      <b-icon icon="gear" variant="dark"></b-icon>
+                    </template>
+                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                    <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
+                  </b-dropdown>
+                  <!-- <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                    <template v-slot:button-content>
+                      <b-icon icon="file-text" variant="dark"></b-icon>
+                    </template>
+                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                  </b-dropdown> -->
+                  <b-button v-b-modal.modal-2 size="sm" class="border-0" variant="link">
+                    <b-icon icon="people" variant="warning"></b-icon>
+                  </b-button>
+                  <!-- 팀원 모달 -->
+                  <div>
+                    <b-modal id="modal-2" title="팀원" hide-footer>
+                      <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
+                        <li v-if="per.isjoin" class="list-group-item d-flex">
+                          <div class="d-flex">
+                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            {{ per.empId.user.nickname }}
+                            </div>
+                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                              <b-icon scale="0.8" icon="person" ></b-icon>
+                            </div>
+                          </div>
+                          <div class="ml-auto">
+                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
+                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
+                          </div>
+                        </li>
+                      </ul>
+                    </b-modal>
+                  </div>
 
+                <b-modal id="modal-5" title="스터디원 탈퇴 목록" hide-footer>
+                  <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
+                    <li class="list-group-item d-flex">
+                      <div class="d-flex">
+                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                        {{ per.nickname }}
+                        </div>
+                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                          <b-icon scale="0.8" icon="person" ></b-icon>
+                        </div>
+                      </div>
+                      <div class="ml-auto">
+                        <b-button class="btn-sm mr-2 float-right " variant="outline-success" @click="DeleteApply(per.uid)"> 승인 </b-button>
+                        <b-button class="btn-sm mr-2 float-right " variant="outline-danger" @click="DeleteCancel(per.uid)"> 취소 </b-button>
+                      </div>
+                    </li>
+                  </ul>
+                </b-modal>
+
+                  <b-button @click="goBoard(postData.pid)" size="sm" class="border-0" variant="link">
+                    <b-icon icon="file-text" variant="dark"></b-icon>
+                  </b-button>
+                  <b-button size="sm" class="border-0" variant="link">
+                  <b-icon style="cursor:pointer;"
+                    variant="dark"
+                    @click="goPostMain(postData.pid)"
+                    icon="house-door"
+                  ></b-icon>
+                  </b-button>
+                </div>
               </div>
-
-              
-
             </div>
           </div>
         </div>
-        <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
-
-          <b-button class="btn-sm mr-2 " variant="warning" v-b-modal.modal-3>생성 </b-button>
-          <b-modal @ok="expectOk" id="modal-3" title="일정 추가">
-            <form ref="form">
-              <b-form-group id="expectdoWrite">
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
-                    type="text" />
-                </div>
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
-                    placeholder="날짜 입력" />
-                </div>
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
-                    placeholder="할일 입력" />
-                </div>
-              </b-form-group>
-            </form>
-          </b-modal>
-          <b-button class="btn-sm mr-2 " variant="primary" v-b-modal.modal-4 >수정</b-button>
-          <b-modal @ok="expectUpdate" id="modal-4" title="일정 업데이트">
-            <form ref="form">
-              <b-form-group id="expectdoUpdate">
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
-                    type="text" />
-                </div>
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
-                    placeholder="날짜 입력" />
-                </div>
-                <div class="input-wrap mx-3">
-                  <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
-                    placeholder="할일 입력" />
-                </div>
-              </b-form-group>
-            </form>
-          </b-modal>
-          <b-button class="btn-sm" variant="success" @click="expectDelete">삭제</b-button>
-
-        </div>
+        
         
         <div class="card my-1">
           <div class="card-body text-left">
-            <p class="badge badge-pill badge-danger">D-{{decimalDay}}
-
-
-            </p>
+            <div class="d-flex">
+              <div>
+                <p class="badge badge-pill badge-danger">D-{{decimalDay}}</p>
+              </div>
+              <div class="ml-auto">
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                  <template v-slot:button-content>
+                    <b-icon icon="gear" variant="dark"></b-icon>
+                  </template>
+                  <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
+                  <b-dropdown-item v-b-modal.modal-4>수정</b-dropdown-item>
+                  <b-dropdown-item @click="expectDelete">삭제</b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
 
             <p>장소 : {{expectTodo.doplace}}</p>
             <p>일시 : {{expectTodo.dodate}}</p>
             <p>과제 : {{expectTodo.assignment}}</p>
+          </div>
+          <!-- 모달 -->
+          <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
+            <b-modal @ok="expectOk" id="modal-3" title="일정 추가">
+              <form ref="form">
+                <b-form-group id="expectdoWrite">
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
+                      type="text" />
+                  </div>
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
+                      placeholder="날짜 입력" />
+                  </div>
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
+                      placeholder="할일 입력" />
+                  </div>
+                </b-form-group>
+              </form>
+            </b-modal>
+            <b-modal @ok="expectUpdate" id="modal-4" title="일정 업데이트">
+              <form ref="form">
+                <b-form-group id="expectdoUpdate">
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
+                      type="text" />
+                  </div>
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
+                      placeholder="날짜 입력" />
+                  </div>
+                  <div class="input-wrap mx-3">
+                    <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
+                      placeholder="할일 입력" />
+                  </div>
+                </b-form-group>
+              </form>
+            </b-modal>
           </div>
         </div>
         <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
@@ -183,13 +228,18 @@
         selectedDay: [],
         week: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
         days: [],
-
+        delegationData: {
+          leader: "",
+          member: "",
+          pid: 0
+        },
         readyLists: [],
         leaderLists: [],
         unleaderLists: [],
 
         leaderListsTmp1: [],
 
+        DeleteMemberListData: [],
         leaderListsTmp0: [],
 
       };
@@ -198,11 +248,75 @@
       this.addprofileInfo();
       this.memberList()
       this.getDetail()
+      this.DeleteMemberList()
     },
     mounted() {
       this.getPostTime()
     },
     methods: {
+      goPostMain(post_id){
+        this.$router.push({
+          name: constants.URL_TYPE.POST.POSTDETAIL,
+          params: {
+            post_id: post_id
+          },
+        });
+      },
+      goLeader(post_id){
+        this.$router.push({
+          name: constants.URL_TYPE.STUDY.STUDYLEADERMAIN,
+          params: {
+            post_id: post_id
+          },
+        });
+      },
+      DeleteMemberList(){
+        axios.get(SERVER_URL + '/study/detail/deleteList', { params:{
+            pid: this.$route.params.post_id
+          }})
+          .then(res => {
+            console.log(res.data.object)
+            this.DeleteMemberListData = res.data.object
+          }).catch(err=>console.log(err))
+      },
+      delegation(memberid){
+        this.delegationData.pid = this.postData.pid;
+        this.delegationData.leader = this.postData.uid;
+        this.delegationData.member = memberid;
+        console.log(this.delegationData)
+        axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
+      },
+      deleteApply(memberid){
+        this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.indvData)
+        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
+      },
+      deleteCancel(memberid){
+          this.indvData.uid = memberid;
+        this.indvData.pid = this.postData.pid;
+        this.indvData.isLeader = 0;
+        this.indvData.isJoin = 1;
+        console.log(this.delegationData)
+        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
+          .then((res) => {
+            console.log(res);
+          })
+
+          .catch((err) => console.log(err));
+      },
       handleOk() {
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
@@ -319,10 +433,6 @@
             }
           })
           .then((res) => {
-            
-            console.log(res);
-            console.log(res.data)
-            console.log(res.data.object)
             this.postData = res.data.object[0];
             this.tagData = res.data.object[2]
             this.userData = res.data.object[4];
@@ -397,8 +507,6 @@
           })
           .then(res => {
             this.expectTodo = res.data.object[1]
-            console.log(res.data.object);
-            console.log(this.expectTodo);
             var today = new Date()
             var count = new Date(res.data.object[1].dodate)
             var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
@@ -437,7 +545,6 @@
         });
       },
       expectOk() {
-        console.log(this.expectData);
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/create", this.expectData)
@@ -448,11 +555,9 @@
           .catch((err) => console.log(err));
       },
       expectUpdate() {
-        console.log(this.expectTodo);
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
-        console.log(this.expectData)
         axios.post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
 
@@ -466,7 +571,6 @@
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
-        console.log(this.expectData)
         axios.post(SERVER_URL + "/upcoming/delete", this.expectData)
           .then((res) => {
 

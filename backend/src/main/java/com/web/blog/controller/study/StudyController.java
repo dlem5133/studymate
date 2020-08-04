@@ -539,7 +539,7 @@ public class StudyController {
 
     @GetMapping("/study/recruitstop")
     @ApiOperation(value = "모집 중지")
-    // 전체 글 가져오기
+
     public Object recruitstop(@RequestParam(required = true) int pid) {
         Study study = studyDao.findStudyByPid(pid);
         study.setTmp(0);
@@ -549,6 +549,33 @@ public class StudyController {
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "모집 중지 완료";
+            result.object = savedstudy;
+            response = new ResponseEntity < > (result, HttpStatus.OK);
+        } else {
+            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/study/finish")
+    @ApiOperation(value = "스터디 종료")
+    public Object finish(@RequestParam(required = true) int pid) {
+        Study study = studyDao.findStudyByPid(pid);
+        study.setTmp(2);
+        Study savedstudy = studyDao.save(study);
+        List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(pid);
+        for(int i = 0;i<indvstudylsts.size();i++)
+        {
+            User user = indvstudylsts.get(i).getEmpId().getUser();
+            user.setMileage(user.getMileage()+200);
+            userDao.save(user);
+        }
+        ResponseEntity < Object > response = null;
+        if (study != null) {
+            BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.data = "스터디 종료";
             result.object = savedstudy;
             response = new ResponseEntity < > (result, HttpStatus.OK);
         } else {
