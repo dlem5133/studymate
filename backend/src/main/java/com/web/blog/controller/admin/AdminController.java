@@ -94,7 +94,6 @@ public class AdminController {
         for (int i = 0; i < check.size(); i++) {
             int reportuser = reportDao.countByPidAndTarget(check.get(i).getPid(), check.get(i).getUid());
             if (reportuser > indvStudylstDao.countByPid((int) Math.round((double) check.get(i).getPid()) / 2)) {
-                System.out.println(check.get(i).getPid());
                 //여러개일때는 어떻게하나.....
                 myset.add(reportDao.findByPidAndTarget(check.get(i).getPid(), check.get(i).getUid()));
             }

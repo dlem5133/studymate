@@ -2,8 +2,7 @@
 package com.web.blog.model.user;
 
 import lombok.Data;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 

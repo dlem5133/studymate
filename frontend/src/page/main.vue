@@ -62,7 +62,7 @@ export default {
         constants.URL_TYPE.ERROR.PAGENOTFOUND
       ];
 
-      let isHeader = falseq;
+      let isHeader = false;
       let isFooter = true;
       array.map(path => {
         if (url === path) {
