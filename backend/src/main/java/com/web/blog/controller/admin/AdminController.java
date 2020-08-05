@@ -88,6 +88,7 @@ public class AdminController {
     public Object searchReportUser() {
         ResponseEntity<Object> response = null;
         List<Indvstudylst> check = indvStudylstDao.findByIsjoin(1);
+        System.out.println(check);
 
         BasicResponse result = new BasicResponse();
         List<ArrayList<Object>> myset = new ArrayList<>();
@@ -102,6 +103,7 @@ public class AdminController {
                 ArrayList<Object> sublst = new ArrayList<>();
                 sublst.add(reportDao.findByPidAndTarget(check.get(i).getPid(), check.get(i).getUid()));
                 sublst.add(userDao.findUserByUid(check.get(i).getUid()));
+                sublst.add(studyDao.findStudyByPid(check.get(i).getPid()));
 
                 myset.add(sublst);
             }
@@ -142,6 +144,25 @@ public class AdminController {
 
         return response;
 
+    }
+
+    @Transactional
+    @PostMapping("/admin/nopenalty")
+    @ApiOperation(value = "패널티 반려")
+    public Object nopenalty(@Valid @RequestBody ReportRequest request) {
+
+        ResponseEntity<Object> response = null;
+
+        // 패널티 부여 시, 해당 신고내역은 삭제
+        reportDao.deleteByPidAndTarget(request.getPid(), request.getTarget());
+
+        BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "패널티 부여 반려";
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
     }
 
     @PostMapping("/admin/banlist")
