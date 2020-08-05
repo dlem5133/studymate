@@ -27,6 +27,39 @@
                     <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                     <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
                   </b-dropdown> -->
+
+                  <!-- 상호평가 -->
+                  <div>
+                    <b-button size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                    </b-button>
+
+                    <b-modal id="modal-multi-1" size="lg" title="상호 평가" ok-only no-stacking>
+
+                      <b-list-group v-for="member in memberListData" :key="member.uid">
+                        <b-list-group-item class="m-1 px-3 p-0">
+                          <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
+                          <b-button class="float-right" variant="link" v-b-modal.modal-multi-2>
+                            <!-- <i class="fas fa-star" style="color: orange; font-size: large;"></i> -->
+                            <i class="far fa-star" style="color: orange; font-size: large;"></i>
+                          </b-button>
+                        </b-list-group-item>
+                      </b-list-group>
+                    </b-modal>
+
+                    <b-modal id="modal-multi-2" title="상호 평가" ok-only>
+                      <b-list-group v-for="member in memberListData" :key="member.uid">
+                        <b-list-group-item class="m-1 px-3 p-0">
+                          <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
+                          <b-button class="float-right" variant="link" v-b-modal.modal-multi-2>
+                            <!-- <i class="fas fa-star" style="color: orange; font-size: large;"></i> -->
+                            <i class="far fa-star" style="color: orange; font-size: large;"></i>
+                          </b-button>
+                        </b-list-group-item>
+                      </b-list-group>
+                    </b-modal>
+                  </div>
+
                   <b-button v-b-modal.modal-2 size="sm" class="border-0 float-right" variant="link">
                     <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
                   </b-button>

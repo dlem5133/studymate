@@ -70,4 +70,6 @@ public class Study {
     @Column(name = "end_date")
     private Date end_date;
 
+    private Integer evalcount;
+
 }

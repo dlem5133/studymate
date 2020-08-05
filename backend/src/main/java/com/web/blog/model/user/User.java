@@ -56,5 +56,5 @@ public class User {
     @NotNull
     private double score3;
 
-
+    private Integer totalscoreper;
 }

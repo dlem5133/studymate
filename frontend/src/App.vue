@@ -34,6 +34,7 @@ export default {
     checkUrl(url) {
       // let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
       let array = [
+        constants.URL_TYPE.MAIN,
         constants.URL_TYPE.USER.LOGIN,
         constants.URL_TYPE.USER.JOIN,
         constants.URL_TYPE.USER.UPDATE,

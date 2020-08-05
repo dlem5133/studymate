@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.study.IndvstudylstDao;
 import com.web.blog.dao.study.StudyDao;
 import com.web.blog.dao.user.ReportDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.mail.MailHandler;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.study.StudyRequest;
 import com.web.blog.model.study.Indvstudylst;
@@ -59,14 +61,19 @@ public class AccountController {
 
     @Autowired
     ReportDao reportDao;
-
+    
+    @Autowired
+    MileageDao mileageDao;
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
             @RequestParam(required = true) final String password) {
-        User userOpt = userDao.findUserByEmailAndPassword(email, password);
+        User userOpt = new User();
+        userOpt = userDao.findUserByEmailAndPassword(email, password);
         ResponseEntity<Object> response = null;
+        
         String token = jwtService.createLoginToken(userOpt);
+        System.out.println(token);
 
         if (userOpt.getPassword().equals(password)) {
             final BasicResponse result = new BasicResponse();
@@ -107,7 +114,16 @@ public class AccountController {
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
             
-            this.userDao.save(user);
+            User saveduser = this.userDao.save(user);
+
+            Mileage mileage = new Mileage();
+            mileage.setUid(saveduser.getUid());
+            mileage.setUser(saveduser);
+            mileage.setDiarypoint(0);
+            mileage.setEndpoint(0);
+            mileage.setEvalpoint(0);
+            mileage.setTotal(1000);
+            mileageDao.save(mileage);
 
             final BasicResponse result = new BasicResponse();
             result.status = true;
@@ -165,26 +181,30 @@ public class AccountController {
         // 회원 정보 삭제
         // 이메일로 삭제
         User user = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
+
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
-        indvstudylstDao.deleteByUid(user.getUid());
+        userDao.delete(user);
         for(int i = 0;i<studylist.size();i++)
         {
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
-            if(indvstudylsts!=null)
+            System.out.println(indvstudylsts);
+            if(indvstudylsts.size()!=0)
             {
                 //indv 리더 설정
+                System.out.println(indvstudylsts.get(0));
                 Indvstudylst tmp = indvstudylsts.get(0);
                 tmp.setIsleader(1);
                 indvstudylstDao.save(tmp);
                 //study uid 설정
                 tmp.getEmpId().getStudy().setUid(tmp.getUid());
+                System.out.println(tmp.getEmpId());
                 studyDao.save(tmp.getEmpId().getStudy());
             }
         }
-        userDao.delete(user);
+        
         result.status = true;
         result.data = "회원 탈퇴 완료";
 
@@ -230,8 +250,8 @@ public class AccountController {
     @ApiOperation(value = "회원 프로필")
     public Object profile(@RequestParam(required = true) final String Token) { // 회원 정보 조회
         // 이메일로 조회
-        User user = (jwtService.getUser(Token));
-
+        User user2 = (jwtService.getUser(Token));
+        User user = userDao.findUserByEmailAndPassword(user2.getEmail(), user2.getPassword());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
 
