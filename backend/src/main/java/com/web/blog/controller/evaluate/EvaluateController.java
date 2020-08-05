@@ -3,11 +3,13 @@ package com.web.blog.controller.evaluate;
 import javax.validation.Valid;
 
 import com.web.blog.dao.evaluate.EvaluateDao;
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.study.StudyDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.evaluate.Evaluate;
 import com.web.blog.model.evaluate.EvaluateRequest;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.user.User;
 
@@ -42,6 +44,9 @@ public class EvaluateController {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    MileageDao mileageDao;
+    
     @PostMapping("/eva/score")
     @ApiOperation(value = "평점 넘기기")
     public Object evaScore1(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
@@ -51,7 +56,6 @@ public class EvaluateController {
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
         Study study = studyDao.findStudyByPid(evaluateRequest.getPid());
         Evaluate eva = new Evaluate();
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         eva.setPid(evaluateRequest.getPid());
         eva.setWriter_uid(writer.getUid());
         eva.setTarget_uid(target.getUid());
@@ -62,8 +66,6 @@ public class EvaluateController {
         eva.setStudy(study);
         eva.setUser(writer);
         eva.setUser2(target);
-        System.out.println("22222222222222222222222222222222222222222222222222");
-        System.out.println(eva);
         if(target.getScore1() == 0){
             target.setScore1(evaluateRequest.getScore1());
         }
@@ -89,8 +91,12 @@ public class EvaluateController {
         //마일리지
         System.out.println(eva);
         writer.setMileage(writer.getMileage()+10);
+        Mileage mileage = mileageDao.findByUid(writer.getUid());
+            
+        mileage.setTotal(mileage.getTotal()+10);
+        mileage.setEndpoint(mileage.getEvalpoint()+1);
+        mileageDao.save(mileage);
         userDao.save(writer);
-        System.out.println(eva);
         final Evaluate saveEva = this.evaluateDao.save(eva);
         final BasicResponse result = new BasicResponse();
 
