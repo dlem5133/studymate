@@ -59,74 +59,157 @@
         </div>
 
         <div class="stats">
-          <div class="box">
-            <span class="value">5</span>
+          <div class="box" @click="page=0">
+            <span class="value">{{studyLists.length + readyLists.length}}</span>
             <span class="parameter">가입중인 스터디</span>
           </div>
-          <div class="box">
-            <span class="value">1387</span>
+          <div class="box" @click="page=1">
+            <span class="value">{{total_mileage}}</span>
             <span class="parameter">마일리지</span>
           </div>
-          <div class="box">
-            <span class="value">4.6</span>
-            <span class="parameter">랭크</span>
+          <div class="box" @click="page=2">
+            <span class="value">{{total_score}} / 5</span>
+            <span class="parameter">평점</span>
           </div>
         </div>
       </div>
-      <div class="side">
-        <div class="text-left pt-3 col-12">
-          <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
-          <div
-            v-for="list in readyLists"
-            :key="list.id"
-            class="card m-2 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-          >
-            <div class="d-flex inline">
-              <small class="text-left">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
-            </div>
-          </div>
 
-          <div
-            v-for="list in leaderListsTmp0"
-            :key="list.id"
-            class="card m-2 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-          >
-            <div class="d-flex inline">
-              <small class="text-left">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="danger">진행중&팀장</b-badge>
+      <div v-if="page === 0">
+        <div class="side">
+          <div class="text-left pt-3 col-12">
+            <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
+            <div
+              v-for="list in readyLists"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              @click="goStudyMain(list.pid)"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
+              </div>
             </div>
-          </div>
 
-          <div
-            v-for="list in unleaderLists"
-            :key="list.id"
-            class="card m-2 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-          >
-            <div class="d-flex inline">
-              <small class="text-left">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="success">신청완료</b-badge>
+            <div
+              v-for="list in leaderListsTmp0"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              @click="goStudyMain(list.pid)"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="danger">진행중·팀장</b-badge>
+              </div>
             </div>
-          </div>
-          <hr />
 
-          <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
-          <div
-            v-for="list in leaderListsTmp1"
-            :key="list.id"
-            class="card m-2 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-          >
-            <div class="d-flex inline">
-              <small class="text-left">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="warning">모집중&팀장</b-badge>
+            <div
+              v-for="list in unleaderLists"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              @click="goStudyMain(list.pid)"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
+              </div>
+            </div>
+            <hr />
+
+            <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
+            <div
+              v-for="list in leaderListsTmp1"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              @click="goStudyMain(list.pid)"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="danger">팀장</b-badge>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+
+      <div v-if="page===1">
+        <div class="side">
+          <div class="text-left pt-3 col-12">
+            <small class="text-dark font-weight-bold text-left pl-3">마일리지 LOG</small>
+            <div>
+              <small class="text-success font-weight-bold text-left pl-3">일지</small>
+              <small>{{ mileageData.diarypoint }}</small>
+            </div>              
+            <div>
+              <small class="text-success font-weight-bold text-left pl-3">평가</small>
+              <small>{{ mileageData.evalpoint }}</small>
+            </div>
+            <div>
+              <small class="text-success font-weight-bold text-left pl-3">스터디 완료</small>
+              <small>{{ mileageData.endpoint * 200 }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="page===2">
+        <div class="side" >
+          <div class="p-3">
+           <p> {{total_score}}총점인데 이따가 꾸밀게 뭘 해도 못생겼어</p>
+          <hr>
+          <div id="ratingbox" class="text-left row mx-auto">
+            <div class="col-4 col-sm-12 py-5">
+              <div class="text-center">
+                <b-form-rating 
+                  v-model="profileInfo.score1"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+              </div>
+              <div class="text-center pt-5">
+                <small class="text-dark font-weight-bold">성실도</small>
+              </div>
+            </div>
+            <div class="col-4 col-sm-12 py-5">
+              <div class="text-center">
+                <b-form-rating
+                  v-model="profileInfo.score2"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+              </div>
+              <div class="text-center pt-5">
+                <small class="text-dark font-weight-bold">참여도</small>
+              </div>
+            </div>
+            <div class="col-4 col-sm-12 py-5">
+              <div class="text-center">
+                <b-form-rating
+                  v-model="profileInfo.score3"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+              </div>
+              <div class="text-center pt-5">
+                <small class="text-dark font-weight-bold">인싸력</small>
+              </div>
+            </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -157,14 +240,36 @@ export default {
         email: "",
         password: "",
       },
+      page: 0,
       readyLists: [],
       leaderLists: [],
       unleaderLists: [],
       leaderListsTmp1: [],
       leaderListsTmp0: [],
+      mileageData:{},
     };
   },
+  computed:{
+    total_score(){
+      return ((this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1)
+    },    
+    total_mileage(){
+      
+      if ("+this.mileageData.total".length > 3){
+        return this.mileageData.total / 1000 + "K"
+      } else {
+        return this.mileageData.total
+      }
+    }
+  },
   methods: {
+    mileageList(){
+      axios.get(SERVER_URL+"/mileage/user", {params:{uid:this.profileInfo.uid}})
+      .then(res=>{
+        this.mileageData = res.data.object
+      })
+      .catch(err=>console.log(err))
+    },
     changeDatedata(time) {
       return time.substring(5, 10) + " " + time.substring(11, 19);
     },
@@ -174,7 +279,6 @@ export default {
         .get(SERVER_URL + "/account/profile", { params: { Token: token } })
         .then((res) => {
           this.profileInfo = res.data.object;
-          console.log("pro", this.profileInfo);
           this.updateData.email = res.data.object.email;
           this.updateData.nickname = res.data.object.nickname;
           this.updateData.password = res.data.object.password;
@@ -184,6 +288,7 @@ export default {
           this.addTmpList();
           this.addReadyList();
           this.addStudyList();
+          this.mileageList()
         })
         .catch((err) => {
           this.$router.push({
@@ -198,7 +303,7 @@ export default {
           nickname: this.profileInfo.nickname,
         })
         .then((res) => {
-          console.log("tmplist", res.data.object);
+          // console.log("tmplist", res.data.object);
           this.tmplists = res.data.object;
         })
         .catch((err) => {
@@ -209,6 +314,7 @@ export default {
       axios
         .post(SERVER_URL + "/account/studylist", this.profileInfo)
         .then((res) => {
+          this.studyLists = res.data.object
           this.leaderLists = res.data.object.filter(
             (item) => item.isleader != 0
           );
@@ -222,7 +328,7 @@ export default {
           this.unleaderLists = res.data.object.filter(
             (item) => item.isleader == 0
           );
-          console.log("studylist", this.leaderLists);
+          // console.log("studylist", this.leaderLists);
         })
         .catch((err) => {
           console.log(err);
@@ -233,7 +339,7 @@ export default {
         .post(SERVER_URL + "/account/readylist", this.profileInfo)
         .then((res) => {
           this.readyLists = res.data.object;
-          console.log("readylist", res.data.object);
+          // console.log("readylist", res.data.object);
         })
         .catch((err) => {
           console.log(err);
@@ -317,5 +423,11 @@ export default {
 .clickbtn,
 .tmplist {
   cursor: pointer;
+}
+.form-control{
+ background-color: rgba(0,0,0,0);
+}
+.b-rating .b-rating-star, .b-rating .b-rating-value{
+  padding:0 !important;
 }
 </style>
