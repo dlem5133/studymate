@@ -54,4 +54,5 @@ public interface StudyDao extends JpaRepository<Study, String> {
 
 	public List<Study> findStudyByUid(Integer uid);
 
+
 }
