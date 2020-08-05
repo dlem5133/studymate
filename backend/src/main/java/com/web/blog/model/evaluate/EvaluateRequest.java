@@ -33,5 +33,6 @@ public class EvaluateRequest {
     @ApiModelProperty(required = true)
     String sentence;
 
+    int count;
     
 }

@@ -46,9 +46,9 @@ public class Evaluate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int pid;
 
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = false, name = "writer_uid")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int writer_uid;
+    private int writeruid;
 
     @Column(insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,5 +64,7 @@ public class Evaluate {
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime eva_date;
+
+    private Integer count;
 
 }
