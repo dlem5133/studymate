@@ -48,13 +48,18 @@
                     </b-modal>
 
                     <b-modal id="modal-multi-2" title="상호 평가" ok-only>
-                      <b-list-group v-for="member in memberListData" :key="member.uid">
-                        <b-list-group-item class="m-1 px-3 p-0">
-                          <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
-                          <b-button class="float-right" variant="link" v-b-modal.modal-multi-2>
-                            <!-- <i class="fas fa-star" style="color: orange; font-size: large;"></i> -->
-                            <i class="far fa-star" style="color: orange; font-size: large;"></i>
-                          </b-button>
+                      <b-list-group>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">1. </span>
+                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
+                        </b-list-group-item>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">2. </span>
+                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
+                        </b-list-group-item>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">3. </span>
+                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
                         </b-list-group-item>
                       </b-list-group>
                     </b-modal>
@@ -290,13 +295,13 @@
         unleaderLists: [],
         indvData:{},
         leaderListsTmp1: [],
-
         DeleteMemberListData: [],
         leaderListsTmp0: [],
         deleteData:{
           pid:"",
           uid:"",
-        }
+        },
+        
       };
     },
     created() {

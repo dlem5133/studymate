@@ -70,6 +70,8 @@ public class AccountController {
             @RequestParam(required = true) final String password) {
         User userOpt = new User();
         userOpt = userDao.findUserByEmailAndPassword(email, password);
+        // https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/loginn&response_type=code
+        // 카카오 로그인으로 가는 링크 <a> 링크로도 연결가능 프론트에서 사용할것
         ResponseEntity<Object> response = null;
         
         String token = jwtService.createLoginToken(userOpt);

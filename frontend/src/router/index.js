@@ -4,6 +4,7 @@ import Router from "vue-router";
 import constants from "../lib/constants";
 import Mainpage from "../page/main.vue";
 import AdminPage from "../page/AdminPage.vue";
+import test from "../page/test.vue";
 // 유저
 import Profile from "../page/user/Profile.vue";
 import JoinConfirm from "../page/user/JoinConfirm.vue";
@@ -41,6 +42,11 @@ export default new Router({
       path: "/main",
       name: constants.URL_TYPE.MAIN,
       component: Mainpage,
+    },
+    {
+      path: "/http://localhost:8080/account/kakaologin",
+      name: "test",
+      component: test,
     },
     {
       path: "/admin",

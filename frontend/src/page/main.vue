@@ -69,7 +69,6 @@
             </div>
           </div>
         </div>
- 
   </div>
 </div>
 
@@ -108,7 +107,8 @@ export default {
     },
     onSlideEnd(slide) {
       this.sliding = false
-    }
+    },
+
   },
   data() {
     return {
