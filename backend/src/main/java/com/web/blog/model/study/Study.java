@@ -46,7 +46,6 @@ public class Study {
 
     private Integer tmp;
 
-  
     private Integer limitp;
 
     private Integer bindo;
