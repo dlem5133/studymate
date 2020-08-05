@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.web.blog.dao.likep.StudylikepDao;
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.post.ReplyDao;
 import com.web.blog.dao.study.GugunDao;
 import com.web.blog.dao.study.IndvstudylstDao;
@@ -18,6 +19,7 @@ import com.web.blog.model.BasicResponse;
 
 import com.web.blog.model.post.Reply;
 import com.web.blog.model.likep.Studylikep;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.EmpId;
 import com.web.blog.model.study.Gugun;
 import com.web.blog.model.study.Study;
@@ -75,6 +77,9 @@ public class StudyController {
 
     @Autowired
     GugunDao gugunCodeDao;
+
+    @Autowired
+    MileageDao mileageDao;
 
     @GetMapping("/study/details")
     @ApiOperation(value = "스터디 상세정보")
@@ -205,8 +210,35 @@ public class StudyController {
     @PostMapping("/study/write")
     @ApiOperation(value = "스터디 생성")
     public Object signup(@Valid @RequestBody StudyRequest request) {
-        ResponseEntity<Object> response = null;
-        System.out.println(LocalDate.now().getMonthValue());
+        ResponseEntity < Object > response = null;
+        Study study = new Study();
+
+        study.setCategory(request.getCategory());
+        study.setData(request.getData());
+        study.setTitle(request.getTitle());
+        study.setUid(request.getUid());
+        study.setBackground_image(request.getBackground_image());
+        study.setTmp(request.getTmp());
+        study.setBindo(request.getBindo());
+        study.setStart_date(request.getStart_date());
+        study.setEnd_date(request.getEnd_date());
+        study.setLikep(0);
+        study.setLimitp(request.getLimitp());
+        study.setSidocode(request.getSido_code());
+        study.setSigungucode(request.getSigungu_code());
+        study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
+        study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
+        study.setEvalcount(0);
+        Study savedStudy = this.studyDao.save(study);
+        int pid = savedStudy.getPid();
+
+        for (int i = 0; i < request.getTag().size(); i++) {
+            Studytag tag = new Studytag();
+            tag.setPid(pid);
+            tag.setStudy(savedStudy);
+            tag.setTagname(request.getTag().get(i));
+            studyTagDao.save(tag);
+        }
 
         List<Study> check_study = studyDao.findStudyByUid(request.getUid());
         int cnt = 0;
@@ -582,7 +614,11 @@ public class StudyController {
         List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(pid);
         for (int i = 0; i < indvstudylsts.size(); i++) {
             User user = indvstudylsts.get(i).getEmpId().getUser();
-            user.setMileage(user.getMileage() + 200);
+            Mileage mileage = mileageDao.findByUid(indvstudylsts.get(i).getUid());
+            
+            mileage.setTotal(mileage.getTotal()+200);
+            mileage.setEndpoint(mileage.getEndpoint()+1);
+            mileageDao.save(mileage);
             userDao.save(user);
         }
         ResponseEntity<Object> response = null;

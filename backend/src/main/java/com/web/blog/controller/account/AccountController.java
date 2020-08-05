@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.study.IndvstudylstDao;
 import com.web.blog.dao.study.StudyDao;
 import com.web.blog.dao.user.ReportDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.mail.MailHandler;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.study.StudyRequest;
 import com.web.blog.model.study.Indvstudylst;
@@ -59,7 +61,9 @@ public class AccountController {
 
     @Autowired
     ReportDao reportDao;
-
+    
+    @Autowired
+    MileageDao mileageDao;
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
@@ -110,7 +114,16 @@ public class AccountController {
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
             
-            this.userDao.save(user);
+            User saveduser = this.userDao.save(user);
+
+            Mileage mileage = new Mileage();
+            mileage.setUid(saveduser.getUid());
+            mileage.setUser(saveduser);
+            mileage.setDiarypoint(0);
+            mileage.setEndpoint(0);
+            mileage.setEvalpoint(0);
+            mileage.setTotal(1000);
+            mileageDao.save(mileage);
 
             final BasicResponse result = new BasicResponse();
             result.status = true;
@@ -167,26 +180,19 @@ public class AccountController {
     public Object delete(@Valid @RequestBody final SignupRequest request) {
         // 회원 정보 삭제
         // 이메일로 삭제
-        System.out.println(request);
         User user = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
 
-        System.out.println(user);
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         userDao.delete(user);
-        System.out.println("333333333333333333333333333333333333333333333");
         for(int i = 0;i<studylist.size();i++)
         {
-            System.out.println("444444444444444444444444444444444444444444");
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
             System.out.println(indvstudylsts);
             if(indvstudylsts.size()!=0)
             {
-                System.out.println("555555555555555555555555555555555555555");
                 //indv 리더 설정
                 System.out.println(indvstudylsts.get(0));
                 Indvstudylst tmp = indvstudylsts.get(0);

@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 
 import com.web.blog.dao.diary.DiaryDao;
 import com.web.blog.dao.diary.ExpectdoDao;
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.post.ReplyDao;
 import com.web.blog.dao.study.StudyDao;
 import com.web.blog.dao.user.UserDao;
@@ -17,6 +18,7 @@ import com.web.blog.model.diary.Diary;
 import com.web.blog.model.diary.DiaryRequest;
 import com.web.blog.model.diary.Expectdo;
 import com.web.blog.model.diary.ExpectdoRequest;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.user.User;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +59,8 @@ public class DiaryController {
     @Autowired
     ExpectdoDao expectdoDao;
 
+    @Autowired
+    MileageDao mileageDao;
     
 
     @GetMapping("/diary/list")
@@ -130,7 +134,13 @@ public class DiaryController {
         diary.setTmp(request.getTmp());
         Diary savedDiary = this.diaryDao.save(diary);
         BasicResponse result = new BasicResponse();
-        user.setMileage(user.getMileage()+10);
+        
+        Mileage mileage = mileageDao.findByUid(user.getUid());
+            
+        mileage.setTotal(mileage.getTotal()+10);
+        mileage.setEndpoint(mileage.getEvalpoint()+1);
+        mileageDao.save(mileage);
+
         userDao.save(user);
         result.status = true;
         result.data = "일지 작성 완료";
