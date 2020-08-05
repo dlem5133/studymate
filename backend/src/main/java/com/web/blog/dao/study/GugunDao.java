@@ -9,4 +9,6 @@ public interface GugunDao extends JpaRepository<Gugun, String> {
     List<Gugun> findBySidocode(String sidocode);
 
 	List<Gugun> findByGugunnameLike(String string);
+
+	Gugun findByGuguncode(Integer sigungu_code);
 }

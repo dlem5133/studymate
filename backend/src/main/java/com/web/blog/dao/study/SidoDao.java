@@ -10,4 +10,6 @@ public interface SidoDao extends JpaRepository<Sido, String> {
 
 	List<Sido> findBySidonameLike(String string);
 
+	Sido findBySidocode(Integer sido_code);
+
 }
