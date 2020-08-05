@@ -1,6 +1,61 @@
 <template>
-  <div id="app">
-    <div class="book-container">
+    <b-carousel
+      id="carousel-1"
+      v-model="slide"
+      :interval="4000"
+      controls
+      indicators
+      background="#ababab"
+      img-width="100vw"
+      img-height="100vh"
+      style="text-shadow: 1px 1px 2px #333;"
+      @sliding-start="onSlideStart"
+      @sliding-end="onSlideEnd"
+    >
+      <!-- Text slides with image -->
+      <b-carousel-slide 
+            width="100%"
+            height="100%"
+        caption="First slide"
+        text="Nulla vitae elit libero, a pharetra augue mollis interdum."
+        img-src="https://picsum.photos/1024/480/?image=52"
+      ></b-carousel-slide>
+
+      <!-- Slides with custom text -->
+      <b-carousel-slide 
+            width="100%"
+            height="100%" img-src="https://picsum.photos/1024/480/?image=54">
+        <h1>Hello world!</h1>
+      </b-carousel-slide>
+
+      <!-- Slides with image only -->
+      <b-carousel-slide
+            width="100%"
+            height="100%" img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
+
+      <!-- Slides with img slot -->
+      <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
+      <b-carousel-slide>
+        <template v-slot:img>
+          <img
+            class="d-block img-fluid"
+            width="100%"
+            height="100%"
+            src="https://picsum.photos/1024/480/?image=55"
+            alt="image slot"
+          >
+        </template>
+      </b-carousel-slide>
+
+      <!-- Slide with blank fluid image to maintain slide aspect ratio -->
+      <b-carousel-slide caption="Blank Image" img-blank img-alt="Blank image">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eros felis, tincidunt
+          a tincidunt eget, convallis vel est. Ut pellentesque ut lacus vel interdum.
+        </p>
+      </b-carousel-slide>
+    </b-carousel>
+    <!-- <div class="book-container">
     
     <div v-if="!isLoggedIn" class="d-flex inline justify-content-center">
         <b-nav-item @click="openModal(loginmodal)" class="login-btn  mx-3">Login</b-nav-item>
@@ -8,37 +63,23 @@
         <b-nav-item @click="openList()" class="login-btn  mx-3">둘러보기</b-nav-item>
     </div>
     
-    </div>
-  </div>
+    </div> -->
 </template>
 
-<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>  
 <script>
 import "../assets/css/post.scss";
 import axios from "axios";
-import { VueperSlides, VueperSlide } from "vueperslides";
-import "vueperslides/dist/vueperslides.css";
+// import { VueperSlides, VueperSlide } from "vueperslides";
+// import "vueperslides/dist/vueperslides.css";
 import LoginModal from "../modal/LoginModal";
 import constants from "../lib/constants";
-import Header from "../components/common/Header.vue";
-import Footer from "../components/common/Footer.vue";
+
 export default {
   name: "App",
   components: {
-    Header,
-    Footer,
     LoginModal,
   },
-  created() {
-    let url = this.$route.name;
-
-    this.checkUrl(url);
-  },
-  watch: {
-    $route(to) {
-      this.checkUrl(to.name);
-    }
-  },
+  created() {},
   methods: {
     openList() {
       this.$router.push({
@@ -51,33 +92,17 @@ export default {
     closeModal() {
       this.loginmodal = false;
     },
-    checkUrl(url) {
-      // let array = [constants.URL_TYPE.USER.LOGIN, constants.URL_TYPE.USER.JOIN];
-      let array = [
-        constants.URL_TYPE.USER.LOGIN,
-        constants.URL_TYPE.USER.JOIN,
-        constants.URL_TYPE.USER.UPDATE,
-        constants.URL_TYPE.USER.DELETE,
-        constants.URL_TYPE.USER.FINDPASSWORD,
-        constants.URL_TYPE.ERROR.PAGENOTFOUND
-      ];
-
-      let isHeader = false;
-      let isFooter = true;
-      array.map(path => {
-        if (url === path) {
-          isHeader = false;
-          isFooter = false;
-        }
-      });
-      this.isHeader = isHeader;
-      this.isFooter = isFooter;
+    onSlideStart(slide) {
+      this.sliding = true
+    },
+    onSlideEnd(slide) {
+      this.sliding = false
     }
   },
-  data: function() {
+  data() {
     return {
-      isHeader: false,
-      isFooter:true,
+      slide: 0,
+      sliding: null,
       constants,
       isLoggedIn: false,
       loginmodal: false,
@@ -99,6 +124,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
+/* *{
+  margin-top:0 !important;
+} */
 </style>
