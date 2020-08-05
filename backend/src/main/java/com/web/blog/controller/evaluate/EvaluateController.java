@@ -1,13 +1,17 @@
 package com.web.blog.controller.evaluate;
 
+import java.util.ArrayList;
+
 import javax.validation.Valid;
 
 import com.web.blog.dao.evaluate.EvaluateDao;
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.study.StudyDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.evaluate.Evaluate;
 import com.web.blog.model.evaluate.EvaluateRequest;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.user.User;
 
@@ -42,6 +46,9 @@ public class EvaluateController {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    MileageDao mileageDao;
+    
     @PostMapping("/eva/score")
     @ApiOperation(value = "평점 넘기기")
     public Object evaScore1(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
@@ -51,9 +58,8 @@ public class EvaluateController {
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
         Study study = studyDao.findStudyByPid(evaluateRequest.getPid());
         Evaluate eva = new Evaluate();
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         eva.setPid(evaluateRequest.getPid());
-        eva.setWriter_uid(writer.getUid());
+        eva.setWriteruid(writer.getUid());
         eva.setTarget_uid(target.getUid());
         eva.setScore1(evaluateRequest.getScore1());
         eva.setScore2(evaluateRequest.getScore2());
@@ -62,8 +68,6 @@ public class EvaluateController {
         eva.setStudy(study);
         eva.setUser(writer);
         eva.setUser2(target);
-        System.out.println("22222222222222222222222222222222222222222222222222");
-        System.out.println(eva);
         if(target.getScore1() == 0){
             target.setScore1(evaluateRequest.getScore1());
         }
@@ -88,9 +92,11 @@ public class EvaluateController {
         }
         //마일리지
         System.out.println(eva);
-        writer.setMileage(writer.getMileage()+10);
+        Mileage mileage = mileageDao.findByUid(writer.getUid());
+        mileage.setTotal(mileage.getTotal()+10);
+        mileage.setEndpoint(mileage.getEvalpoint()+1);
+        mileageDao.save(mileage);
         userDao.save(writer);
-        System.out.println(eva);
         final Evaluate saveEva = this.evaluateDao.save(eva);
         final BasicResponse result = new BasicResponse();
 
@@ -115,7 +121,7 @@ public class EvaluateController {
         final Evaluate eva = new Evaluate();
 
         eva.setPid(evaluateRequest.getPid());
-        eva.setWriter_uid(writer.getUid());
+        eva.setWriteruid(writer.getUid());
         eva.setTarget_uid(target.getUid());
         eva.setSentence(evaluateRequest.getSentence());       
 
@@ -125,6 +131,25 @@ public class EvaluateController {
         result.status = true;
         result.data = "한줄평 남기고 평점 넘기기 완료";
         result.object = saveEva;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @PostMapping("/eva/list")
+    @ApiOperation(value = "평가 목록 조회")
+    public Object evalist(@Valid @RequestBody final EvaluateRequest Request) {
+        
+        ResponseEntity<Object> response = null;
+        
+        final ArrayList<Evaluate> evaList = evaluateDao.findByPidAndWriteruidAndCount(Request.getPid(),Request.getWriter_uid(),Request.getCount());
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "평가목록 조회";
+        result.object = evaList;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
