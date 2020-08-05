@@ -1,15 +1,18 @@
 <template>
-  <div id="header" v-if="isHeader">
-    <b-navbar id="navbar" toggleable="lg" type="light" variant="light" class="px-auto sticky-top row shadow">
-      <b-navbar-brand tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}" class="ml-3 font-weight-bold text-monospace"> 
-      <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/></b-navbar-brand>
+  <div class="container" v-if="isHeader">
+    <b-navbar id="navbar" toggleable="lg" class="px-auto sticky-top row mb-5">
+      <b-navbar-brand id="brandname" tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}"> 
+      <!-- <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/> -->
+        <h4 id="brandname">스터디메이트</h4>
+      </b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto">
 
         </b-navbar-nav>
 
         <b-dropdown size="lg" dropleft variant="link" toggle-class="text-decoration-none" no-caret>
           <template v-slot:button-content>
-            <i class="far fa-user-circle iconcss"></i>
+            <b-icon icon="person-circle" style="color:#feb74d"></b-icon>
+            <!-- <i class="far fa-user-circle iconcss"></i> -->
           </template>
 
           <div class="text-center">
@@ -39,7 +42,8 @@
 
         <b-dropdown v-if="isLoggedIn" size="lg" dropleft variant="link" toggle-class="text-decoration-none" no-caret>
           <template v-slot:button-content>
-            <i class="fas fa-book-reader iconcss"></i>
+            <b-icon icon="book" style="color:#feb74d"></b-icon>
+            <!-- <i class="fas fa-book-reader iconcss"></i> -->
           </template>
 
           <div class="text-center text-nowrap" style="width: auto;">
@@ -219,6 +223,17 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-family:'Do Hyeon', sans-serif;
+}
+#brandname{
+  /* font-family: 'Black Han Sans', sans-serif; */
+  font-family: 'Do Hyeon', sans-serif;
+  font-weight: bold;
+  font-size:x-large;
+  /* font-family: 'Jua', sans-serif; */
+}
+
 #navbar {
   margin: 0;
   padding: 10px;

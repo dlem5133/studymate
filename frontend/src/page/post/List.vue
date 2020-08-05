@@ -1,7 +1,7 @@
 <template>
   <div id="main" class="container">
     <div class="row row-cols-2">
-      <div class="main-table col-12 col-md-12 border">
+      <div class="main-table col-12 col-md-12">
         <div class="container logoimg">
           <img class="main-table col-12 col-md-6" src="../../assets/img/owl_logo.png" />
         </div>
