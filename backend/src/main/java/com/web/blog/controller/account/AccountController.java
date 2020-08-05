@@ -64,9 +64,12 @@ public class AccountController {
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
             @RequestParam(required = true) final String password) {
-        User userOpt = userDao.findUserByEmailAndPassword(email, password);
+        User userOpt = new User();
+        userOpt = userDao.findUserByEmailAndPassword(email, password);
         ResponseEntity<Object> response = null;
+        
         String token = jwtService.createLoginToken(userOpt);
+        System.out.println(token);
 
         if (userOpt.getPassword().equals(password)) {
             final BasicResponse result = new BasicResponse();
@@ -241,8 +244,8 @@ public class AccountController {
     @ApiOperation(value = "회원 프로필")
     public Object profile(@RequestParam(required = true) final String Token) { // 회원 정보 조회
         // 이메일로 조회
-        User user = (jwtService.getUser(Token));
-
+        User user2 = (jwtService.getUser(Token));
+        User user = userDao.findUserByEmailAndPassword(user2.getEmail(), user2.getPassword());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
 
