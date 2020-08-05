@@ -11,7 +11,7 @@
           </div>
           <div class="d-flex justify-content-end">
             <span class="btn" @click="test" id="kakao-link">
-              <img src="../../assets/img/shareicon2.jpg" style="width:23px" />
+              <b-icon icon="share"></b-icon>
             </span>
           </div>
           <div class="d-flex align-items-end flex-column bd-highlight mb-3">
@@ -32,7 +32,7 @@
           ></b-icon>
           <b-icon v-if="!islike" :icon="changeLike" @click="likePost(islike=true)"></b-icon>
           <b-icon variant="danger" v-else :icon="changeLike" @click="likePost(islike=false)"></b-icon>
-          <small class="ml-1">{{likeData.length}}</small>
+          <small class="ml-1">{{likeListData.length}}</small>
         </div>
         <div class="d-flex flex-column col-12 p-0">
           <div class="float-left">
@@ -107,30 +107,48 @@
           <h5 class="float-left font-weight-bold m-2">COMMENTS</h5>
         </div>
         <div class="card-body text-left p-0" v-for="comment in replyData" :key="comment.rid">
-          <div class="p-3 d-flex inline">
-            <p class="px-2 m-0 col-xs-4 col-sm-7">{{ comment.reply_content }}</p>
-            <!-- <b-icon icon="person"></b-icon> -->
-            <small class="ml-auto text-muted">{{ comment.reply_writer }}</small>
+          <div>
+            <div class="p-3 d-flex inline">
+              <p class="px-2 m-0 col-xs-4 col-sm-7">{{ comment.reply_content }}</p>
+              <!-- <b-icon icon="person"></b-icon> -->
+              <small class="ml-auto text-muted">{{ comment.reply_writer }}</small>
+            </div>
+            <div class="pt-0 px-4 text-secondary d-flex inline card-body text-left">
+              <small class="mt-auto">
+                {{changeDatedata(comment.reply_time)}}
+                <!-- 수정 : {{changeDatedata(comment.updated_at)}} -->
+              </small>
+              <div class="ml-auto">
+              <b-button
+                size="sm"
+                variant="outline-success"
+                @click="reReply(comment.rid)">
+              <small>작성</small></b-button>
+              <b-button
+                size="sm"
+                variant="outline-danger"
+                @click="replyDelete(comment)"
+                v-if="profileInfo.uid==comment.uid&&comment.reply_content!='삭제된 댓글입니다.'"
+              >
+                <small>Delete</small>
+              </b-button>
+              </div>
+            </div>
+            <div v-for="reReply in reReplyData" :key="reReply.id">
+              <div v-if="comment.rid === reReply.reply_parent">
+                <div class="d-flex">
+                  <p class="px-4 py-2 m-0 col-xs-4 col-sm-7"><b-icon icon="reply" flip-v></b-icon> {{ reReply.reply_content }}</p>
+                  <b-button @click="replyDelete(reReply)" class="ml-auto my-auto mr-4" size="sm" variant="outline-danger"><b-icon icon="trash"></b-icon><small> 삭제인데 가독성 구려</small></b-button>
+                </div>
+              </div>
+            </div>
+            <hr class="m-0" />
           </div>
-          <div class="pt-0 px-4 text-secondary d-flex inline card-body text-left">
-            <small class="mt-auto">
-              {{changeDatedata(comment.reply_time)}}
-              <!-- 수정 : {{changeDatedata(comment.updated_at)}} -->
-            </small>
-            <b-button
-              class="ml-auto"
-              size="sm"
-              variant="outline-danger"
-              @click="replyDelete(comment)"
-              v-if="profileInfo.uid==comment.uid"
-            >
-              <small>Delete</small>
-            </b-button>
-          </div>
-          <hr class="m-0" />
+          
         </div>
         <div class="p-3 pb-4">
-          <p class="align-self-center m-1 text-left font-weight-bold">Comments</p>
+          <p v-if="replyparent==0" class="align-self-center m-1 text-left font-weight-bold">Comments</p>
+          <p v-else class="align-self-center m-1 text-left font-weight-bold">{{replyparent}}'s Comments</p>
           <div class="d-flex inline">
             <textarea
               type="text"
@@ -141,7 +159,7 @@
             <b-button
               class="ml-3"
               variant="outline-secondary"
-              @click="replyCreate(profileInfo.uid)"
+              @click="replyCreate(replyparent)"
             >작성</b-button>
           </div>
         </div>
@@ -165,12 +183,10 @@ export default {
 
       postData: {},
       replyData: {},
+      reReplyData:{},
       tagData: {},
       userData: {},
       newReply: {
-        pid: null,
-        uid: null,
-        reply_content: null,
       },
       requestListData: {},
       approvalData: {
@@ -190,11 +206,13 @@ export default {
       memberListData: {},
       islike: false,
       likeData: {},
+      likeListData:{},
       likeClickData: {
         pid: null,
         uid: null,
       },
       isMember: false,
+      replyparent:0,
     };
   },
   created() {
@@ -215,6 +233,30 @@ export default {
     this.getDetail();
   },
   methods: {
+    reReply(replyparent){
+      console.log(replyparent)
+      this.replyparent=replyparent
+    },
+
+
+    likeList(){
+      axios.get(SERVER_URL+'/likep/list',{params:{pid:this.$route.params.post_id}})
+      .then(res=>{
+        this.likeListData = res.data.object
+      })
+      .catch(err=>console.log(err))
+    },
+
+    likePost() {
+      this.likeClickData.pid = this.$route.params.post_id;
+      this.likeClickData.uid = this.profileInfo.uid;
+      axios
+        .post(SERVER_URL + "/likep/likep", this.likeClickData)
+        .then((res) => {
+          this.likeList()
+        })
+        .catch((err) => console.log(err));
+    },
     changeDate(time) {
       if (time) {
         return (
@@ -243,6 +285,7 @@ export default {
             this.getDetail();
             this.requestPeopleList();
             this.memberList();
+            this.likeList()
           })
           .catch((err) => {
             this.$router.push({
@@ -257,12 +300,18 @@ export default {
       axios
         .get(SERVER_URL + "/study/details", { params: { pid: post_id } })
         .then((res) => {
-          console.log(res.data.object);
           this.postData = res.data.object[0];
-          this.replyData = res.data.object[1];
+          // this.replyData = res.data.object[1];
           this.tagData = res.data.object[2];
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];
+          console.log(res.data.object[1])
+          const datas = res.data.object[1]
+          this.replyData = datas.filter(datas => datas.reply_parent==0)
+          this.reReplyData = datas.filter(datas => datas.reply_parent!=0)
+          console.log(this.replyData)
+          console.log(this.reReplyData)
+
           for (var i = 0; i < this.likeData.length; i++) {
             if (this.likeData[i].uid == this.profileInfo.uid) {
               this.islike = true;
@@ -288,18 +337,22 @@ export default {
     //     })
     //     .catch((err) => console.log(err));
     // },
-    replyCreate(user) {
+    replyCreate(replyparent) {
       this.newReply.pid = this.postData.pid;
-      this.newReply.uid = user;
+      this.newReply.uid = this.profileInfo.uid
+      this.newReply.reply_parent = replyparent
+      console.log(this.newReply)
       axios
         .post(SERVER_URL + "/reply/write", this.newReply)
-        .then((res) => this.$router.go())
+        .then(()=>
+          this.getDetail()
+        )
         .catch((err) => console.log(err));
     },
     replyDelete(reply) {
       axios
         .post(SERVER_URL + "/reply/delete", reply)
-        .then((res) => this.$router.go())
+        .then(() => this.getDetail())
         .catch((err) => console.log(err));
     },
     requestPeopleList() {
@@ -343,8 +396,8 @@ export default {
       this.approvalData.uid = uid;
       axios
         .post(SERVER_URL + "/study/approval", this.approvalData)
-        .then((res) => {
-          this.$router.go();
+        .then(() => {
+          this.requestPeopleList();
         })
         .catch((err) => console.log(err));
     },
@@ -369,18 +422,6 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-
-    likePost() {
-      this.likeClickData.pid = this.$route.params.post_id;
-      this.likeClickData.uid = this.profileInfo.uid;
-      console.log(this.likeClickData);
-      axios
-        .post(SERVER_URL + "/likep/likep", this.likeClickData)
-        .then((res) => {
-          this.$router.go();
-        })
-        .catch((err) => console.log(err));
-    },
     goStudyMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
@@ -401,7 +442,7 @@ export default {
           title: '친구가 스터디 "' + this.postData.title + '"를 공유했습니다 !',
 
           //이미지와 버튼 링크 다르게 생성 가능
-          //프로필 버튼 누르면 메인으로 가게끔 설정해놓음
+          //프로필 버튼 누르면 메인으로 가게끔 설정해놓음 
           description: "",
           imageUrl:
             "https://cdn.a1news.co.kr/news/photo/202003/5196_6089_1728.png",

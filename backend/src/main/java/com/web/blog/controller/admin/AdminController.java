@@ -101,6 +101,7 @@ public class AdminController {
             }
         }
 
+
         result.status = true;
         result.data = "모든 회원 조회 완료";
         result.object = myset;
@@ -124,8 +125,8 @@ public class AdminController {
         // 패널티 부여 시, 해당 신고내역은 삭제
         reportDao.deleteByPidAndTarget(request.getPid(), request.getTarget());
 
-        // 패널티 부여 시, 해당 유저는 해당 스터디에서 추방
-        indvStudylstDao.deleteByPidAndUid(request.getPid(), request.getTarget());
+        // // 패널티 부여 시, 해당 유저는 해당 스터디에서 추방
+        // indvStudylstDao.deleteByPidAndUid(request.getPid(), request.getTarget());
 
         BasicResponse result = new BasicResponse();
         result.status = true;
@@ -138,21 +139,21 @@ public class AdminController {
 
     }
 
-    @PostMapping("/admin/banlist")
-    @ApiOperation(value = "벤 목록 조회")
-    public Object searchban() {
-        ResponseEntity<Object> response = null;
-        List<User> user = userDao.findByPenaltyGreaterThan(3);
+    // @PostMapping("/admin/banlist")
+    // @ApiOperation(value = "벤 목록 조회")
+    // public Object searchban() {
+    //     ResponseEntity<Object> response = null;
+    //     List<User> user = userDao.findByPenaltyGreaterThan(3);
 
-        BasicResponse result = new BasicResponse();
+    //     BasicResponse result = new BasicResponse();
 
-        result.status = true;
-        result.data = "벤 목록 조회 완료";
-        result.object = user;
+    //     result.status = true;
+    //     result.data = "벤 목록 조회 완료";
+    //     result.object = user;
 
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-        return response;
+    //     response = new ResponseEntity<>(result, HttpStatus.OK);
+    //     return response;
 
-    }
+    // }
 
 }
