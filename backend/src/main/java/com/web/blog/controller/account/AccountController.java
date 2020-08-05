@@ -167,26 +167,19 @@ public class AccountController {
     public Object delete(@Valid @RequestBody final SignupRequest request) {
         // 회원 정보 삭제
         // 이메일로 삭제
-        System.out.println(request);
         User user = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
 
-        System.out.println(user);
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         userDao.delete(user);
-        System.out.println("333333333333333333333333333333333333333333333");
         for(int i = 0;i<studylist.size();i++)
         {
-            System.out.println("444444444444444444444444444444444444444444");
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
             System.out.println(indvstudylsts);
             if(indvstudylsts.size()!=0)
             {
-                System.out.println("555555555555555555555555555555555555555");
                 //indv 리더 설정
                 System.out.println(indvstudylsts.get(0));
                 Indvstudylst tmp = indvstudylsts.get(0);

@@ -8,6 +8,7 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.evaluate.Evaluate;
 import com.web.blog.model.evaluate.EvaluateRequest;
+import com.web.blog.model.study.Study;
 import com.web.blog.model.user.User;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -41,102 +42,55 @@ public class EvaluateController {
     @Autowired
     UserDao userDao;
 
-    @PostMapping("/eva/score1")
+    @PostMapping("/eva/score")
     @ApiOperation(value = "평점 넘기기")
     public Object evaScore1(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
 
         ResponseEntity<Object> response = null;
         User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
-
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
-
+        Study study = studyDao.findStudyByPid(evaluateRequest.getPid());
         Evaluate eva = new Evaluate();
-
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         eva.setPid(evaluateRequest.getPid());
         eva.setWriter_uid(writer.getUid());
         eva.setTarget_uid(target.getUid());
+        eva.setScore1(evaluateRequest.getScore1());
+        eva.setScore2(evaluateRequest.getScore2());
+        eva.setScore3(evaluateRequest.getScore3());
+        eva.setSentence(evaluateRequest.getSentence());
+        eva.setStudy(study);
+        eva.setUser(writer);
+        eva.setUser2(target);
+        System.out.println("22222222222222222222222222222222222222222222222222");
+        System.out.println(eva);
         if(target.getScore1() == 0){
             target.setScore1(evaluateRequest.getScore1());
         }
         else{
-            double a = target.getScore1();
+            //score 1,2,3 세팅
+            double a = target.getScore1()*target.getTotalscoreper();
             double b = evaluateRequest.getScore1();
-            double c = (a + b)/2;
+            double c = (a + b)/(target.getTotalscoreper()+1);
             target.setScore1(c);
-        }
-        
-        final Evaluate saveEva = this.evaluateDao.save(eva);
-        final BasicResponse result = new BasicResponse();
 
-        result.status = true;
-        result.data = "평점 넘기기 완료";
-        result.object = saveEva;
-
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-
-        return response;
-    }
-
-    @PostMapping("/eva/score2")
-    @ApiOperation(value = "평점 넘기기")
-    public Object evaScore2(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
-
-        ResponseEntity<Object> response = null;
-        User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
-
-        User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
-
-        final Evaluate eva = new Evaluate();
-
-        eva.setPid(evaluateRequest.getPid());
-        eva.setWriter_uid(writer.getUid());
-        eva.setTarget_uid(target.getUid());
-        if(target.getScore2() == 0){
-            target.setScore2(evaluateRequest.getScore2());
-        }
-        else{
-            double a = target.getScore2();
-            double b = evaluateRequest.getScore2();
-            double c = (a + b)/2;
+            a = target.getScore2()*target.getTotalscoreper();
+            b = evaluateRequest.getScore2();
+            c = (a + b)/(target.getTotalscoreper()+1);
             target.setScore2(c);
-            }
-        
-        final Evaluate saveEva = this.evaluateDao.save(eva);
-        final BasicResponse result = new BasicResponse();
 
-        result.status = true;
-        result.data = "평점 넘기기 완료";
-        result.object = saveEva;
-
-        response = new ResponseEntity<>(result, HttpStatus.OK);
-
-        return response;
-    }
-
-    @PostMapping("/eva/score3")
-    @ApiOperation(value = "평점 넘기기")
-    public Object evaScore3(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
-
-        ResponseEntity<Object> response = null;
-        User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
-
-        User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
-
-        final Evaluate eva = new Evaluate();
-
-        eva.setPid(evaluateRequest.getPid());
-        eva.setWriter_uid(writer.getUid());
-        eva.setTarget_uid(target.getUid());
-        if(target.getScore3() == 0){
-            target.setScore3(evaluateRequest.getScore3());
-        }
-        else{
-            double a = target.getScore3();
-            double b = evaluateRequest.getScore3();
-            double c = (a + b)/2;
+            a = target.getScore3()*target.getTotalscoreper();
+            b = evaluateRequest.getScore3();
+            c = (a + b)/(target.getTotalscoreper()+1);
             target.setScore3(c);
-            }
-        
+
+            target.setTotalscoreper(target.getTotalscoreper()+1);
+        }
+        //마일리지
+        System.out.println(eva);
+        writer.setMileage(writer.getMileage()+10);
+        userDao.save(writer);
+        System.out.println(eva);
         final Evaluate saveEva = this.evaluateDao.save(eva);
         final BasicResponse result = new BasicResponse();
 
@@ -148,8 +102,6 @@ public class EvaluateController {
 
         return response;
     }
-
-
 
     @PostMapping("/eva/write")
     @ApiOperation(value = "한줄 평 남기기")
