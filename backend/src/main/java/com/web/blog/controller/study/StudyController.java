@@ -21,7 +21,6 @@ import com.web.blog.model.study.EmpId;
 import com.web.blog.model.study.Gugun;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.study.StudyRequest;
-import com.web.blog.model.study.StudyResponse;
 import com.web.blog.model.study.Studytag;
 import com.web.blog.model.study.StudytagRequest;
 import com.web.blog.model.study.Indvstudylst;
@@ -191,7 +190,6 @@ public class StudyController {
             result.data = "태그 검색 완료";
             result.object = responses;
         } else {
-            ArrayList < StudyResponse > responses = new ArrayList < > ();
             List < Study > studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
             
             /*
