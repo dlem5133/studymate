@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.web.blog.dao.likep.StudylikepDao;
+import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.post.ReplyDao;
 import com.web.blog.dao.study.GugunDao;
 import com.web.blog.dao.study.IndvstudylstDao;
@@ -17,6 +18,7 @@ import com.web.blog.model.BasicResponse;
 
 import com.web.blog.model.post.Reply;
 import com.web.blog.model.likep.Studylikep;
+import com.web.blog.model.mileage.Mileage;
 import com.web.blog.model.study.EmpId;
 import com.web.blog.model.study.Gugun;
 import com.web.blog.model.study.Study;
@@ -78,6 +80,9 @@ public class StudyController {
 
     @Autowired
     GugunDao gugunCodeDao;
+
+    @Autowired
+    MileageDao mileageDao;
 
     @GetMapping("/study/details")
     @ApiOperation(value = "스터디 상세정보")
@@ -569,7 +574,11 @@ public class StudyController {
         for(int i = 0;i<indvstudylsts.size();i++)
         {
             User user = indvstudylsts.get(i).getEmpId().getUser();
-            user.setMileage(user.getMileage()+200);
+            Mileage mileage = mileageDao.findByUid(indvstudylsts.get(i).getUid());
+            
+            mileage.setTotal(mileage.getTotal()+200);
+            mileage.setEndpoint(mileage.getEndpoint()+1);
+            mileageDao.save(mileage);
             userDao.save(user);
         }
         ResponseEntity < Object > response = null;
