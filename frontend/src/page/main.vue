@@ -12,7 +12,6 @@
       style="text-shadow: 1px 1px 2px #333;"
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
-      class="d-none d-md-block test"
     >
       <!-- Text slides with image -->
       <!-- <b-carousel-slide 
@@ -70,7 +69,6 @@
             </div>
           </div>
         </div>
- 
   </div>
 </div>
 
@@ -109,7 +107,8 @@ export default {
     },
     onSlideEnd(slide) {
       this.sliding = false
-    }
+    },
+
   },
   data() {
     return {
@@ -124,10 +123,6 @@ export default {
 </script>
 
 <style>
-.test {
-  position: relative;
-  bottom: 60px;
-}
 body {
   background-image: url('../assets/img/15944.jpg');
    background-repeat: no-repeat;
@@ -146,7 +141,7 @@ body {
   position: absolute;
   width:30%;
   height:400px;
-  top: 0%;
+  top: 55%;
   left:70%; 
 }
 

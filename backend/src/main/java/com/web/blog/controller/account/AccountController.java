@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -26,7 +25,6 @@ import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -66,7 +64,7 @@ public class AccountController {
 
     @Autowired
     ReportDao reportDao;
-
+    
     @Autowired
     MileageDao mileageDao;
 
@@ -160,8 +158,10 @@ public class AccountController {
             @RequestParam(required = true) final String password) {
         User userOpt = new User();
         userOpt = userDao.findUserByEmailAndPassword(email, password);
+        // https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/loginn&response_type=code
+        // 카카오 로그인으로 가는 링크 <a> 링크로도 연결가능 프론트에서 사용할것
         ResponseEntity<Object> response = null;
-
+        
         String token = jwtService.createLoginToken(userOpt);
         System.out.println(token);
 
@@ -202,7 +202,7 @@ public class AccountController {
             user.setNickname(request.getNickname());
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
-
+            
             User saveduser = this.userDao.save(user);
 
             Mileage mileage = new Mileage();
@@ -217,7 +217,7 @@ public class AccountController {
             final BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "회원가입 완료";
-
+            
             try {
                 final String memberMail = request.getEmail();
                 final MailHandler mail = new MailHandler(mailSender);
@@ -263,7 +263,7 @@ public class AccountController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }
-
+    
     @PostMapping("/account/delete")
     @ApiOperation(value = "삭제")
     public Object delete(@Valid @RequestBody final SignupRequest request) {
@@ -276,22 +276,24 @@ public class AccountController {
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         userDao.delete(user);
-        for (int i = 0; i < studylist.size(); i++) {
+        for(int i = 0;i<studylist.size();i++)
+        {
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
             System.out.println(indvstudylsts);
-            if (indvstudylsts.size() != 0) {
-                // indv 리더 설정
+            if(indvstudylsts.size()!=0)
+            {
+                //indv 리더 설정
                 System.out.println(indvstudylsts.get(0));
                 Indvstudylst tmp = indvstudylsts.get(0);
                 tmp.setIsleader(1);
                 indvstudylstDao.save(tmp);
-                // study uid 설정
+                //study uid 설정
                 tmp.getEmpId().getStudy().setUid(tmp.getUid());
                 System.out.println(tmp.getEmpId());
                 studyDao.save(tmp.getEmpId().getStudy());
             }
         }
-
+        
         result.status = true;
         result.data = "회원 탈퇴 완료";
 
@@ -416,27 +418,27 @@ public class AccountController {
     @ApiOperation(value = "팀원 신고")
     public Object report(@Valid @RequestBody final ReportRequest request) {
 
-        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(),
-                request.getTarget());
+        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(), request.getTarget());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
 
-        if (report_check != null) {
+        if(report_check != null){
             result.status = true;
-            result.data = "해당 유저는 이미 신고됨.";
+            result.data = "해당 유저는 이미 신고됨."; 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            Report report = new Report();
-            report.setPid(request.getPid());
-            report.setTarget(request.getTarget());
-            report.setReason(request.getReason());
-            report.setReporter(request.getReporter());
+        }else{
+        Report report = new Report();
+        report.setPid(request.getPid());
+        report.setTarget(request.getTarget());
+        report.setReason(request.getReason());
+        report.setReporter(request.getReporter());
 
-            reportDao.save(report);
+        
+        reportDao.save(report);
 
-            result.status = true;
-            result.data = "유저 신고완료";
-            response = new ResponseEntity<>(result, HttpStatus.OK);
+        result.status = true;
+        result.data = "유저 신고완료"; 
+        response = new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         return response;
