@@ -220,7 +220,7 @@ public class StudyController {
         for (int i = 0; i < check_study.size(); i++) {
             if (check_study.get(i).getPosttime().getMonthValue() == LocalDate.now().getMonthValue()) {
                 cnt++;
-                if (cnt >= 3) {
+                if (cnt >= 10) {
                     flag = true;
                 }
             }

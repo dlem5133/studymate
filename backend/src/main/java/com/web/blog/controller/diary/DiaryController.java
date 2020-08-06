@@ -138,7 +138,7 @@ public class DiaryController {
         Mileage mileage = mileageDao.findByUid(user.getUid());
             
         mileage.setTotal(mileage.getTotal()+10);
-        mileage.setEndpoint(mileage.getEvalpoint()+1);
+        mileage.setDiarypoint(mileage.getDiarypoint()+10);
         mileageDao.save(mileage);
 
         userDao.save(user);

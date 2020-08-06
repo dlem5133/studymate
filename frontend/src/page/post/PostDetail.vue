@@ -138,7 +138,7 @@
               <div v-if="comment.rid === reReply.reply_parent">
                 <div class="d-flex">
                   <p class="px-4 py-2 m-0 col-xs-4 col-sm-7"><b-icon icon="reply" flip-v></b-icon> {{ reReply.reply_content }}</p>
-                  <b-button @click="replyDelete(reReply)" class="ml-auto my-auto mr-4" size="sm" variant="outline-danger"><b-icon icon="trash"></b-icon><small> 삭제인데 가독성 구려</small></b-button>
+                  <b-button @click="replyDelete(reReply)" class="ml-auto my-auto mr-4" size="sm" variant="outline-danger"><b-icon icon="trash"></b-icon></b-button>
                 </div>
               </div>
             </div>
@@ -344,15 +344,18 @@ export default {
       console.log(this.newReply)
       axios
         .post(SERVER_URL + "/reply/write", this.newReply)
-        .then(()=>
+        .then(()=> {
           this.getDetail()
-        )
+          this.newReply.reply_content = ""
+        })
         .catch((err) => console.log(err));
     },
     replyDelete(reply) {
       axios
         .post(SERVER_URL + "/reply/delete", reply)
-        .then(() => this.getDetail())
+        .then(() => {
+          this.getDetail()
+        })
         .catch((err) => console.log(err));
     },
     requestPeopleList() {

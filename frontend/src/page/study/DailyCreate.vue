@@ -1,68 +1,45 @@
 <template>
+  <div class="container p-5">
+    <h1>Daily</h1>
 
-  <div class="row p-0">
-    <div class="main-table d-none d-md-block col-md-3 border bg-light" style="height: 100vw;">
-      <div class="m-5">
-        <div v-if="!profileInfo.profile_image">
-          <img class="rounded-circle" src="../../assets/img/defualt_image.png" />
-        </div>
-        <div v-else>
-          <img class="rounded-circle" :src="profileInfo.profile_image" />
-        </div>
-        <p class="m-0">{{ profileInfo.nickname }}님의 정보</p>
-        <div v-for="studylist of studyLists" :key="studylist.id">
-          <small v-if="studylist.empId.study.tmp==1" class="clickstudy mt-3 text-primary"
-            @click="goStudyMain(studylist.pid)">{{studylist.empId.study.title}}</small>
-        </div>
+    <label>제목</label>
+    <b-form-input class="my-2" v-model="text" placeholder="제목"></b-form-input>
+    <label>내용</label>
+    <!-- <b-form-textarea class="my-2" v-model="content" rows="8"></b-form-textarea> -->
+    <editor ref="toastuiEditor" />
+
+    <!-- <editor :options="editorOptions" height="500px" initialEditType="wysiwyg"
+      previewStyle="vertical" :html="editorHtml" /> -->
+    <div class="d-flex inline justify-content-center">
+      <div class="p-3">
+        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">SUBMIT</div>
       </div>
-    </div>
-
-    <div class="main-table col-12 col-md-9 border">
-
-      <div class="container p-5">
-        <h1>Daily</h1>
-
-        <label>제목</label>
-        <b-form-input class="my-2" v-model="text" placeholder="제목"></b-form-input>
-        <label>내용</label>
-        <p>{{editorHtml}}</p>
-        <!-- <b-form-textarea class="my-2" v-model="content" rows="8"></b-form-textarea> -->
-        <editor ref="toastuiEditor" />
-
-        <!-- <editor :options="editorOptions" height="500px" initialEditType="wysiwyg"
-          previewStyle="vertical" :html="editorHtml" /> -->
-        <div class="d-flex inline justify-content-center">
-          <div class="p-3">
-            <div @click="submitDaily(1)" class="btn btn-warning btn-sm">SUBMIT</div>
+      <div class="p-3">
+        <div @click="submitDaily(0)" class="btn btn-primary btn-sm">임시저장</div>
+      </div>
+      <div class="p-3">
+        <b-button variant="info" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}
+        </b-button>
+        <b-modal id="bv-modal-example" hide-footer>
+          <template v-slot:modal-title>
+            임시저장중인 리스트
+          </template>
+          <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+            <div class="card-body d-flex justify-content-between">
+              <p>{{tmpdaily.title}}</p>
+              <p>
+                {{tmpdaily.posttime}}
+                <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
+              </p>
+            </div>
           </div>
-          <div class="p-3">
-            <div @click="submitDaily(0)" class="btn btn-primary btn-sm">임시저장</div>
-          </div>
-          <div class="p-3">
-            <b-button variant="info" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}
-            </b-button>
-            <b-modal id="bv-modal-example" hide-footer>
-              <template v-slot:modal-title>
-                임시저장중인 리스트
-              </template>
-              <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-                <div class="card-body d-flex justify-content-between">
-                  <p>{{tmpdaily.title}}</p>
-                  <p>
-                    {{tmpdaily.posttime}}
-                    <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
-                  </p>
-                </div>
-              </div>
-              <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
-            </b-modal>
-          </div>
-        </div>
-
+          <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+        </b-modal>
       </div>
     </div>
   </div>
 </template>
+
 <script>
   import axios from "axios";
   import constants from "../../lib/constants";

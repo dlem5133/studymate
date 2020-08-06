@@ -18,13 +18,14 @@
           <div class="text-center">
             <div v-if="isLoggedIn">
               <div v-if="!profileInfo.profile_image">
-                <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/>
+                <img class="border rounded-circle profileImg" src="../../assets/img/defualt_image.png"/>
               </div>
               <div v-else>
-                <img class="border rounded-circle" :src="profileInfo.profile_image" width="70" height="70"/>
+                <img class="border rounded-circle profileImg" :src="profileInfo.profile_image"/>
               </div>
               <div class="nameandemail">{{ profileInfo.nickname }}<br>
-              <small  class="email">{{ profileInfo.email }}</small>
+              <small class="email">{{ profileInfo.email }}</small><br>
+              <small class="email">마일리지: {{ profileInfo.mileage }} | 평점: {{ total_score }}</small>
               </div>
               <b-list-group-item class="listitem" tag="router-link" to="/user/profile">프로필</b-list-group-item>
               <b-list-group-item class="listitem" @click="logout">로그아웃</b-list-group-item>
@@ -101,7 +102,7 @@
               </div>
             </div>
             <hr>
-            <b-list-group-item class="listitem" tag="router-link" to="/post/create"><i class="fas fa-plus plusstudy" style="color: white"></i> <i class="fas fa-book-open plusstudy" style="color: white"></i></b-list-group-item>
+            <b-list-group-item class="listitem" tag="router-link" to="/post/create">모집생성</b-list-group-item>
           </div>
 
         </b-dropdown>
@@ -123,22 +124,23 @@ export default {
     LoginModal,
   },
   props: ["isHeader"],
-  computed: {},
+  computed: {
+    total_score(){
+      return ((this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1)
+    }, 
+  },
   watch: {},
   created() {
     this.tokencheck();
     this.addprofileInfo();
   },
   methods: {
-
     kakao(){
       axios.get(SERVER_URL+"/k/klogin").then((res)=> {
         this.locate = res.data.object;
         location.href=this.locate;
       })
     },
-
-
     logout() {
       this.$cookies.remove("Auth-Token");
       this.$router.push("/");
@@ -163,7 +165,6 @@ export default {
         axios.get(SERVER_URL + "/account/profile", {params: {Token: token}})
         .then((res) => {
           this.profileInfo = res.data.object
-          console.log("pro", this.profileInfo)
           this.addReadyList() 
           this.addStudyList()
         })
@@ -234,6 +235,10 @@ export default {
 <style scoped>
 *{
   font-family:'Do Hyeon', sans-serif;
+}
+.profileImg {
+  width: 70px;
+  height: 70px;
 }
 #brandname{
   /* font-family: 'Black Han Sans', sans-serif; */
