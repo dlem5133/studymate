@@ -24,8 +24,7 @@
         <h1>DailyUpdate</h1>
         <label>제목</label>
         <b-form-input class="my-2" v-model="preData.title" placeholder="제목"></b-form-input>
-        <label>내용</label>
-        <b-form-textarea class="my-2" v-model="preData.body" placeholder="공부한 내용을 입력해주세요" rows="8"></b-form-textarea>
+        <label>내용</label><editor ref="toastuiEditor" />
         
         <div class="d-flex inline justify-content-center">
           <div class="p-3">
@@ -61,13 +60,24 @@
 <script>
 import axios from "axios";
 import constants from "../../lib/constants";
+ import 'codemirror/lib/codemirror.css';
+  import '@toast-ui/editor/dist/toastui-editor.css';
 
+  import {
+    Editor
+  } from '@toast-ui/vue-editor';
 const SERVER_URL = "http://localhost:8080";
 
 export default {
   name: "DailyUpdate",
+   components: {
+      'editor': Editor
+    },
   data: () => {
     return {
+      editorOptions: {
+          hideModeSwitch: true
+        },
       profileInfo: [],
       studyLists: [],
       tmpDailyData: [],
@@ -150,10 +160,11 @@ export default {
     submitDaily() {
       const dailydData = {
         title: this.preData.title,
-        body: this.preData.body,
+        body: this.$refs.toastuiEditor.invoke("getMarkdown"),
         pid: this.$route.params.post_id,
         did: this.$route.params.daily_id,
         uid: this.profileInfo.uid,
+        tmp: 1,
       };
       axios
         .post(SERVER_URL + "/diary/update", dailydData)
