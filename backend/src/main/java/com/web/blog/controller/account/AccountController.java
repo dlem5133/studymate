@@ -69,7 +69,7 @@ public class AccountController {
     
     @Autowired
     MileageDao mileageDao;
-
+    
     @Autowired
     private KakaoAPI kakao;
 
@@ -250,7 +250,7 @@ public class AccountController {
 
         session.removeAttribute("access_Token");
     }
-
+    
     @PostMapping("/account/update")
     @ApiOperation(value = "수정")
     public Object update(@Valid @RequestBody final SignupRequest request) {
@@ -437,7 +437,7 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         if(report_check != null){
-            result.status = true;
+            result.status = false;
             result.data = "해당 유저는 이미 신고됨."; 
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }else{
@@ -446,7 +446,7 @@ public class AccountController {
         report.setTarget(request.getTarget());
         report.setReason(request.getReason());
         report.setReporter(request.getReporter());
-
+        System.out.println(report);
         
         reportDao.save(report);
 
@@ -457,5 +457,26 @@ public class AccountController {
 
         return response;
     }
+    @PostMapping("/account/reportcheck")
+    @ApiOperation(value = "팀원 신고")
+    public Object reportcheck(@Valid @RequestBody final ReportRequest request) {
+
+        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(), request.getTarget());
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+
+        if(report_check != null){
+            result.status = false;
+            result.data = "해당 유저는 이미 신고됨."; 
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+        result.status = true;
+        result.data = "유저 신고 가능"; 
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        return response;
+    }
+
 
 }

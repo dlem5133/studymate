@@ -60,8 +60,8 @@
                         <b-list-group-item class="p-1 pl-3 m-1">
                           <span style="line-height: 38px;">3. </span>
                           <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                      </b-list-group>
+                        </b-list-group-item>                      
+                        </b-list-group>
                     </b-modal>
                   </div>
 
@@ -103,7 +103,20 @@
                           </div>
                           <div class="ml-auto">
                             <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
-                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
+                            <div @click="reportCheck(per.uid)">
+                                <div v-b-modal.modal-9>
+                                  <b-icon class="my-auto" icon="trash" variant="danger"></b-icon><small class="text-danger my-auto"> 신고</small>
+                                </div>
+                                <div v-if="ismodal">
+                                  <b-modal id="modal-9" title="신고 내용" hide-footer>
+                                    <div class="d-flex">
+                                      <textarea class="border w-100 mr-2" v-model="reportdata.reason"></textarea>
+                                      <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success" @click="reportMember(per.uid)"> 신고 </b-button>
+                                    </div>
+                                  </b-modal>
+
+                                </div>
+                            </div>
                           </div>
                         </li>
                       </ul>
@@ -295,13 +308,20 @@
         unleaderLists: [],
         indvData:{},
         leaderListsTmp1: [],
+
         DeleteMemberListData: [],
         leaderListsTmp0: [],
         deleteData:{
           pid:"",
           uid:"",
         },
-        
+        reportdata:{
+          pid:"",
+          target:"",
+          reporter:"",
+          reason:""
+        },
+        ismodal:false,
       };
     },
     created() {
@@ -314,6 +334,38 @@
       this.getPostTime()
     },
     methods: {
+      reportCheck(target){
+        this.reportdata.target = target
+        this.reportdata.pid = this.$route.params.post_id
+        this.reportdata.reporter = this.profileInfo.uid
+        axios.post(SERVER_URL+"/account/reportcheck",this.reportdata)
+        .then(res=>{
+          console.log(res.data.status)
+          if(res.data.status){
+            this.ismodal = true;
+          }
+          else{
+            this.ismodal = false;
+            alert("이미 신고된 회원입니다.")
+          }
+          
+        })
+        .catch(err=>console.log(err))
+      },
+
+      reportMember(target){
+        this.reportdata.target = target
+        this.reportdata.pid = this.$route.params.post_id
+        this.reportdata.reporter = this.profileInfo.uid
+        console.log(this.reportdata)
+        console.log(this.reportdata.reason)
+        axios.post(SERVER_URL+"/account/report",this.reportdata)
+        .then(res=>{
+          console.log(res)
+          this.$router.go()
+        })
+        .catch(err=>console.log(err))
+      },
       deleteMember(user_id){
         this.deleteData.pid = this.$route.params.post_id
         this.deleteData.uid = user_id
