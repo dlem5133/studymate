@@ -124,7 +124,7 @@ public class DiaryController {
 
         ResponseEntity<Object> response = null;
         Diary diary = new Diary();
-
+        System.out.println(request);
         User user = userDao.findUserByUid(request.getUid());
         diary.setTitle(request.getTitle());
         diary.setBody(request.getBody());
@@ -134,7 +134,7 @@ public class DiaryController {
         diary.setTmp(request.getTmp());
         Diary savedDiary = this.diaryDao.save(diary);
         BasicResponse result = new BasicResponse();
-        
+        System.out.println(savedDiary);
         Mileage mileage = mileageDao.findByUid(user.getUid());
             
         mileage.setTotal(mileage.getTotal()+10);
