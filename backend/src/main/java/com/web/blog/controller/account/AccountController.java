@@ -1,9 +1,11 @@
 package com.web.blog.controller.account;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.web.blog.dao.mileage.MileageDao;
@@ -64,10 +66,10 @@ public class AccountController {
 
     @Autowired
     ReportDao reportDao;
-
+    
     @Autowired
     MileageDao mileageDao;
-
+    
     @Autowired
     private KakaoAPI kakao;
 
@@ -86,7 +88,7 @@ public class AccountController {
 
 
     @GetMapping(value = "/account/kakaologin")
-    public Object kakaologin(@RequestParam("code") final String code) {
+    public Object kakaologin(@RequestParam("code") final String code , HttpSession session) {
 
         final String access_Token = kakao.getAccessToken(code);
         System.out.println(code);
@@ -101,7 +103,9 @@ public class AccountController {
         if (userInfo.get("email") == null) {
             // 이메일 동의 안했을 경우 백 처리
             System.out.println("?");
-            new RedirectView("http://localhost:3000/");
+           // front에서 alert창으로 카카오에서 지우라고 띄워주기
+
+            return new RedirectView("http://localhost:3000/#/duplicate");
         }
 
         // 그 밑은 그럴일이 없다.
@@ -119,16 +123,14 @@ public class AccountController {
              * kakaologin&response_type=code
              */
             System.out.println("+++++++++++++++++++++++++++++++++++++++++");
-            if (userOpt != null) {
-                // 회원 정보 있으면, jwt토큰으로 바꾸기
-                final BasicResponse result = new BasicResponse();
-                String token = jwtService.createLoginToken(userOpt);
-                result.status = true;
-                result.data = "success";
-                result.object = code;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-                System.out.println("gg");
-                return response;
+            System.out.println(userInfo.get("nickname").toString()+" "+ userInfo.get("email").toString());
+            
+            String user_email = userInfo.get("email").toString();
+            String user_name = userInfo.get("nickname");
+
+            if (userOpt!= null) {
+                // 회원 정보 있으면, 아무것도 하지않고, front에서 alert창으로 회원정보가 있다고 띄워주기
+                return new RedirectView("http://localhost:3000/#/duplicate");
             } else {
                 // final User user = new User();
                 // user.setEmail(userInfo.get("email").toString());
@@ -137,12 +139,22 @@ public class AccountController {
 
                 // 회원가입 창으로 가기
                 System.out.println("엥");
-                return new RedirectView("http://localhost:3000/#/user/signup");
+                System.out.println(user_name);
+                String namee = URLEncoder.encode(user_name, StandardCharsets.UTF_8);
+                session.setAttribute("access_Token", access_Token);
+                System.out.println(session.getAttribute("access_Token"));
+
+                session.removeAttribute("access_Token");
+                System.out.println(session.getAttribute("access_Token"));
+
+                String url = "http://localhost:3000/#/user/signup?email="+ user_email + "&nickname="+ namee + "&pass=" + "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc";
+                return new RedirectView(url);
 
             }
         }
-        return new RedirectView("http://localhost:3000/");
     }
+
+
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -153,7 +165,7 @@ public class AccountController {
         // https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/loginn&response_type=code
         // 카카오 로그인으로 가는 링크 <a> 링크로도 연결가능 프론트에서 사용할것
         ResponseEntity<Object> response = null;
-
+        
         String token = jwtService.createLoginToken(userOpt);
         System.out.println(token);
 
@@ -171,13 +183,12 @@ public class AccountController {
 
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
-    public Object signup(@Valid @RequestBody final SignupRequest request) {
+    public Object signup(@Valid @RequestBody final SignupRequest request, HttpSession session) {
         // 이메일, 닉네임 중복처리 필수
         // 회원가입단을 생성해 보세요.
         final User email_test = userDao.getUserByEmail(request.getEmail());
         final User nickname_test = userDao.getUserByNickname(request.getNickname());
         ResponseEntity<Object> response = null;
-
         if (email_test != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
@@ -195,7 +206,7 @@ public class AccountController {
             user.setNickname(request.getNickname());
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
-
+            
             User saveduser = this.userDao.save(user);
 
             Mileage mileage = new Mileage();
@@ -210,7 +221,7 @@ public class AccountController {
             final BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "회원가입 완료";
-
+            
             try {
                 final String memberMail = request.getEmail();
                 final MailHandler mail = new MailHandler(mailSender);
@@ -224,12 +235,22 @@ public class AccountController {
                 e.printStackTrace();
                 result.data = "메일 전송 실패";
             }
+            session.removeAttribute("access_Token");
+            System.out.println(session.toString());
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         return response;
     }
 
+    @GetMapping("/account/logout")
+    @ApiOperation(value = "로그아웃")
+    public void 로그아웃( HttpSession session) {
+        System.out.println(session.getAttribute("access_Token"));
+
+        session.removeAttribute("access_Token");
+    }
+    
     @PostMapping("/account/update")
     @ApiOperation(value = "수정")
     public Object update(@Valid @RequestBody final SignupRequest request) {
@@ -256,7 +277,7 @@ public class AccountController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }
-
+    
     @PostMapping("/account/delete")
     @ApiOperation(value = "삭제")
     public Object delete(@Valid @RequestBody final SignupRequest request) {
@@ -269,22 +290,24 @@ public class AccountController {
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         userDao.delete(user);
-        for (int i = 0; i < studylist.size(); i++) {
+        for(int i = 0;i<studylist.size();i++)
+        {
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
             System.out.println(indvstudylsts);
-            if (indvstudylsts.size() != 0) {
-                // indv 리더 설정
+            if(indvstudylsts.size()!=0)
+            {
+                //indv 리더 설정
                 System.out.println(indvstudylsts.get(0));
                 Indvstudylst tmp = indvstudylsts.get(0);
                 tmp.setIsleader(1);
                 indvstudylstDao.save(tmp);
-                // study uid 설정
+                //study uid 설정
                 tmp.getEmpId().getStudy().setUid(tmp.getUid());
                 System.out.println(tmp.getEmpId());
                 studyDao.save(tmp.getEmpId().getStudy());
             }
         }
-
+        
         result.status = true;
         result.data = "회원 탈퇴 완료";
 
@@ -409,30 +432,51 @@ public class AccountController {
     @ApiOperation(value = "팀원 신고")
     public Object report(@Valid @RequestBody final ReportRequest request) {
 
-        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(),
-                request.getTarget());
+        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(), request.getTarget());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
 
-        if (report_check != null) {
-            result.status = true;
-            result.data = "해당 유저는 이미 신고됨.";
+        if(report_check != null){
+            result.status = false;
+            result.data = "해당 유저는 이미 신고됨."; 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            Report report = new Report();
-            report.setPid(request.getPid());
-            report.setTarget(request.getTarget());
-            report.setReason(request.getReason());
-            report.setReporter(request.getReporter());
+        }else{
+        Report report = new Report();
+        report.setPid(request.getPid());
+        report.setTarget(request.getTarget());
+        report.setReason(request.getReason());
+        report.setReporter(request.getReporter());
+        System.out.println(report);
+        
+        reportDao.save(report);
 
-            reportDao.save(report);
-
-            result.status = true;
-            result.data = "유저 신고완료";
-            response = new ResponseEntity<>(result, HttpStatus.OK);
+        result.status = true;
+        result.data = "유저 신고완료"; 
+        response = new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         return response;
     }
+    @PostMapping("/account/reportcheck")
+    @ApiOperation(value = "팀원 신고")
+    public Object reportcheck(@Valid @RequestBody final ReportRequest request) {
+
+        Report report_check = reportDao.findReportByPidAndReporterAndTarget(request.getPid(), request.getReporter(), request.getTarget());
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+
+        if(report_check != null){
+            result.status = false;
+            result.data = "해당 유저는 이미 신고됨."; 
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+        result.status = true;
+        result.data = "유저 신고 가능"; 
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        return response;
+    }
+
 
 }

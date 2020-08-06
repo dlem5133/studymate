@@ -41,6 +41,8 @@ public class KakaoAPI {
             bw.write(sb.toString());
             bw.flush();
 
+
+            ///////////////////////
             // 결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             // System.out.println("++++++++++++ \nresponseCode : " + responseCode);
@@ -53,7 +55,7 @@ public class KakaoAPI {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            // System.out.println("=========== \nresponse body : " + result);
+            System.out.println("=========== \nresponse body : " + result);
 
             // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
@@ -79,6 +81,7 @@ public class KakaoAPI {
         // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, String> userInfo = new HashMap<>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
+
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -110,12 +113,13 @@ public class KakaoAPI {
             // System.out.println("HELLO :::: " + kakao_account.toString());
 
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String email =null;
-            if(kakao_account.getAsJsonObject().get("email")!=null){
-            email = kakao_account.getAsJsonObject().get("email").getAsString();}
+            String email = null;
+            if (kakao_account.getAsJsonObject().get("email") != null) {
+                email = kakao_account.getAsJsonObject().get("email").getAsString();
+                userInfo.put("nickname", nickname);
+                userInfo.put("email", email);
+            }
 
-            userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
 
         } catch (IOException e) {
             e.printStackTrace();

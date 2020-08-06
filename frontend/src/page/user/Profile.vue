@@ -22,9 +22,9 @@
             <b-button class="btn" v-b-modal.modal-1>수정</b-button>
             <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정">
               <small>닉네임</small>
-              <b-form-input v-model="updateData.nickname"></b-form-input>
+              <b-card class="baseInput" no-body id="input-email">{{updateData.nickname}}</b-card>
               <small>이메일</small>
-              <b-form-input v-model="updateData.email"></b-form-input>
+              <b-card class="baseInput" no-body id="input-email">{{updateData.email}}</b-card>
               <small>비밀번호</small>
               <b-form-input type="password" v-model="updateData.password"></b-form-input>
               <small>자기소개</small>
@@ -79,31 +79,7 @@
           <div class="text-left pt-3 col-12">
             <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
             <div
-              v-for="list in readyLists"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              @click="goStudyMain(list.pid)"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
-              </div>
-            </div>
-
-            <div
-              v-for="list in leaderListsTmp0"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              @click="goStudyMain(list.pid)"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="danger">진행중·팀장</b-badge>
-              </div>
-            </div>
-
-            <div
-              v-for="list in unleaderLists"
+              v-for="list in ingStudy"
               :key="list.id"
               class="card m-2 px-2 p-2"
               @click="goStudyMain(list.pid)"
@@ -113,20 +89,63 @@
                 <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
               </div>
             </div>
+
             <hr />
 
             <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
             <div
-              v-for="list in leaderListsTmp1"
+              v-for="list in readyLists"
               :key="list.id"
               class="card m-2 px-2 p-2"
-              @click="goStudyMain(list.pid)"
+              @click="goPostMain(list.pid)"
             >
               <div class="d-flex inline">
                 <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="danger">팀장</b-badge>
+                <b-badge class="ml-auto my-auto" variant="warning">승인대기중</b-badge>
               </div>
             </div>
+            <div
+              v-for="list in comStudy"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              @click="goPostMain(list.pid)"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="danger">모집중</b-badge>
+              </div>
+            </div>
+
+            
+            <hr />
+
+            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">완료된 스터디</small>
+            
+            <div
+              v-for="list in endStudy"
+              :key="list.id"
+              class="card m-2 px-2 p-2"
+              v-b-modal.modal-3
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list.empId.study.title }}</small>
+                <b-badge class="ml-auto my-auto" variant="secondary">완료</b-badge>
+              </div>
+            <!-- <b-modal title="한줄평" id="modal-3" hide-footer>
+
+              <div 
+              v-show="list.pid==list1.pid" v-for="list1 in evalistdata" :key="list1.id"
+              class="m-2 px-2 p-2"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list1.sentence }}</small>
+                <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
+              </div>
+            </div>
+            </b-modal> -->
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -158,7 +177,7 @@
            <p> {{total_score}}총점인데 이따가 꾸밀게 뭘 해도 못생겼어</p>
           <hr>
           <div id="ratingbox" class="text-left row mx-auto">
-            <div class="col-4 col-sm-12 py-5">
+            <div class="col-4 py-5">
               <div class="text-center">
                 <b-form-rating 
                   v-model="profileInfo.score1"
@@ -173,7 +192,7 @@
                 <small class="text-dark font-weight-bold">성실도</small>
               </div>
             </div>
-            <div class="col-4 col-sm-12 py-5">
+            <div class="col-4 py-5">
               <div class="text-center">
                 <b-form-rating
                   v-model="profileInfo.score2"
@@ -188,7 +207,7 @@
                 <small class="text-dark font-weight-bold">참여도</small>
               </div>
             </div>
-            <div class="col-4 col-sm-12 py-5">
+            <div class="col-4 py-5">
               <div class="text-center">
                 <b-form-rating
                   v-model="profileInfo.score3"
@@ -205,6 +224,19 @@
             </div>
 
             </div>
+            <div>
+            <hr>
+            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">한줄평</small>
+
+            <div 
+              v-for="list1 in evalistdata" :key="list1.id"
+              class="m-2 px-2 p-2"
+            >
+              <div class="d-flex inline">
+                <small class="text-left">{{ list1.sentence }}</small>
+                <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
+              </div>
+            </div></div>
           </div>
         </div>
       </div>
@@ -226,8 +258,6 @@ export default {
   data: () => {
     return {
       profileInfo: {},
-      studyLists: {},
-      tmplists: {},
       updateData: {
         email: "",
         nickname: "",
@@ -241,11 +271,13 @@ export default {
         password: "",
       },
       page: 0,
+
+      studyLists: [],
+      comStudy:[],
+      ingStudy:[],
+      endStudy:[],
       readyLists: [],
-      leaderLists: [],
-      unleaderLists: [],
-      leaderListsTmp1: [],
-      leaderListsTmp0: [],
+      evalistdata:{},
       mileageData:{},
     };
   },
@@ -263,6 +295,16 @@ export default {
     }
   },
   methods: {
+    evaList(){
+      const targetid = this.profileInfo.uid
+      console.log(targetid)
+      axios.post(SERVER_URL+'/eva/targetlist', {target_uid:targetid})
+      .then(res=>{
+        this.evalistdata = res.data.object
+        console.log(this.evalistdata)
+      })
+      .catch(err=>console.log(err))
+    },
     mileageList(){
       axios.get(SERVER_URL+"/mileage/user", {params:{uid:this.profileInfo.uid}})
       .then(res=>{
@@ -285,10 +327,10 @@ export default {
           this.updateData.uid = res.data.object.uid;
           this.updateData.intro = res.data.object.intro;
           this.updateData.profile_image = res.data.object.profile_image;
-          this.addTmpList();
           this.addReadyList();
           this.addStudyList();
           this.mileageList()
+          this.evaList()
         })
         .catch((err) => {
           this.$router.push({
@@ -297,38 +339,15 @@ export default {
           });
         });
     },
-    addTmpList() {
-      axios
-        .post(SERVER_URL + "/account/tmplist", {
-          nickname: this.profileInfo.nickname,
-        })
-        .then((res) => {
-          // console.log("tmplist", res.data.object);
-          this.tmplists = res.data.object;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     addStudyList() {
       axios
         .post(SERVER_URL + "/account/studylist", this.profileInfo)
         .then((res) => {
           this.studyLists = res.data.object
-          this.leaderLists = res.data.object.filter(
-            (item) => item.isleader != 0
-          );
-          this.leaderListsTmp0 = this.leaderLists.filter(
-            (item) => item.empId.study.tmp == 0
-          );
-          this.leaderListsTmp1 = this.leaderLists.filter(
-            (item) => item.empId.study.tmp == 1
-          );
-
-          this.unleaderLists = res.data.object.filter(
-            (item) => item.isleader == 0
-          );
-          // console.log("studylist", this.leaderLists);
+          this.comStudy = res.data.object.filter((item)=>item.empId.study.tmp===0)
+          this.ingStudy = res.data.object.filter((item)=>item.empId.study.tmp===1)
+          this.endStudy = res.data.object.filter((item)=>item.empId.study.tmp===2)
+          console.log(this.endStudy)
         })
         .catch((err) => {
           console.log(err);
@@ -339,14 +358,12 @@ export default {
         .post(SERVER_URL + "/account/readylist", this.profileInfo)
         .then((res) => {
           this.readyLists = res.data.object;
-          // console.log("readylist", res.data.object);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-
-    goStudy(post_id) {
+    goPostMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTDETAIL,
         params: { post_id: post_id },
@@ -355,12 +372,6 @@ export default {
     goStudyMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
-        params: { post_id: post_id },
-      });
-    },
-    goTmp(post_id) {
-      this.$router.push({
-        name: constants.URL_TYPE.POST.POSTUPDATE,
         params: { post_id: post_id },
       });
     },
@@ -375,9 +386,6 @@ export default {
         this.updateData.profile_image = e.target.result;
       };
       reader.readAsDataURL(fileObject);
-
-      // const file = e.target.files[0];
-      // this.updateData.profile_image = URL.createObjectURL(file);
     },
     removeImage: function (e) {
       this.updateData.profile_image = "";
@@ -390,7 +398,7 @@ export default {
           const token = res.data.object;
           this.$cookies.set("Auth-Token", token);
           alert("수정되었습니다.");
-          this.$router.go();
+          this.addprofileInfo()
         })
         .catch((err) => {
           // this.$router.push({name: constants.URL_TYPE.ERROR.ERRORPAGE,params:{'code':err.response.data}});

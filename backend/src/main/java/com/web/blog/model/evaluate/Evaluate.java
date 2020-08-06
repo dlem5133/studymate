@@ -50,9 +50,10 @@ public class Evaluate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int writeruid;
 
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = false,name = "target_uid")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int target_uid;
+    private int targetuid;
+
 
     private double score1;
 

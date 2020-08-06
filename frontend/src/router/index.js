@@ -33,6 +33,7 @@ import BoardUpdate from "../page/board/BoardUpdate.vue"
 // 404 오류
 import PageNotFound from "../page/error/PageNotFound.vue";
 import ErrorPage from "../page/error/ErrorPage.vue";
+import Duplicate from "../page/error/Duplicate.vue";
 
 Vue.use(Router);
 
@@ -153,6 +154,11 @@ export default new Router({
       name: constants.URL_TYPE.ERROR.ERRORPAGE,
       component: ErrorPage,
       props: true,
+    },
+    {
+      path: "/duplicate",
+      name: constants.URL_TYPE.ERROR.DUPLICATE,
+      component: Duplicate,
     },
   ],
 });
