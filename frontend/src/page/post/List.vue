@@ -22,16 +22,16 @@
           </div>
 
           <!-- =======================================아래 수정====================================================  -->
-
           <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
             <div class="serach-selectbox">            
               <select
-                v-model="studyLists"
+                v-model="selected"
                 class="form-control" @click="sendOption">
-                <option value="all" selected> 전체 </option>
+                <option value="all" > 전체 </option>
                 <option value="title"> 스터디명 </option>
                 <option value="area"> 지역</option>
                 <option value="tag"> 태그</option>
+               
               </select>
             </div>
 
@@ -176,7 +176,7 @@ export default {
       searchList: [],
       scrolled: 3,
       timer: null,
-
+      selected:"all" ,
       readyLists: [],
       leaderLists: [],
       unleaderLists: [],

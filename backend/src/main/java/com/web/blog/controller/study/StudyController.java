@@ -211,6 +211,7 @@ public class StudyController {
     @ApiOperation(value = "스터디 생성")
     public Object signup(@Valid @RequestBody StudyRequest request) {
         ResponseEntity < Object > response = null;
+
         List<Study> check_study = studyDao.findStudyByUid(request.getUid());
         int cnt = 0;
         boolean flag = false;
@@ -241,6 +242,9 @@ public class StudyController {
             study.setLimitp(request.getLimitp());
             study.setSidocode(request.getSido_code());
             study.setSigungucode(request.getSigungu_code());
+            study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
+            study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
+            study.setEvalcount(0);
             Study savedStudy = this.studyDao.save(study);
             int pid = savedStudy.getPid();
 

@@ -5,6 +5,7 @@ $height: auto;
 
 .side {
   height: $height;
+  min-height: 300px;
   min-width: 350px;
   width: 50vw;
 	background: #fff;
