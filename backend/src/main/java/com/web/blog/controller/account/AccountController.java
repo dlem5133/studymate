@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.web.blog.dao.mileage.MileageDao;
@@ -25,6 +26,7 @@ import com.web.blog.model.user.User;
 import com.web.blog.service.JwtService;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -86,7 +88,7 @@ public class AccountController {
 
 
     @GetMapping(value = "/account/kakaologin")
-    public Object kakaologin(@RequestParam("code") final String code) {
+    public Object kakaologin(@RequestParam("code") final String code , HttpSession session) {
 
         final String access_Token = kakao.getAccessToken(code);
         System.out.println(code);
@@ -101,7 +103,9 @@ public class AccountController {
         if (userInfo.get("email") == null) {
             // 이메일 동의 안했을 경우 백 처리
             System.out.println("?");
-            new RedirectView("http://localhost:3000/");
+           // front에서 alert창으로 카카오에서 지우라고 띄워주기
+
+            return new RedirectView("http://localhost:3000/#/duplicate");
         }
 
         // 그 밑은 그럴일이 없다.
@@ -125,15 +129,8 @@ public class AccountController {
             String user_name = userInfo.get("nickname");
 
             if (userOpt!= null) {
-                // 회원 정보 있으면, jwt토큰으로 바꾸기
-                final BasicResponse result = new BasicResponse();
-                String token = jwtService.createLoginToken(userOpt);
-                result.status = true;
-                result.data = "success";
-                result.object = code;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-                System.out.println("gg");
-                return response;
+                // 회원 정보 있으면, 아무것도 하지않고, front에서 alert창으로 회원정보가 있다고 띄워주기
+                return new RedirectView("http://localhost:3000/#/duplicate");
             } else {
                 // final User user = new User();
                 // user.setEmail(userInfo.get("email").toString());
@@ -144,13 +141,20 @@ public class AccountController {
                 System.out.println("엥");
                 System.out.println(user_name);
                 String namee = URLEncoder.encode(user_name, StandardCharsets.UTF_8);
-                String url = "http://localhost:3000/#/user/signup?email="+ user_email + "&nickname="+ namee;
+                session.setAttribute("access_Token", access_Token);
+                System.out.println(session.getAttribute("access_Token"));
+
+                session.removeAttribute("access_Token");
+                System.out.println(session.getAttribute("access_Token"));
+
+                String url = "http://localhost:3000/#/user/signup?email="+ user_email + "&nickname="+ namee + "&pass=" + "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc";
                 return new RedirectView(url);
 
             }
         }
-        return new RedirectView("http://localhost:3000/");
     }
+
+
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -179,7 +183,7 @@ public class AccountController {
 
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
-    public Object signup(@Valid @RequestBody final SignupRequest request) {
+    public Object signup(@Valid @RequestBody final SignupRequest request, HttpSession session) {
         // 이메일, 닉네임 중복처리 필수
         // 회원가입단을 생성해 보세요.
         final User email_test = userDao.getUserByEmail(request.getEmail());
@@ -231,10 +235,20 @@ public class AccountController {
                 e.printStackTrace();
                 result.data = "메일 전송 실패";
             }
+            session.removeAttribute("access_Token");
+            System.out.println(session.toString());
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         return response;
+    }
+
+    @GetMapping("/account/logout")
+    @ApiOperation(value = "로그아웃")
+    public void 로그아웃( HttpSession session) {
+        System.out.println(session.getAttribute("access_Token"));
+
+        session.removeAttribute("access_Token");
     }
 
     @PostMapping("/account/update")
