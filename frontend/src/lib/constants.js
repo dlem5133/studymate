@@ -41,6 +41,7 @@ export default {
     ERROR: {
       PAGENOTFOUND: "pagenotfound",
       ERRORPAGE: "errorpage",
+      DUPLICATE: "duplicate",
     },
   },
 };

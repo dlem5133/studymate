@@ -1,12 +1,13 @@
 <template>
   <div class="container">
     <img src="../../assets/img/owl_logo.png" alt="로고" style="width: 250px; margin-top: 50px;">
+    <p>{{test}}</p>
     <div class="d-flex justify-content-center">
       <b-card title="회원가입" style="width: 500px;" class="my-5">
         <div v-if="page == 0">
           <b-card-text>
             <b-form-group label="이메일" label-for="input-email">
-              <b-card class="baseInput" no-body id="input-email">{{$route.query.email}}</b-card>
+              <b-card class="baseInput" no-body id="input-email">{{signupData.email}}</b-card>
             </b-form-group>
             <b-form-group label="비밀번호" label-for="input-password">
               <b-form-input type="password" v-model="signupData.password" id="input-password"></b-form-input>
@@ -19,7 +20,7 @@
         <div v-if="page == 1">
           <b-card-text>
             <b-form-group label="닉네임" label-for="input-nickname">
-              <b-card class="baseInput" no-body id="input-nickname">{{$route.query.nickname}}</b-card>
+              <b-card class="baseInput" no-body id="input-nickname">{{signupData.nickname}}</b-card>
             </b-form-group>
             <b-form-group label="자기소개" label-for="input-intro">
               <b-form-textarea id="input-intro" v-model="signupData.intro" rows="3" max-rows="6"></b-form-textarea>
@@ -60,6 +61,7 @@ export default {
   name: "Signup",
   data: () => {
     return {
+      test: "",
       page: 0,
       signupData: {
         email: "",
@@ -71,7 +73,20 @@ export default {
       },
     };
   },
+  created() {
+    this.initlogin()
+  },
   methods: {
+    initlogin() {
+      this.signupData.email = this.$route.query.email
+      this.signupData.nickname = this.$route.query.nickname
+      if (this.$route.query.pass === "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc") {
+        this.$router.push('/user/signup')
+      }
+      else {
+        this.$router.push('/duplicate')
+      }
+    },
     pageSwitch(n) {
       this.page = this.page + n
     },
@@ -91,14 +106,12 @@ export default {
       this.signupData.profile_image = '';
     },
     doSign() {
-      this.signupData.email = this.$route.query.email
-      this.signupData.nickname = this.$route.query.nickname
       axios
         .post(SERVER_URL + "/account/signup", this.signupData)
         .then(res => {
           alert("회원가입되었습니다.");
           console.log(this.signupData)
-          this.$router.push("/user/join/confirm");
+          this.$router.push("/");
         })
         .catch(err => {
           console.log(err.response);
