@@ -187,5 +187,23 @@ public class EvaluateController {
 
         return response;
     }
+    @PostMapping("/eva/targetlist")
+    @ApiOperation(value = "유저 한줄평")
+    public Object targetlist(@Valid @RequestBody final EvaluateRequest Request) {
+
+        ResponseEntity < Object > response = null;
+
+        final ArrayList < Evaluate > evaList = evaluateDao.findByTargetuidAndSentenceNotNull(Request.getTarget_uid());
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "유저 한줄평 조회";
+        result.object = evaList;
+
+        response = new ResponseEntity < > (result, HttpStatus.OK);
+
+        return response;
+    }
 
 }
