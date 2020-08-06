@@ -11,6 +11,8 @@ public interface EvaluateDao extends JpaRepository<Evaluate, String> {
 
 	ArrayList<Evaluate> findByPidAndWriteruidAndCount(int pid, int writer_uid, int count);
 
+	ArrayList<Evaluate> findByWriteruidAndSentenceNotNull(int writer_uid);
+
 
 
 	// public Diary findDiaryByDid(int did);
