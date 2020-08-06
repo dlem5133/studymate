@@ -22,9 +22,9 @@
             <b-button class="btn" v-b-modal.modal-1>수정</b-button>
             <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정">
               <small>닉네임</small>
-              <b-form-input v-model="updateData.nickname"></b-form-input>
+              <b-card class="baseInput" no-body id="input-email">{{updateData.nickname}}</b-card>
               <small>이메일</small>
-              <b-form-input v-model="updateData.email"></b-form-input>
+              <b-card class="baseInput" no-body id="input-email">{{updateData.email}}</b-card>
               <small>비밀번호</small>
               <b-form-input type="password" v-model="updateData.password"></b-form-input>
               <small>자기소개</small>
@@ -345,7 +345,6 @@ export default {
           console.log(err);
         });
     },
-
     goStudy(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTDETAIL,
@@ -375,9 +374,6 @@ export default {
         this.updateData.profile_image = e.target.result;
       };
       reader.readAsDataURL(fileObject);
-
-      // const file = e.target.files[0];
-      // this.updateData.profile_image = URL.createObjectURL(file);
     },
     removeImage: function (e) {
       this.updateData.profile_image = "";
@@ -390,7 +386,7 @@ export default {
           const token = res.data.object;
           this.$cookies.set("Auth-Token", token);
           alert("수정되었습니다.");
-          this.$router.go();
+          this.addprofileInfo()
         })
         .catch((err) => {
           // this.$router.push({name: constants.URL_TYPE.ERROR.ERRORPAGE,params:{'code':err.response.data}});

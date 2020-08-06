@@ -33,7 +33,7 @@
               <!-- <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/> -->
               <b-list-group-item class="listitem" variant="warning" @click="openModal">로그인</b-list-group-item>
               <LoginModal v-if="loginmodal" @close="closeModal" />
-              <b-list-group-item class="listitem" variant="warning" @click="goSignup">회원가입</b-list-group-item>
+              <b-list-group-item class="listitem" variant="warning" @click="kakao">회원가입</b-list-group-item>
             </div>
           </div>
 
@@ -130,6 +130,15 @@ export default {
     this.addprofileInfo();
   },
   methods: {
+
+    kakao(){
+      axios.get(SERVER_URL+"/k/klogin").then((res)=> {
+        this.locate = res.data.object;
+        location.href=this.locate;
+      })
+    },
+
+
     logout() {
       this.$cookies.remove("Auth-Token");
       this.$router.push("/");

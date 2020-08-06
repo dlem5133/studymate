@@ -1,5 +1,8 @@
 package com.web.blog.controller.account;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,6 +67,91 @@ public class AccountController {
     
     @Autowired
     MileageDao mileageDao;
+
+    @Autowired
+    private KakaoAPI kakao;
+
+    @GetMapping(value="/k/klogin")
+    public Object lgin(){
+
+        String URL = "https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/kakaologin&response_type=code";
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "success";
+        result.object = URL;
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+    }
+
+
+    @GetMapping(value = "/account/kakaologin")
+    public Object kakaologin(@RequestParam("code") final String code) {
+
+        final String access_Token = kakao.getAccessToken(code);
+        System.out.println(code);
+
+        // accesstoken으로 유저정보를 확인할 수 있다.
+        final HashMap<String, String> userInfo = kakao.getUserInfo(access_Token);
+        System.out.println("login Controller : " + userInfo);
+
+        ResponseEntity<Object> response = null;
+        User userOpt;
+
+        if (userInfo.get("email") == null) {
+            // 이메일 동의 안했을 경우 백 처리
+            System.out.println("?");
+            new RedirectView("http://localhost:3000/");
+        }
+
+        // 그 밑은 그럴일이 없다.
+        // 따라서, DB에 그런 사람이 있는 지 없는지 카카오 메일과 이름으로 확인.
+
+        else {
+            System.out.println("!");
+
+            userOpt = userDao.findUserByNicknameAndEmail(userInfo.get("nickname").toString(),
+                    userInfo.get("email").toString());
+            // 카카오 로그인으로 가는 링크 <a> 링크로도 연결가능 프론트에서 사용할것
+            /*
+             * https://kauth.kakao.com/oauth/authorize?client_id=
+             * a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/
+             * kakaologin&response_type=code
+             */
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++");
+            System.out.println(userInfo.get("nickname").toString()+" "+ userInfo.get("email").toString());
+            
+            String user_email = userInfo.get("email").toString();
+            String user_name = userInfo.get("nickname");
+
+            if (userOpt!= null) {
+                // 회원 정보 있으면, jwt토큰으로 바꾸기
+                final BasicResponse result = new BasicResponse();
+                String token = jwtService.createLoginToken(userOpt);
+                result.status = true;
+                result.data = "success";
+                result.object = code;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+                System.out.println("gg");
+                return response;
+            } else {
+                // final User user = new User();
+                // user.setEmail(userInfo.get("email").toString());
+                // user.setNickname(userInfo.get("nickname").toString());
+                // userDao.save(user); 
+
+                // 회원가입 창으로 가기
+                System.out.println("엥");
+                System.out.println(user_name);
+                String namee = URLEncoder.encode(user_name, StandardCharsets.UTF_8);
+                String url = "http://localhost:3000/#/user/signup?email="+ user_email + "&nickname="+ namee;
+                return new RedirectView(url);
+
+            }
+        }
+        return new RedirectView("http://localhost:3000/");
+    }
+
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
@@ -97,7 +185,6 @@ public class AccountController {
         final User email_test = userDao.getUserByEmail(request.getEmail());
         final User nickname_test = userDao.getUserByNickname(request.getNickname());
         ResponseEntity<Object> response = null;
-
         if (email_test != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
