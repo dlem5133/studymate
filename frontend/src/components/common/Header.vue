@@ -4,7 +4,6 @@
       <b-navbar-brand id="brandname" tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}"> 
       <!-- <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/> -->
         <h4 id="brandname">스터디메이트</h4>
-        <button @click="kakao">로긘</button>
       </b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto">
 
@@ -34,7 +33,7 @@
               <!-- <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/> -->
               <b-list-group-item class="listitem" variant="warning" @click="openModal">로그인</b-list-group-item>
               <LoginModal v-if="loginmodal" @close="closeModal" />
-              <b-list-group-item class="listitem" variant="warning" @click="goSignup">회원가입</b-list-group-item>
+              <b-list-group-item class="listitem" variant="warning" @click="kakao">회원가입</b-list-group-item>
             </div>
           </div>
 
@@ -136,7 +135,7 @@ export default {
       axios.get(SERVER_URL+"/k/klogin").then((res)=> {
         this.locate = res.data.object;
         location.href=this.locate;
-    })
+      })
     },
 
 

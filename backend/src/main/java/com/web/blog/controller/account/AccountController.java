@@ -1,5 +1,7 @@
 package com.web.blog.controller.account;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +121,12 @@ public class AccountController {
              * kakaologin&response_type=code
              */
             System.out.println("+++++++++++++++++++++++++++++++++++++++++");
-            if (userOpt != null) {
+            System.out.println(userInfo.get("nickname").toString()+" "+ userInfo.get("email").toString());
+            
+            String user_email = userInfo.get("email").toString();
+            String user_name = userInfo.get("nickname");
+
+            if (userOpt!= null) {
                 // 회원 정보 있으면, jwt토큰으로 바꾸기
                 final BasicResponse result = new BasicResponse();
                 String token = jwtService.createLoginToken(userOpt);
@@ -137,7 +144,10 @@ public class AccountController {
 
                 // 회원가입 창으로 가기
                 System.out.println("엥");
-                return new RedirectView("http://localhost:3000/#/user/signup");
+                System.out.println(user_name);
+                String namee = URLEncoder.encode(user_name, StandardCharsets.UTF_8);
+                String url = "http://localhost:3000/#/user/signup?email="+ user_email + "&nickname="+ namee;
+                return new RedirectView(url);
 
             }
         }
@@ -175,7 +185,6 @@ public class AccountController {
         final User email_test = userDao.getUserByEmail(request.getEmail());
         final User nickname_test = userDao.getUserByNickname(request.getNickname());
         ResponseEntity<Object> response = null;
-
         if (email_test != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
