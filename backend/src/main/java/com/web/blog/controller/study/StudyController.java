@@ -211,35 +211,6 @@ public class StudyController {
     @ApiOperation(value = "스터디 생성")
     public Object signup(@Valid @RequestBody StudyRequest request) {
         ResponseEntity < Object > response = null;
-        Study study = new Study();
-
-        study.setCategory(request.getCategory());
-        study.setData(request.getData());
-        study.setTitle(request.getTitle());
-        study.setUid(request.getUid());
-        study.setBackground_image(request.getBackground_image());
-        study.setTmp(request.getTmp());
-        study.setBindo(request.getBindo());
-        study.setStart_date(request.getStart_date());
-        study.setEnd_date(request.getEnd_date());
-        study.setLikep(0);
-        study.setLimitp(request.getLimitp());
-        study.setSidocode(request.getSido_code());
-        study.setSigungucode(request.getSigungu_code());
-        study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
-        study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
-        study.setEvalcount(0);
-        Study savedStudy = this.studyDao.save(study);
-        int pid = savedStudy.getPid();
-
-        for (int i = 0; i < request.getTag().size(); i++) {
-            Studytag tag = new Studytag();
-            tag.setPid(pid);
-            tag.setStudy(savedStudy);
-            tag.setTagname(request.getTag().get(i));
-            studyTagDao.save(tag);
-        }
-
         List<Study> check_study = studyDao.findStudyByUid(request.getUid());
         int cnt = 0;
         boolean flag = false;

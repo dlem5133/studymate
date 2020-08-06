@@ -4,6 +4,7 @@
       <b-navbar-brand id="brandname" tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}"> 
       <!-- <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/> -->
         <h4 id="brandname">스터디메이트</h4>
+        <button @click="kakao">로긘</button>
       </b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto">
 
@@ -130,6 +131,15 @@ export default {
     this.addprofileInfo();
   },
   methods: {
+
+    kakao(){
+      axios.get(SERVER_URL+"/k/klogin").then((res)=> {
+        this.locate = res.data.object;
+        location.href=this.locate;
+    })
+    },
+
+
     logout() {
       this.$cookies.remove("Auth-Token");
       this.$router.push("/");
