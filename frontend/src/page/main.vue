@@ -12,6 +12,7 @@
       style="text-shadow: 1px 1px 2px #333;"
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
+      class="d-none d-md-block test"
     >
       <!-- Text slides with image -->
       <!-- <b-carousel-slide 
@@ -123,6 +124,10 @@ export default {
 </script>
 
 <style>
+.test {
+  position: relative;
+  bottom: 60px;
+}
 body {
   background-image: url('../assets/img/15944.jpg');
    background-repeat: no-repeat;
@@ -141,7 +146,7 @@ body {
   position: absolute;
   width:30%;
   height:400px;
-  top: 55%;
+  top: 0%;
   left:70%; 
 }
 
