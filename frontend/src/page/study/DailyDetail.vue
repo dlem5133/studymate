@@ -1,39 +1,22 @@
 <template>
-  <div class="row p-0">
-    <div class="main-table d-none d-md-block col-md-3 border bg-light" style="height: 100vw;">
-      <div class="m-5">
-        <div v-if="!profileInfo.profile_image">
-          <img class="rounded-circle" src="../../assets/img/defualt_image.png" />
+  <div class="main-table border">
+    <div class="container p-5">
+      <h1>DETAIL</h1>
+      <div class="card text-left">
+        <div class="card-header">
+          {{dailyDetailData.title}}<br />
+          {{dailyDetailData.writer}}<br />
+          {{dailyDetailData.posttime}}
         </div>
-        <div v-else>
-          <img class="rounded-circle" :src="profileInfo.profile_image" />
-        </div>
-        <p class="m-0">{{ profileInfo.nickname }}님의 정보</p>
-        <div v-for="studylist of studyLists" :key="studylist.id">
-          <small v-if="studylist.empId.study.tmp==1" class="clickstudy mt-3 text-primary"
-            @click="goStudyMain(studylist.pid)">{{studylist.empId.study.title}}</small>
+        <div class="card-body">
+          <Viewer v-if="dailyDetailData.body != null" :initialValue="dailyDetailData.body" />
         </div>
       </div>
-    </div>
-    <div class="main-table col-12 col-md-9 border">
-      <div class="container p-5">
-        <h1>DETAIL</h1>
-        <div class="card text-left">
-          <div class="card-header">
-            {{dailyDetailData.title}}<br />
-            {{dailyDetailData.writer}}<br />
-            {{dailyDetailData.posttime}}
-          </div>
-          <div class="card-body">
-            <Viewer v-if="dailyDetailData.body != null" :initialValue="dailyDetailData.body" />
-          </div>
-        </div>
-        <div v-if="profileInfo.uid === dailyDetailData.uid">
-          <button type="button" @click="dailyUpdate(dailyDetailData.did)"
-            class="m-2 btn btn-outline-primary btn-rounded waves-effect">수정</button>
-          <button type="button" @click="dailyDelete(dailyDetailData.did)"
-            class="m-2 btn btn-outline-danger btn-rounded waves-effect">삭제</button>
-        </div>
+      <div v-if="profileInfo.uid === dailyDetailData.uid">
+        <button type="button" @click="dailyUpdate(dailyDetailData.did)"
+          class="m-2 btn btn-outline-primary btn-rounded waves-effect">수정</button>
+        <button type="button" @click="dailyDelete(dailyDetailData.did)"
+          class="m-2 btn btn-outline-danger btn-rounded waves-effect">삭제</button>
       </div>
     </div>
   </div>

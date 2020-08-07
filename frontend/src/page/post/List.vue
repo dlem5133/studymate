@@ -58,14 +58,14 @@
 
         <div class="row">
           <ul
-            class="col-12 col-sm-6 col-xl-4 d-flex justify-content-center"
+            class="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center"
             v-for="(list, i) in searchList"
             :key="list.pid"
           >
             <li
               v-if="i < `${scrolled}`"
               class="booking-card"
-              :style="{ backgroundImage: `url(https://picsum.photos/200/300)` }"
+              :style="{ backgroundImage: `url(${list.background_image})` }"
             >
               <div class="book-container">
                 <div class="content">
@@ -221,13 +221,13 @@ export default {
 
     categorySubmit() {
       this.selectCategory.title = this.selectCategory.optionstext;
-      if (this.selectCategory.options == "title") {
+      if (this.selected == "title") {
         this.selectCategory.tmp = 1
         this.selectCategory.sido_code = null;
         this.selectCategory.tag = null;
-      } else if (this.selectCategory.options == "area") {
+      } else if (this.selected == "area") {
         this.selectCategory.tmp = 2
-      } else if (this.selectCategory.options == "tag") {
+      } else if (this.selected == "tag") {
         this.selectCategory.tmp = 3
       }
 
@@ -237,6 +237,7 @@ export default {
         .post(SERVER_URL + "/study/search", this.selectCategory)
         .then((res) => {
           this.searchList = res.data.object;
+          console.log(this.searchList);
         })
         .catch((err) => {
           console.log(err);
