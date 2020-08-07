@@ -297,11 +297,9 @@ export default {
   methods: {
     evaList(){
       const targetid = this.profileInfo.uid
-      console.log(targetid)
       axios.post(SERVER_URL+'/eva/targetlist', {target_uid:targetid})
       .then(res=>{
         this.evalistdata = res.data.object
-        console.log(this.evalistdata)
       })
       .catch(err=>console.log(err))
     },
@@ -347,7 +345,6 @@ export default {
           this.comStudy = res.data.object.filter((item)=>item.empId.study.tmp===0)
           this.ingStudy = res.data.object.filter((item)=>item.empId.study.tmp===1)
           this.endStudy = res.data.object.filter((item)=>item.empId.study.tmp===2)
-          console.log(this.endStudy)
         })
         .catch((err) => {
           console.log(err);
