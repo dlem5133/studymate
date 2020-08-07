@@ -230,14 +230,10 @@ export default {
       } else if (this.selected == "tag") {
         this.selectCategory.tmp = 3
       }
-
-      console.log(this.selectCategory);
-
       axios
         .post(SERVER_URL + "/study/search", this.selectCategory)
         .then((res) => {
           this.searchList = res.data.object;
-          console.log(this.searchList);
         })
         .catch((err) => {
           console.log(err);
@@ -318,7 +314,6 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
-
             this.addStudyList();
             this.addReadyList();
           })

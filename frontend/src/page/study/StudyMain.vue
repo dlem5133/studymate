@@ -29,37 +29,38 @@
                   </b-dropdown> -->
 
                   <!-- 상호평가 -->
-                  <div>
-                    <b-button size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                  <div v-if="calculFri == '금요일'">
+                    <b-button @click="checkEvalue" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
                       <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
                     </b-button>
 
-                    <b-modal id="modal-multi-1" size="lg" title="상호 평가" ok-only no-stacking>
-
+                    <b-modal id="modal-multi-1" size="lg" title="상호 평가" hide-footer>
                       <b-list-group v-for="member in memberListData" :key="member.uid">
-                        <b-list-group-item class="m-1 px-3 p-0">
+                        <b-list-group-item v-if="profileInfo.uid != member.uid" class="m-1 px-3 p-0">
                           <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
-                          <b-button class="float-right" variant="link" v-b-modal.modal-multi-2>
-                            <!-- <i class="fas fa-star" style="color: orange; font-size: large;"></i> -->
+                          <b-button v-if="alreadyEva.includes(member.uid)" class="float-right" @click="onceEva" variant="link">
+                            <i class="fas fa-star" style="color: orange; font-size: large;"></i>
+                          </b-button>
+                          <b-button v-else class="float-right" @click="evalueData.target_uid = member.uid" variant="link" v-b-modal.modal-multi-2>
                             <i class="far fa-star" style="color: orange; font-size: large;"></i>
                           </b-button>
                         </b-list-group-item>
                       </b-list-group>
                     </b-modal>
 
-                    <b-modal id="modal-multi-2" title="상호 평가" ok-only>
+                    <b-modal id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
                       <b-list-group>
                         <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">1. </span>
-                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
+                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
                         </b-list-group-item>
                         <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">2. </span>
-                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
+                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
                         </b-list-group-item>
                         <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">3. </span>
-                          <b-form-rating class="float-right" inline value="1" style="color: orange;"></b-form-rating>
+                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
                         </b-list-group-item>                      
                         </b-list-group>
                     </b-modal>
@@ -114,7 +115,6 @@
                                       <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success" @click="reportMember(per.uid)"> 신고 </b-button>
                                     </div>
                                   </b-modal>
-
                                 </div>
                             </div>
                           </div>
@@ -232,10 +232,7 @@
               </b-form-group>
             </form>
           </b-modal>
-          
         </div>
-
-
 
         <div @click="getDaily">
           <b-calendar :date-info-fn="dateClass" v-model="value" block locale="ko-kr"></b-calendar>
@@ -296,7 +293,7 @@
         },
         expectDataList: [],
         selectedDay: [],
-        week: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+        week: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
         days: [],
         delegationData: {
           leader: "",
@@ -308,7 +305,6 @@
         unleaderLists: [],
         indvData:{},
         leaderListsTmp1: [],
-
         DeleteMemberListData: [],
         leaderListsTmp0: [],
         deleteData:{
@@ -322,7 +318,26 @@
           reason:""
         },
         ismodal:false,
+        // 상호 평가
+        evalueData: {
+          pid: 0,
+          writer_uid: 0,
+          target_uid: 0,
+          score1: 1,
+          score2: 1,
+          score3: 1,
+          sentence: null,
+          count: 0
+        },
+        alreadyEva: [],
       };
+    },
+    computed: {
+      calculFri() {
+        var date = new Date()
+        var d = this.week[date.getDay()]
+        return d
+      },
     },
     created() {
       this.addprofileInfo();
@@ -340,7 +355,6 @@
         this.reportdata.reporter = this.profileInfo.uid
         axios.post(SERVER_URL+"/account/reportcheck",this.reportdata)
         .then(res=>{
-          console.log(res.data.status)
           if(res.data.status){
             this.ismodal = true;
           }
@@ -348,20 +362,15 @@
             this.ismodal = false;
             alert("이미 신고된 회원입니다.")
           }
-          
         })
         .catch(err=>console.log(err))
       },
-
       reportMember(target){
         this.reportdata.target = target
         this.reportdata.pid = this.$route.params.post_id
         this.reportdata.reporter = this.profileInfo.uid
-        console.log(this.reportdata)
-        console.log(this.reportdata.reason)
         axios.post(SERVER_URL+"/account/report",this.reportdata)
         .then(res=>{
-          console.log(res)
           this.$router.go()
         })
         .catch(err=>console.log(err))
@@ -371,7 +380,6 @@
         this.deleteData.uid = user_id
         axios.post(SERVER_URL+"/study/detail/delete_request",this.deleteData)
         .then(res=>{
-          console.log(res.data.object)
           this.memberList()
         })
         .catch(err=>console.log(err))
@@ -381,10 +389,8 @@
         this.indvData.pid = this.postData.pid;
         this.indvData.isLeader = 0;
         this.indvData.isJoin = 1;
-        console.log(this.indvData)
         axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
           .then((res) => {
-            console.log(res);
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
@@ -394,10 +400,8 @@
         this.indvData.pid = this.postData.pid;
         this.indvData.isLeader = 0;
         this.indvData.isJoin = 1;
-        console.log(this.delegationData)
         axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
           .then((res) => {
-            console.log(res);
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
@@ -407,7 +411,6 @@
         this.deleteData.uid = user_id
         axios.post(SERVER_URL+'/study/detail/delete_cancel', this.deleteData)
         .then(res=>{
-          console.log(res.data.object)
           this.memberList()
         })
         .catch(err=>console.log(err))
@@ -417,7 +420,6 @@
             pid: this.$route.params.post_id
           }})
           .then(res => {
-            console.log(res.data.object)
             this.DeleteMemberListData = res.data.object
           }).catch(err=>console.log(err))
       },
@@ -425,10 +427,8 @@
         this.delegationData.pid = this.postData.pid;
         this.delegationData.leader = this.postData.uid;
         this.delegationData.member = memberid;
-        console.log(this.delegationData)
         axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
           .then((res) => {
-            console.log(res);
             this.getDetail()
           })
 
@@ -442,11 +442,9 @@
         this.postData.days = dayString
         this.updateData.study = this.postData
         this.updateData.tag = this.tagData
-        console.log(this.updateData)
         axios
           .post(SERVER_URL + "/study/update", this.updateData)
           .then(res => {
-            console.log(res.data.object)
           })
           .catch(err => {
             console.log(err)
@@ -554,7 +552,6 @@
             pid: this.$route.params.post_id
           })
           .then(res => {
-            console.log(res.data.object)
             this.memberListData = res.data.object
           })
       },
@@ -576,7 +573,7 @@
             }
             
           })
-          .catch((err) => console.log(err.data));
+          .catch((err) => console.log(err.response));
       },
       getDaily() {
         axios.get(SERVER_URL + "/diary/list", {
@@ -713,6 +710,52 @@
           })
 
           .catch((err) => console.log(err));
+      },
+      // 상호 평가
+      setEvaluage() {
+        this.evalueData.pid = this.postData.pid
+        this.evalueData.writer_uid = this.profileInfo.uid
+        this.evalueData.count = this.postData.evalcount
+        axios.post(SERVER_URL + "/eva/score", this.evalueData)
+        .then(res => {
+          console.log(res)
+          this.checkEvalue()
+          this.evalueData = {
+            pid: 0,
+            writer_uid: 0,
+            target_uid: 0,
+            score1: 1,
+            score2: 1,
+            score3: 1,
+            sentence: null,
+            count: 0
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      },
+      checkEvalue() {
+        const evaList = {
+          pid: this.postData.pid,
+          writer_uid : this.profileInfo.uid,
+          count: this.postData.evalcount
+        }
+        const alreadyList = []
+        axios.post(SERVER_URL + "/eva/list", evaList)
+        .then(res => {
+          const tmpData = res.data.object
+          console.log(tmpData);
+          for (let i = 0; i < tmpData.length; i++) {
+            alreadyList.push(tmpData[i].targetuid)
+          }
+          this.alreadyEva = alreadyList
+          console.log(this.alreadyEva);
+        })
+        .catch(err => {console.log(err);})
+      },
+      onceEva() {
+        alert("이미 평가 하셨습니다.")
       }
     },
   };

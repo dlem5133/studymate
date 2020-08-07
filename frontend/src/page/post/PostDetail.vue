@@ -305,12 +305,9 @@ export default {
           this.tagData = res.data.object[2];
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];
-          console.log(res.data.object[1])
           const datas = res.data.object[1]
           this.replyData = datas.filter(datas => datas.reply_parent==0)
           this.reReplyData = datas.filter(datas => datas.reply_parent!=0)
-          console.log(this.replyData)
-          console.log(this.reReplyData)
 
           for (var i = 0; i < this.likeData.length; i++) {
             if (this.likeData[i].uid == this.profileInfo.uid) {
