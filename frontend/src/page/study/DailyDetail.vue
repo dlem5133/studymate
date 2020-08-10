@@ -31,7 +31,7 @@
     Viewer
   } from "@toast-ui/vue-editor";
 
-  const SERVER_URL = "http://localhost:8080";
+  const SERVER_URL = constants.ServerUrl;
 
   export default {
     name: 'dailydetail',

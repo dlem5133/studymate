@@ -90,7 +90,7 @@
 import axios from "axios"
 import constants from '../../lib/constants'
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: 'PostUpdate',
