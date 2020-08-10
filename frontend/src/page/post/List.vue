@@ -90,7 +90,7 @@
                         class="infopplbindo"
                         src="../../assets/img/person.png"
                       />
-                      2 / {{ list.limitp }} 명<br />
+                      {{list.memnum}} / {{ list.limitp }} 명<br />
                       <img
                         class="infopplbindo"
                         src="../../assets/img/calendar.png"

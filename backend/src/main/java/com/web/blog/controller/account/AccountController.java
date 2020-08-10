@@ -279,7 +279,7 @@ public class AccountController {
     }
     
     @PostMapping("/account/delete")
-    @ApiOperation(value = "삭제")
+    @ApiOperation(value = "삭제 및 추방")
     public Object delete(@Valid @RequestBody final SignupRequest request) {
         // 회원 정보 삭제
         // 이메일로 삭제
@@ -290,8 +290,12 @@ public class AccountController {
         List<Study> studylist = studyDao.findStudyByUid(user.getUid());
 
         userDao.delete(user);
+        // 스터디 팀장 위임
         for(int i = 0;i<studylist.size();i++)
         {
+            studylist.get(i).setMemnum(studylist.get(i).getMemnum()-1);
+            studyDao.save(studylist.get(i));
+
             List<Indvstudylst> indvstudylsts = indvstudylstDao.findByPid(studylist.get(i).getPid());
             System.out.println(indvstudylsts);
             if(indvstudylsts.size()!=0)
