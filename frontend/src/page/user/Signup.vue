@@ -106,6 +106,16 @@ export default {
       this.signupData.profile_image = '';
     },
     doSign() {
+            if(this.signupData.password == null){
+        alert("비밀번호가 입력되지 않았습니다. 확인해주세요.")
+      }
+      else if(this.signupData.passwordConfirm == null){
+        alert("비밀번호확인이 입력되지 않았습니다. 확인해주세요.")
+      }
+      else if(this.signupData.password != this.signupData.passwordConfirm){
+        alert("비밀번호가 확인값과 틀립니다. 확인해주세요.")
+      }
+      else{
       axios
         .post(SERVER_URL + "/account/signup", this.signupData)
         .then(res => {
@@ -116,6 +126,7 @@ export default {
         .catch(err => {
           console.log(err.response);
         });
+    }
     },
   },
 }
