@@ -1,6 +1,8 @@
 <template>
-  <div class="container" v-if="isHeader">
-    <b-navbar id="navbar" toggleable="lg" class="px-auto sticky-top row mb-5">
+  <div id="container" class=" fixed-top" v-if="isHeader">
+    <b-navbar id="navbar" toggleable="lg" class="px-auto row">
+      <div class="container pt-2">
+
       <b-navbar-brand id="brandname" tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}"> 
       <!-- <img  src="../../assets/img/textlogo.png" width="120px" height="30px"/> -->
         <h4 id="brandname">스터디메이트</h4>
@@ -104,14 +106,27 @@
             <hr>
             <b-list-group-item class="listitem" tag="router-link" to="/post/create">모집생성</b-list-group-item>
           </div>
-
         </b-dropdown>
-
+      </div>
     </b-navbar>
   </div>
 </template>   
 
 <script>
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    document.getElementById("container").style.backgroundColor = "white"
+    document.getElementById("container").style.borderBottomColor = "black"
+
+  } else {
+    document.getElementById("container").style.backgroundColor = "rgba(255,255,255,0)"
+    // document.getElementById("navbar").style.margin = "1.5rem 1.5rem"
+  }
+}
+
+
 import constants from "../../lib/constants";
 import LoginModal from "../../modal/LoginModal";
 import axios from "axios";
@@ -242,23 +257,19 @@ export default {
 }
 #brandname{
   /* font-family: 'Black Han Sans', sans-serif; */
-  font-family: 'Do Hyeon', sans-serif;
-  font-weight: bold;
-  font-size:x-large;
   /* font-family: 'Jua', sans-serif; */
+  font-family: 'Do Hyeon', sans-serif;
+  font-size:x-large;
+  letter-spacing :0.1em;
+  color:orange;
 }
 
-#navbar {
-  margin: 0;
-  padding: 10px;
-  /* height:60px; */
-}
 .iconcss {
   font-size: 30px;
   color: orange;
 }
 .listitem {
-  background-color: #ffb74d;
+  background-color: orange;
 }
 
 .listitem:hover{

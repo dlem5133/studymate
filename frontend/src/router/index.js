@@ -2,7 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import constants from "../lib/constants";
-import Mainpage from "../page/main.vue";
 import AdminPage from "../page/AdminPage.vue";
 import test from "../page/test.vue";
 // 유저
@@ -39,11 +38,6 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    {
-      path: "/main",
-      name: constants.URL_TYPE.MAIN,
-      component: Mainpage,
-    },
     {
       path: "/http://localhost:8080/account/kakaologin",
       name: "test",
