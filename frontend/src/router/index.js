@@ -27,6 +27,10 @@ import BoardCreate from "../page/board/BoardCreate.vue"
 import BoardDetail from "../page/board/BoardDetail.vue"
 import BoardUpdate from "../page/board/BoardUpdate.vue"
 
+// 랭킹
+
+import Ranking from "../page/rank/Ranking.vue"
+
 // 404 오류
 import PageNotFound from "../page/error/PageNotFound.vue";
 import ErrorPage from "../page/error/ErrorPage.vue";
@@ -124,6 +128,12 @@ export default new Router({
       path: "/study/:post_id/board/:board_id/update",
       name: constants.URL_TYPE.BOARD.BOARDUPDATE,
       component: BoardUpdate,
+    },
+    //랭킹
+    {
+      path: "/rank/ranking",
+      name: constants.URL_TYPE.RANK.RANKING,
+      component: Ranking,
     },
     //page not found
     {

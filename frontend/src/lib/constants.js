@@ -38,6 +38,9 @@ export default {
       BOARDDETAIL: "boarddetail",
       BOARDUPDATE: "boardupdate",
     },
+    RANK: {
+      RANKING: "ranking"
+    },
     ERROR: {
       PAGENOTFOUND: "pagenotfound",
       ERRORPAGE: "errorpage",

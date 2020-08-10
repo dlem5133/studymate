@@ -154,7 +154,7 @@ public class EvaluateController {
         userDao.save(target);
         Mileage mileage = mileageDao.findByUid(writer.getUid());
         mileage.setTotal(mileage.getTotal() + 200);
-        mileage.setEndpoint(mileage.getEndpoint() + 1);
+        mileage.setEndpoint(mileage.getEndpoint() + 200);
         mileageDao.save(mileage);
         userDao.save(writer);
         final Evaluate saveEva = this.evaluateDao.save(eva);
