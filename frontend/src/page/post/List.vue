@@ -41,7 +41,7 @@
                   class="form-control border-0"
                   @click="searchData"
                 >
-                  <option value="all">전체</option>
+                  <option value="all" >전체</option>
                   <option value="title">스터디명</option>
                   <option value="area">지역</option>
                   <option value="tag">태그</option>
@@ -83,7 +83,7 @@
               >
                 <div class="book-container">
                   <div class="content">
-                    <button class="btn" @click="goDetail(list[0].pid)" :key="list[0].pid">Detail</button>
+                    <button class="btn" @click="goDetail(list[0].pid)" :key="list[0].pid">자세히 보기</button>
                   </div>
                 </div>
                 <div class="informations-container">
@@ -95,19 +95,19 @@
                     <div class="info-container">
                       <div class="box inform">
                         <img class="infopplbindo" src="../../assets/img/person.png" />
-                        2 / {{ list[0].limitp }} 명
+                         {{list[0].memnum}} / {{ list[0].limitp }} 명
                         <br />
                         <img class="infopplbindo" src="../../assets/img/calendar.png" />
                         주 {{ list[0].bindo }} 회
                         <br />
                         <img class="infopplbindo" src="../../assets/img/navi.png" />
-                        <span v-if="list[0].sido.sidoname=='온라인'">{{list[0].sido.sidoname}}</span>
+                        <span v-if="list[0].sido.sidoname=='온라인'"> {{list[0].sido.sidoname}}</span>
                         <span
                           v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname != '선택안함'"
-                        >{{ list[0].sido.sidoname }} {{list[0].gugun.gugunname}}</span>
+                        > {{ list[0].sido.sidoname }} {{list[0].gugun.gugunname}}</span>
                         <span
                           v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname == '선택안함'"
-                        >{{ list[0].sido.sidoname }} (미정)</span>
+                        > {{ list[0].sido.sidoname }} (미정)</span>
                       </div>
                     </div>
                   </div>

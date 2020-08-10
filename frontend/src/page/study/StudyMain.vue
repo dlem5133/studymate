@@ -7,9 +7,9 @@
             <div>
               <div class="d-flex">
                 <div>
-                  <h3 class="text-left font-weight-bold">{{ postData.title }} </h3>
-                  <small class="float-left">{{ userData.nickname }},</small><br>
-                  <small class="d-flex inline">{{postData.start_date}} ~ {{postData.end_date}}</small>
+                  <h3 class="text-left font-weight-bold">{{ postData.title }} </h3><br>
+                  <small class="float-left"> 팀장 : {{ userData.nickname }}    </small><br>
+                  <small class="d-flex inline">진행 일정 : {{postData.start_date}} ~ {{postData.end_date}}</small>
                 </div>
                 <div class="ml-auto my-auto float-right">
                   <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
@@ -178,10 +178,8 @@
             </div>
           </div>
         </div>
-        
-        
         <div class="card my-1">
-          <div class="card-body text-left">
+          <div class="card-body text-left" v-if="expectTodo.dodate != null">
             <div class="d-flex">
               <div>
                 <p class="badge badge-pill badge-danger">D-{{decimalDay}}</p>
@@ -197,10 +195,29 @@
                 </b-dropdown>
               </div>
             </div>
-
             <p>장소 : {{expectTodo.doplace}}</p>
             <p>일시 : {{expectTodo.dodate}}</p>
             <p>과제 : {{expectTodo.assignment}}</p>
+          </div>
+          <div class="card-body text-left" v-if="expectTodo.dodate == null">
+            <div class="d-flex">
+              <div>
+                <p class="badge badge-pill badge-danger">D-None</p>
+              </div>
+              <div class="ml-auto">
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                  <template v-slot:button-content>
+                    <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
+                  </template>
+                  <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
+                  <b-dropdown-item v-b-modal.modal-4>수정</b-dropdown-item>
+                  <b-dropdown-item @click="expectDelete">삭제</b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
+              <div>
+                예정된 스터디가 없습니다.
+              </div>
           </div>
           <!-- 모달 -->
           <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
@@ -678,7 +695,9 @@
           .then(res => {
             this.expectTodo = res.data.object[1]
             var today = new Date()
+            today.setHours(0,0,0,0)
             var count = new Date(res.data.object[1].dodate)
+            count.setHours(0,0,0,0)
             var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
             if (dday <= 0) {
               this.decimalDay = 'day'
@@ -725,11 +744,11 @@
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/create", this.expectData)
           .then((res) => {
-            this.expectUpdate()
+            this.expectTodo = res.data.object
             this.getPostTime()
           })
           .catch((err) => console.log(err));
-        }
+      }
       },
       expectUpdate() {
       if (this.expectData.dodate == null) {
@@ -744,7 +763,6 @@
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
-
             this.expectTodo = res.data.object
             this.getPostTime()
           })
@@ -758,7 +776,6 @@
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/delete", this.expectData)
           .then((res) => {
-
             this.expectTodo = res.data.object
             this.getPostTime()
           })
