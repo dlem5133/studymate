@@ -34,7 +34,6 @@ public interface StudyDao extends JpaRepository<Study, String> {
 
 	public List<Study> findStudyByTitleLikeAndCategoryLikeAndTmp(String string, String category, int i);
 
-
 	public List<Study> findByTmpAndUid(int i, int uid);
 
 	public List<Study> findByTmpOrderByPosttimeAsc(int i);
@@ -42,17 +41,14 @@ public interface StudyDao extends JpaRepository<Study, String> {
 	public List<Study> findStudyByTitleLikeAndCategoryLikeAndTmpOrderByPosttimeAsc(String string, String category,
 			int i);
 
-
 	public List<Study> findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(String category, int i);
 
 	public List<Study> findTop10ByTmpOrderByLikepDesc(int i);
 
 	public List<Study> findStudyBySidocodeOrderByPosttimeAsc(Integer sidocode);
 
-
 	public List<Study> findStudyBySigungucodeOrderByPosttimeAsc(Integer integer);
 
 	public List<Study> findStudyByUid(Integer uid);
-
 
 }

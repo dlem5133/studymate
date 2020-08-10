@@ -28,16 +28,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@ApiResponses(value = {
-    @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-    @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-    @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-    @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class)
-})
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
+        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = {
-    "http://localhost:3000"
-})
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class EvaluateController {
 
@@ -56,7 +52,7 @@ public class EvaluateController {
     @PostMapping("/eva/score")
     @ApiOperation(value = "평점 넘기기")
     public Object evaScore1(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
         User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
         Study study = studyDao.findStudyByPid(evaluateRequest.getPid());
@@ -75,7 +71,7 @@ public class EvaluateController {
         if (target.getScore1() == 0) {
             target.setScore1(evaluateRequest.getScore1());
         } else {
-            //score 1,2,3 세팅
+            // score 1,2,3 세팅
             double a = target.getScore1() * target.getTotalscoreper();
             double b = evaluateRequest.getScore1();
             double c = (a + b) / (target.getTotalscoreper() + 1);
@@ -93,8 +89,7 @@ public class EvaluateController {
 
             target.setTotalscoreper(target.getTotalscoreper() + 1);
         }
-        //마일리지
-        System.out.println(eva);
+
         Mileage mileage = mileageDao.findByUid(writer.getUid());
         mileage.setTotal(mileage.getTotal() + 10);
         mileage.setEndpoint(mileage.getEvalpoint() + 1);
@@ -107,7 +102,7 @@ public class EvaluateController {
         result.data = "평점 넘기기 완료";
         result.object = saveEva;
 
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }
@@ -116,7 +111,7 @@ public class EvaluateController {
     @ApiOperation(value = "한줄 평 남기기")
     public Object evaWrtie(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
 
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
         final Evaluate eva = new Evaluate();
         User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
@@ -136,7 +131,7 @@ public class EvaluateController {
         if (target.getScore1() == 0) {
             target.setScore1(evaluateRequest.getScore1());
         } else {
-            //score 1,2,3 세팅
+            // score 1,2,3 세팅
             double a = target.getScore1() * target.getTotalscoreper();
             double b = evaluateRequest.getScore1();
             double c = (a + b) / (target.getTotalscoreper() + 1);
@@ -167,7 +162,7 @@ public class EvaluateController {
         result.data = "한줄평 남기고 평점 넘기기 완료";
         result.object = saveEva;
 
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }
@@ -176,9 +171,10 @@ public class EvaluateController {
     @ApiOperation(value = "평가 목록 조회")
     public Object evalist(@Valid @RequestBody final EvaluateRequest Request) {
 
-        ResponseEntity < Object > response = null;
-        
-        final ArrayList < Evaluate > evaList = evaluateDao.findByPidAndWriteruidAndEvadate(Request.getPid(), Request.getWriter_uid(), Request.getEva_date());
+        ResponseEntity<Object> response = null;
+
+        final ArrayList<Evaluate> evaList = evaluateDao.findByPidAndWriteruidAndEvadate(Request.getPid(),
+                Request.getWriter_uid(), Request.getEva_date());
 
         final BasicResponse result = new BasicResponse();
 
@@ -186,7 +182,7 @@ public class EvaluateController {
         result.data = "평가목록 조회";
         result.object = evaList;
 
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }
@@ -195,9 +191,10 @@ public class EvaluateController {
     @ApiOperation(value = "마지막 평가 목록 조회")
     public Object finalevalist(@Valid @RequestBody final EvaluateRequest Request) {
 
-        ResponseEntity < Object > response = null;
-        
-        final ArrayList < Evaluate > evaList = evaluateDao.findByPidAndWriteruidAndCount(Request.getPid(), Request.getWriter_uid(), 1);
+        ResponseEntity<Object> response = null;
+
+        final ArrayList<Evaluate> evaList = evaluateDao.findByPidAndWriteruidAndCount(Request.getPid(),
+                Request.getWriter_uid(), 1);
 
         final BasicResponse result = new BasicResponse();
 
@@ -205,7 +202,7 @@ public class EvaluateController {
         result.data = "마지막평가목록 조회";
         result.object = evaList;
 
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }
@@ -214,9 +211,9 @@ public class EvaluateController {
     @ApiOperation(value = "유저 한줄평")
     public Object userlist(@Valid @RequestBody final EvaluateRequest Request) {
 
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
 
-        final ArrayList < Evaluate > evaList = evaluateDao.findByWriteruidAndSentenceNotNull(Request.getWriter_uid());
+        final ArrayList<Evaluate> evaList = evaluateDao.findByWriteruidAndSentenceNotNull(Request.getWriter_uid());
 
         final BasicResponse result = new BasicResponse();
 
@@ -224,7 +221,7 @@ public class EvaluateController {
         result.data = "유저 한줄평 조회";
         result.object = evaList;
 
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }

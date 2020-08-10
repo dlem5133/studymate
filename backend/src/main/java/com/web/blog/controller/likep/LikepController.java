@@ -13,8 +13,6 @@ import com.web.blog.model.likep.StudylikepRequest;
 
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -76,17 +74,17 @@ public class LikepController {
     @ApiOperation(value = "좋아요 전체 목록")
     // 전체 글 가져오기
     public Object likeplist(@RequestParam(required = true) int pid) {
-        List < Studylikep > likelist = studylikeDao.findStudylikepByPid(pid);
-        ResponseEntity < Object > response = null;
+        List<Studylikep> likelist = studylikeDao.findStudylikepByPid(pid);
+        ResponseEntity<Object> response = null;
         if (likelist != null) {
 
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "좋아요 전체 목록 조회 완료";
             result.object = likelist;
-            response = new ResponseEntity < > (result, HttpStatus.OK);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return response;

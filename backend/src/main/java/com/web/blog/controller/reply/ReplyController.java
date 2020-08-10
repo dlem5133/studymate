@@ -103,10 +103,10 @@ public class ReplyController {
                 replyRequest.getPid());
         // Diary find_pid = diaryDao.findByDidAndUid(request.getDid(),request.getUid());
         ResponseEntity<Object> response = null;
+        BasicResponse result = new BasicResponse();
 
         if (reply_rid.getReplyparent() != 0) {
-            final BasicResponse result = new BasicResponse();
-            //첫 댓이 살아있지 않으면 첫댓 아예 DB에서 지워요
+            // 첫 댓이 살아있지 않으면 첫댓 아예 DB에서 지워요
             if ((replyDao.findReplyByRid(reply_rid.getReplyparent())).getReply_writer().equals("")) {
                 replyDao.delete(replyDao.findReplyByRid(reply_rid.getReplyparent()));
             }
@@ -119,7 +119,6 @@ public class ReplyController {
             // 첫댓글이고
             // 해당 댓글에 답댓글이 있을 때
             if (replyDao.countByReplyparent(reply_rid.getRid()) != 0) {
-                final BasicResponse result = new BasicResponse();
                 reply_rid.setReply_content("삭제된 댓글입니다.");
                 reply_rid.setReply_writer("");
                 replyDao.save(reply_rid);
@@ -130,7 +129,7 @@ public class ReplyController {
 
             // 답댓이 없을 때
             else {
-                final BasicResponse result = new BasicResponse();
+                result = new BasicResponse();
                 replyDao.delete(reply_rid);
                 result.status = true;
                 result.data = "댓글 삭제 완료";

@@ -61,7 +61,6 @@ public class DiaryController {
 
     @Autowired
     MileageDao mileageDao;
-    
 
     @GetMapping("/diary/list")
     @ApiOperation(value = "해당 스터디의 일지 전체 목록")
@@ -124,7 +123,6 @@ public class DiaryController {
 
         ResponseEntity<Object> response = null;
         Diary diary = new Diary();
-        System.out.println(request);
         User user = userDao.findUserByUid(request.getUid());
         diary.setTitle(request.getTitle());
         diary.setBody(request.getBody());
@@ -134,11 +132,10 @@ public class DiaryController {
         diary.setTmp(request.getTmp());
         Diary savedDiary = this.diaryDao.save(diary);
         BasicResponse result = new BasicResponse();
-        System.out.println(savedDiary);
         Mileage mileage = mileageDao.findByUid(user.getUid());
-            
-        mileage.setTotal(mileage.getTotal()+10);
-        mileage.setDiarypoint(mileage.getDiarypoint()+10);
+
+        mileage.setTotal(mileage.getTotal() + 10);
+        mileage.setDiarypoint(mileage.getDiarypoint() + 10);
         mileageDao.save(mileage);
 
         userDao.save(user);
@@ -235,7 +232,7 @@ public class DiaryController {
         BasicResponse result = new BasicResponse();
         result.status = true;
         result.data = "다가올 스터디 수정 완료";
-        result.object = saved; 
+        result.object = saved;
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
