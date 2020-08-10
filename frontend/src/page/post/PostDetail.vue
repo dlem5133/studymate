@@ -5,7 +5,7 @@
     <div class="col-12 col-sm-12 col-md-12">
       <div class="blog-header">
         <div class="blog-cover">
-          <img class :src="postData.background_image" width="100%" height="240px" />
+          <img class :src="postData.background_image" style="width:100%; height:240px;" />
         </div>
       </div>
       <div class="d-flex justify-content-end">
@@ -60,6 +60,7 @@
         <div class="blog-tags">
           <a
             class="float-left mr-1 mt-1"
+            style="width:10%"
             variant="warning"
             v-for="tag in tagData"
             :key="tag.tid"
@@ -103,48 +104,51 @@
     <br />
     <div class="card shadow mb-5">
       <div class="card-header font-weight-bold">
-        <h5 class="float-left font-weight-bold m-2">COMMENTS</h5>
+        <h5 class="float-left font-weight-bold m-2">댓글</h5>
       </div>
       <div class="card-body text-left p-0" v-for="comment in replyData" :key="comment.rid">
         <div>
-          <div class="p-3 d-flex inline">
-            <p class="px-2 m-0 col-xs-4 col-sm-7">{{ comment.reply_content }}</p>
+          <div class="p-3  d-flex inline">
+            <p class="px-2 m-0 col-xs-4 col-sm-10">{{ comment.reply_content }}</p>
             <!-- <b-icon icon="person"></b-icon> -->
-            <small class="ml-auto text-muted">{{ comment.reply_writer }}</small>
           </div>
           <div class="pt-0 px-4 text-secondary d-flex inline card-body text-left">
-            <small class="mt-auto">
-              {{changeDatedata(comment.reply_time)}}
+            <small class="mt-1">
+             {{comment.reply_writer}} {{changeDatedata(comment.reply_time)}}
               <!-- 수정 : {{changeDatedata(comment.updated_at)}} -->
             </small>
             <div class="ml-auto">
-              <b-button size="sm" variant="outline-success" @click="reReply(comment.rid)">
-                <small>작성</small>
+              <b-button  size="sm" variant="outline-success" @click="reReply(comment.rid)">
+                <small>답글</small>
               </b-button>
               <b-button
-                size="sm"
+                size="sm" class="ml-1"
                 variant="outline-danger"
                 @click="replyDelete(comment)"
                 v-if="profileInfo.uid==comment.uid&&comment.reply_content!='삭제된 댓글입니다.'"
               >
-                <small>Delete</small>
+              <small><b-icon icon="trash"></b-icon></small> 
               </b-button>
             </div>
           </div>
           <div v-for="reReply in reReplyData" :key="reReply.id">
             <div v-if="comment.rid === reReply.replyparent">
               <div class="d-flex">
-                <p class="px-4 py-2 m-0 col-xs-4 col-sm-7">
+                <p class="px-4  col-xs-4 col-sm-9">
                   <b-icon icon="reply" flip-v></b-icon>
-                  {{ reReply.reply_content }}
+                   {{ reReply.reply_content }}
                 </p>
+                  <small class="m-auto">
+                  {{reReply.reply_writer}}
+                   <!-- {{changeDatedata(reReply.reply_time)}} -->
+                </small>
                 <b-button
                   @click="replyDelete(reReply)"
-                  class="ml-auto my-auto mr-4"
+                  class="ml-1 my-auto mr-4"
                   size="sm"
                   variant="outline-danger"
                 >
-                  <b-icon icon="trash"></b-icon>
+                 <small> <b-icon icon="trash"></b-icon></small>
                 </b-button>
               </div>
             </div>
@@ -452,4 +456,6 @@ export default {
 .detail {
   margin-top: 6rem;
 }
+
+
 </style>

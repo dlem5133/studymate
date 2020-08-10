@@ -29,14 +29,14 @@
               <b-form-input type="password" v-model="updateData.password"></b-form-input>
               <small>자기소개</small>
               <b-form-textarea v-model="updateData.intro" rows="3" max-rows="6"></b-form-textarea>
-              <small>프로필</small>
+              <small>프로필 사진을 선택해주세요</small>
+              <br>
               <div v-if="!updateData.profile_image">
-                <h2>Select an image</h2>
                 <input type="file" @change="onChangeImages" />
               </div>
               <div v-else>
                 <img :src="updateData.profile_image" style="width: 100%;" />
-                <button @click="removeImage">Remove image</button>
+                <button @click="removeImage">이미지 지우기</button>
               </div>
             </b-modal>
 
@@ -126,26 +126,28 @@
               :key="list.id"
               class="card m-2 px-2 p-2"
               v-b-modal.modal-3
-            >
+             >
               <div class="d-flex inline">
                 <small class="text-left">{{ list.empId.study.title }}</small>
                 <b-badge class="ml-auto my-auto" variant="secondary">완료</b-badge>
               </div>
-            <!-- <b-modal title="한줄평" id="modal-3" hide-footer>
 
-              <div 
-              v-show="list.pid==list1.pid" v-for="list1 in evalistdata" :key="list1.id"
-              class="m-2 px-2 p-2"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list1.sentence }}</small>
-                <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
-              </div>
-            </div>
-            </b-modal> -->
 
-            </div>
+              <!-- <b-modal title="한줄평" id="modal-3" hide-footer>
 
+                <div 
+                v-show="list.pid==list1.pid" v-for="list1 in evalistdata" :key="list1.id"
+                class="m-2 px-2 p-2"
+              >
+               <div class="d-flex inline">
+                  <small class="text-left">{{ list1.sentence }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
+                </div>
+             </div>
+             </b-modal> -->
+
+             </div>
+            <hr />
           </div>
         </div>
       </div>
