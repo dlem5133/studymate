@@ -50,7 +50,8 @@ public class Reply {
     
     private String reply_content;
     
-    private int reply_parent;
+    @Column(name="reply_parent")
+    private int replyparent;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime reply_time;

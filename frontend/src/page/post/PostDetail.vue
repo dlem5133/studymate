@@ -123,7 +123,7 @@
                 size="sm"
                 variant="outline-success"
                 @click="reReply(comment.rid)">
-              <small>작성</small></b-button>
+              <small>답댓</small></b-button>
               <b-button
                 size="sm"
                 variant="outline-danger"
@@ -135,9 +135,11 @@
               </div>
             </div>
             <div v-for="reReply in reReplyData" :key="reReply.id">
-              <div v-if="comment.rid === reReply.reply_parent">
+              <div v-if="comment.rid === reReply.replyparent">
                 <div class="d-flex">
                   <p class="px-4 py-2 m-0 col-xs-4 col-sm-7"><b-icon icon="reply" flip-v></b-icon> {{ reReply.reply_content }}</p>
+                  <small class="ml-auto text-muted">{{ reReply.reply_writer }}</small>
+
                   <b-button @click="replyDelete(reReply)" class="ml-auto my-auto mr-4" size="sm" variant="outline-danger"><b-icon icon="trash"></b-icon></b-button>
                 </div>
               </div>
@@ -306,8 +308,9 @@ export default {
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];
           const datas = res.data.object[1]
-          this.replyData = datas.filter(datas => datas.reply_parent==0)
-          this.reReplyData = datas.filter(datas => datas.reply_parent!=0)
+          console.log(res.data.object);
+          this.replyData = datas.filter(datas => datas.replyparent==0)
+          this.reReplyData = datas.filter(datas => datas.replyparent!=0)
 
           for (var i = 0; i < this.likeData.length; i++) {
             if (this.likeData[i].uid == this.profileInfo.uid) {
@@ -336,8 +339,8 @@ export default {
     // },
     replyCreate(replyparent) {
       this.newReply.pid = this.postData.pid;
-      this.newReply.uid = this.profileInfo.uid
-      this.newReply.reply_parent = replyparent
+      this.newReply.uid = this.profileInfo.uid;
+      this.newReply.reply_parent = replyparent;
       console.log(this.newReply)
       axios
         .post(SERVER_URL + "/reply/write", this.newReply)

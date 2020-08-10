@@ -55,7 +55,7 @@ public class ReplyController {
         reply.setReply_writer(user.getNickname());
         reply.setPid(replyRequest.getPid());
         reply.setStudy(studyDao.findStudyByPid(replyRequest.getPid()));
-        reply.setReply_parent(replyRequest.getReply_parent());
+        reply.setReplyparent(replyRequest.getReply_parent());
 
         final Reply saveReply = this.replyDao.save(reply);
         final BasicResponse result = new BasicResponse();
@@ -104,19 +104,39 @@ public class ReplyController {
         // Diary find_pid = diaryDao.findByDidAndUid(request.getDid(),request.getUid());
         ResponseEntity<Object> response = null;
 
-        if (reply_rid.getReply_parent() != 0) {
+        if (reply_rid.getReplyparent() != 0) {
             final BasicResponse result = new BasicResponse();
+            //첫 댓이 살아있지 않으면 첫댓 아예 DB에서 지워요
+            if ((replyDao.findReplyByRid(reply_rid.getReplyparent())).getReply_writer().equals("")) {
+                replyDao.delete(replyDao.findReplyByRid(reply_rid.getReplyparent()));
+            }
             replyDao.delete(reply_rid);
             result.status = true;
             result.data = "댓글 삭제 완료";
             response = new ResponseEntity<>(result, HttpStatus.OK);
+
         } else {
-            final BasicResponse result = new BasicResponse();
-            reply_rid.setReply_content("삭제된 댓글입니다.");
-            this.replyDao.save(reply_rid);
-            result.status = true;
-            result.data = "댓글 삭제 완료";
-            response = new ResponseEntity<>(result, HttpStatus.OK);
+            // 첫댓글이고
+            // 해당 댓글에 답댓글이 있을 때
+            if (replyDao.countByReplyparent(reply_rid.getRid()) != 0) {
+                final BasicResponse result = new BasicResponse();
+                reply_rid.setReply_content("삭제된 댓글입니다.");
+                reply_rid.setReply_writer("");
+                replyDao.save(reply_rid);
+                result.status = true;
+                result.data = "댓글 삭제 완료";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+
+            // 답댓이 없을 때
+            else {
+                final BasicResponse result = new BasicResponse();
+                replyDao.delete(reply_rid);
+                result.status = true;
+                result.data = "댓글 삭제 완료";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+
         }
         return response;
     }
