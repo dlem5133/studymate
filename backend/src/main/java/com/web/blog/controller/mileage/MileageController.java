@@ -1,5 +1,7 @@
 package com.web.blog.controller.mileage;
 
+import java.util.List;
+
 import com.web.blog.dao.evaluate.EvaluateDao;
 import com.web.blog.dao.mileage.MileageDao;
 import com.web.blog.dao.study.StudyDao;
@@ -48,6 +50,21 @@ public class MileageController {
 
         ResponseEntity<Object> response = null;
         Mileage mileage = mileageDao.findByUid(uid);
+
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "개인 마일리지 조회";
+        result.object = mileage;
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+    @GetMapping("/mileage/list")
+    @ApiOperation(value = "랭킹 조회")
+    public Object list() {
+
+        ResponseEntity<Object> response = null;
+        List<Mileage> mileage = mileageDao.findByOrderByTotalDesc();
 
         final BasicResponse result = new BasicResponse();
         result.status = true;

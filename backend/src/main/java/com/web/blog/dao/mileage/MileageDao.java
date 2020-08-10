@@ -8,5 +8,7 @@ public interface MileageDao extends JpaRepository<Mileage, String> {
 
 	Mileage findByUid(Integer uid);
 
+	List<Mileage> findByOrderByTotalDesc();
+
    
 }
