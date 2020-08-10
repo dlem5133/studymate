@@ -142,7 +142,7 @@ import LoginModal from "../../modal/LoginModal";
 import constants from "../../lib/constants";
 import { mdbIcon } from 'mdbvue';
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "",

@@ -175,7 +175,7 @@ import axios from "axios";
 import constants from "../../lib/constants";
 import "../../assets/css/postdetail.scss";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "PostDetail",

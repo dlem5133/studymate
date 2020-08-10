@@ -52,10 +52,10 @@
 </template>
 
 <script>
-// import constants from "../lib/constants";
+import constants from "../../lib/constants";
 import axios from "axios";
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "Signup",

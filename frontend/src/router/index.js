@@ -3,10 +3,8 @@ import Router from "vue-router";
 
 import constants from "../lib/constants";
 import AdminPage from "../page/AdminPage.vue";
-import test from "../page/test.vue";
 // 유저
 import Profile from "../page/user/Profile.vue";
-import JoinConfirm from "../page/user/JoinConfirm.vue";
 import Signup from "../page/user/Signup.vue";
 import MemberProfile from '../page/user/memberProfile'
 
@@ -39,21 +37,11 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: "/http://localhost:8080/account/kakaologin",
-      name: "test",
-      component: test,
-    },
-    {
       path: "/admin",
       name: constants.URL_TYPE.ADMIN,
       component: AdminPage,
     },
     // 로그인/가입
-    {
-      path: "/user/join/confirm",
-      name: constants.URL_TYPE.USER.CONFIRM,
-      component: JoinConfirm,
-    },
     {
       path: "/user/profile",
       name: constants.URL_TYPE.USER.PROFILE,
