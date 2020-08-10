@@ -399,7 +399,8 @@ public class StudyController {
         Study study = studyDao.findStudyByPid(request.getPid());
         User user = userDao.findUserByUid(request.getUid());
         BasicResponse result = new BasicResponse();
-
+        study.setMemnum(study.getMemnum()+1);
+        studyDao.save(study);
         Indvstudylst Indv = new Indvstudylst();
         Indv.setIsjoin(1);
         Indv.setIsleader(0);

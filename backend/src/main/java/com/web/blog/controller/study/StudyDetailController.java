@@ -145,6 +145,8 @@ public class StudyDetailController {
         BasicResponse result = new BasicResponse();
         if(indv.getIsjoin()==2)
         {
+            Study study = indv.getEmpId().getStudy();
+            study.setMemnum(study.getMemnum()-1);
             indvstudylstDao.delete(indv);
 
             result.status = true;
