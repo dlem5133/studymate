@@ -13,7 +13,6 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.study.Indvstudylst;
 import com.web.blog.model.study.Study;
-import com.web.blog.model.user.Report;
 import com.web.blog.model.user.ReportRequest;
 import com.web.blog.model.user.User;
 

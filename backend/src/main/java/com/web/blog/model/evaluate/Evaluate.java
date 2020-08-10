@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.blog.model.study.Study;
 import com.web.blog.model.user.User;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 @Entity
 @Data
@@ -50,7 +50,7 @@ public class Evaluate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int writeruid;
 
-    @Column(insertable = false, updatable = false,name = "target_uid")
+    @Column(insertable = false, updatable = false, name = "target_uid")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int targetuid;
 
@@ -63,9 +63,9 @@ public class Evaluate {
 
     private String sentence;
 
-    @Column(insertable = false, updatable = false)
-    private LocalDateTime eva_date;
+    @Column(insertable = false, updatable = false, name = "eva_date")
+    private Date evadate;
 
-    private Integer count;
+    private int count;
 
 }

@@ -3,6 +3,8 @@ package com.web.blog.model.evaluate;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.sql.Date;
+
 import javax.validation.Valid;
 
 @Valid
@@ -33,6 +35,10 @@ public class EvaluateRequest {
     @ApiModelProperty(required = true)
     String sentence;
 
+    @ApiModelProperty(required = true)
+    Date eva_date;
+    
+    @ApiModelProperty(required = true)
     int count;
     
 }

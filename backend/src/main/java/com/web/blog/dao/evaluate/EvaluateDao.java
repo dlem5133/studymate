@@ -1,5 +1,6 @@
 package com.web.blog.dao.evaluate;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.web.blog.model.evaluate.Evaluate;
@@ -13,6 +14,8 @@ public interface EvaluateDao extends JpaRepository<Evaluate, String> {
 
 	ArrayList<Evaluate> findByWriteruidAndSentenceNotNull(int writer_uid);
 	ArrayList<Evaluate> findByTargetuidAndSentenceNotNull(int target_uid);
+
+	ArrayList<Evaluate> findByPidAndWriteruidAndEvadate(int pid, int writer_uid, Date eva_date);
 
 
 

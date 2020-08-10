@@ -29,8 +29,11 @@
                   </b-dropdown> -->
 
                   <!-- 상호평가 -->
-                  <div v-if="calculFri == '금요일'">
-                    <b-button @click="checkEvalue" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                  <div v-if="calculFri == '월요일' || finalCheck < 7">
+                    <b-button v-if="finalCheck > 7" @click="checkEvalue" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                    </b-button>
+                    <b-button v-if="finalCheck <= 7" @click="checkFinalEva" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
                       <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
                     </b-button>
 
@@ -48,7 +51,7 @@
                       </b-list-group>
                     </b-modal>
 
-                    <b-modal id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
+                    <b-modal v-if="finalCheck > 7" id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
                       <b-list-group>
                         <b-list-group-item class="p-1 pl-3 m-1">
                           <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
@@ -62,7 +65,25 @@
                           <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
                           <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
                         </b-list-group-item>                      
-                        </b-list-group>
+                      </b-list-group>
+                    </b-modal>
+
+                    <b-modal v-if="finalCheck <= 7" id="modal-multi-2" @ok="setFinEva" title="마지막 상호 평가" ok-only>
+                      <b-list-group>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
+                        </b-list-group-item>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
+                        </b-list-group-item>
+                        <b-list-group-item class="p-1 pl-3 m-1">
+                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
+                        </b-list-group-item>
+                        <b-form-input class="p-1 pl-3 m-1" v-model="evalueData.sentence" placeholder="한줄평을 작성해주세요"></b-form-input>                   
+                      </b-list-group>
                     </b-modal>
                   </div>
 
@@ -338,6 +359,13 @@
         var d = this.week[date.getDay()]
         return d
       },
+      finalCheck() {
+        var stday = this.postData.end_date
+        var today = new Date()
+        var count = new Date(stday)
+        var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
+        return dday
+      }
     },
     created() {
       this.addprofileInfo();
@@ -715,11 +743,60 @@
       setEvaluage() {
         this.evalueData.pid = this.postData.pid
         this.evalueData.writer_uid = this.profileInfo.uid
-        this.evalueData.count = this.postData.evalcount
         axios.post(SERVER_URL + "/eva/score", this.evalueData)
-        .then(res => {
-          console.log(res)
+        .then(() => {
           this.checkEvalue()
+          this.evalueData = {
+            pid: 0,
+            writer_uid: 0,
+            target_uid: 0,
+            score1: 1,
+            score2: 1,
+            score3: 1,
+            sentence: null,
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      },
+      checkEvalue() {
+        let today = new Date();   
+        let year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let date = today.getDate();
+        if (month < 10) {
+          var d = year + '-0' + month + '-' + date
+        } else {
+          var d = year + '-' + month + '-' + date
+        }
+        const evaList = {
+          pid: this.postData.pid,
+          writer_uid: this.profileInfo.uid,
+          eva_date: d
+        }
+        const alreadyList = []
+        axios.post(SERVER_URL + "/eva/list", evaList)
+        .then(res => {
+          const tmpData = res.data.object
+          for (let i = 0; i < tmpData.length; i++) {
+            alreadyList.push(tmpData[i].targetuid)
+          }
+          this.alreadyEva = alreadyList
+        })
+        .catch(err => {console.log(err);})
+      },
+      onceEva() {
+        alert("이미 평가 하셨습니다.")
+      },
+      setFinEva() {
+        this.evalueData.pid = this.postData.pid
+        this.evalueData.writer_uid = this.profileInfo.uid
+        this.evalueData.count = 1
+        console.log(this.evalueData);
+        axios.post(SERVER_URL + "/eva/write", this.evalueData)
+        .then(() => {
+          this.checkFinalEva()
           this.evalueData = {
             pid: 0,
             writer_uid: 0,
@@ -735,17 +812,16 @@
           console.log(err)
         })
       },
-      checkEvalue() {
-        const evaList = {
+      checkFinalEva() {
+        const evaFinList = {
           pid: this.postData.pid,
-          writer_uid : this.profileInfo.uid,
-          count: this.postData.evalcount
+          writer_uid: this.profileInfo.uid,
+          count: 1
         }
         const alreadyList = []
-        axios.post(SERVER_URL + "/eva/list", evaList)
+        axios.post(SERVER_URL + "/eva/finallist", evaFinList)
         .then(res => {
           const tmpData = res.data.object
-          console.log(tmpData);
           for (let i = 0; i < tmpData.length; i++) {
             alreadyList.push(tmpData[i].targetuid)
           }
@@ -754,9 +830,6 @@
         })
         .catch(err => {console.log(err);})
       },
-      onceEva() {
-        alert("이미 평가 하셨습니다.")
-      }
     },
   };
 </script>
@@ -765,20 +838,14 @@
   .clickstudy {
     cursor: pointer;
   }
-
   .createpoint {
     position: absolute;
     right: 2%;
     cursor: pointer;
     font-size: large;
   }
-
   .dailycss:hover {
     cursor: pointer;
     background-color: #eee;
   }
-
-  /* .calendar {
-  background-color: ;
-} */
 </style>

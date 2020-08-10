@@ -228,6 +228,7 @@ export default {
     givePenalty(user) {
       axios.post(SERVER_URL + "/admin/givepenalty", user).then(() => {
         this.allReport();
+        this.allUser();
       });
     },
     noPenalty(user) {
