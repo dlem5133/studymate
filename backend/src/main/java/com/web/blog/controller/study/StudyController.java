@@ -287,6 +287,7 @@ public class StudyController {
         ResponseEntity<Object> response = null;
         Study study = new Study();
         // 이미지 업로드 부분
+
         study.setPid(request.getPid());
         study.setCategory(request.getCategory());
         study.setData(request.getData());

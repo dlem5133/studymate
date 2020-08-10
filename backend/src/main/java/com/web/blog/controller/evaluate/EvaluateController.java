@@ -89,7 +89,9 @@ public class EvaluateController {
 
             target.setTotalscoreper(target.getTotalscoreper() + 1);
         }
-
+        userDao.save(target);
+        // 마일리지
+        System.out.println(eva);
         Mileage mileage = mileageDao.findByUid(writer.getUid());
         mileage.setTotal(mileage.getTotal() + 10);
         mileage.setEndpoint(mileage.getEvalpoint() + 1);
@@ -149,10 +151,10 @@ public class EvaluateController {
 
             target.setTotalscoreper(target.getTotalscoreper() + 1);
         }
-
+        userDao.save(target);
         Mileage mileage = mileageDao.findByUid(writer.getUid());
         mileage.setTotal(mileage.getTotal() + 200);
-        mileage.setEndpoint(mileage.getEndpoint() + 1);
+        mileage.setEndpoint(mileage.getEndpoint() + 200);
         mileageDao.save(mileage);
         userDao.save(writer);
         final Evaluate saveEva = this.evaluateDao.save(eva);

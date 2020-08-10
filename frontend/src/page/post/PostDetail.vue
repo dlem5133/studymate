@@ -175,14 +175,13 @@ import axios from "axios";
 import constants from "../../lib/constants";
 import "../../assets/css/postdetail.scss";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "PostDetail",
   data: () => {
     return {
       profileInfo: [],
-
       postData: {},
       replyData: {},
       reReplyData:{},
@@ -236,11 +235,8 @@ export default {
   },
   methods: {
     reReply(replyparent){
-      console.log(replyparent)
       this.replyparent=replyparent
     },
-
-
     likeList(){
       axios.get(SERVER_URL+'/likep/list',{params:{pid:this.$route.params.post_id}})
       .then(res=>{
@@ -248,7 +244,6 @@ export default {
       })
       .catch(err=>console.log(err))
     },
-
     likePost() {
       this.likeClickData.pid = this.$route.params.post_id;
       this.likeClickData.uid = this.profileInfo.uid;
@@ -308,7 +303,6 @@ export default {
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];
           const datas = res.data.object[1]
-          console.log(res.data.object);
           this.replyData = datas.filter(datas => datas.replyparent==0)
           this.reReplyData = datas.filter(datas => datas.replyparent!=0)
 
@@ -395,14 +389,18 @@ export default {
         .catch((err) => console.log(err));
     },
     approvalStudy(uid) {
-      this.approvalData.pid = this.$route.params.post_id;
-      this.approvalData.uid = uid;
-      axios
-        .post(SERVER_URL + "/study/approval", this.approvalData)
-        .then(() => {
-          this.requestPeopleList();
-        })
-        .catch((err) => console.log(err));
+      if (this.postData.memnum >= this.postData.limitp) {
+        alert("인원이 가득합니다. 더 원하시면 최대맴버수를 수정해주세요!!")
+      } else {
+        this.approvalData.pid = this.$route.params.post_id;
+        this.approvalData.uid = uid;
+        axios
+          .post(SERVER_URL + "/study/approval", this.approvalData)
+          .then(() => {
+            this.requestPeopleList();
+          })
+          .catch((err) => console.log(err));
+      }
     },
     studyRequest() {
       this.requestData.pid = this.postData.pid;

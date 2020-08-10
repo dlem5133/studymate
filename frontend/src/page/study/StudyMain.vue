@@ -282,7 +282,7 @@
   import axios from "axios";
   import constants from "../../lib/constants";
 
-  const SERVER_URL = "http://localhost:8080";
+  const SERVER_URL = constants.ServerUrl;
 
   export default {
     name: "PostDetail",
@@ -470,9 +470,11 @@
         this.postData.days = dayString
         this.updateData.study = this.postData
         this.updateData.tag = this.tagData
+        console.log(this.updateData);
         axios
-          .post(SERVER_URL + "/study/update", this.updateData)
+          .post(SERVER_URL + "/study/daysupdate", this.updateData)
           .then(res => {
+            this.getDetail()
           })
           .catch(err => {
             console.log(err)
@@ -595,11 +597,12 @@
             this.postData = res.data.object[0];
             this.tagData = res.data.object[2]
             this.userData = res.data.object[4];
+            const tmpdays = []
             for (var i = 0; i < this.postData.days.length;) {
-              this.days.push(this.postData.days.slice(i, i + 3))
+              tmpdays.push(this.postData.days.slice(i, i + 3))
               i += 3
             }
-            
+            this.days = tmpdays
           })
           .catch((err) => console.log(err.response));
       },
@@ -623,6 +626,9 @@
         var year = date.getFullYear();
         var month = date.getMonth() + 1
         var day = date.getDate();
+
+        var d = this.week[date.getDay()]
+
         if (month < 10) {
           month = "0" + month;
         }
@@ -638,6 +644,10 @@
             flag = true
             break
           }
+        }
+        if (this.days.indexOf(d) !== -1) {
+          alert('일지작성이 불가능한 날입니다.')
+          flag = true
         }
         if (!flag) {
           this.$router.push({
@@ -690,7 +700,6 @@
         if (this.checkPost.indexOf(ymd) !== -1) {
           return 'table-success'
         }
-
         if (this.days.indexOf(d) !== -1) {
           return 'table-secondary'
         }
@@ -793,7 +802,6 @@
         this.evalueData.pid = this.postData.pid
         this.evalueData.writer_uid = this.profileInfo.uid
         this.evalueData.count = 1
-        console.log(this.evalueData);
         axios.post(SERVER_URL + "/eva/write", this.evalueData)
         .then(() => {
           this.checkFinalEva()

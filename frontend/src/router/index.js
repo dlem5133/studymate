@@ -3,10 +3,8 @@ import Router from "vue-router";
 
 import constants from "../lib/constants";
 import AdminPage from "../page/AdminPage.vue";
-import test from "../page/test.vue";
 // 유저
 import Profile from "../page/user/Profile.vue";
-import JoinConfirm from "../page/user/JoinConfirm.vue";
 import Signup from "../page/user/Signup.vue";
 import MemberProfile from '../page/user/memberProfile'
 
@@ -29,6 +27,10 @@ import BoardCreate from "../page/board/BoardCreate.vue"
 import BoardDetail from "../page/board/BoardDetail.vue"
 import BoardUpdate from "../page/board/BoardUpdate.vue"
 
+// 랭킹
+
+import Ranking from "../page/rank/Ranking.vue"
+
 // 404 오류
 import PageNotFound from "../page/error/PageNotFound.vue";
 import ErrorPage from "../page/error/ErrorPage.vue";
@@ -39,21 +41,11 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: "/http://localhost:8080/account/kakaologin",
-      name: "test",
-      component: test,
-    },
-    {
       path: "/admin",
       name: constants.URL_TYPE.ADMIN,
       component: AdminPage,
     },
     // 로그인/가입
-    {
-      path: "/user/join/confirm",
-      name: constants.URL_TYPE.USER.CONFIRM,
-      component: JoinConfirm,
-    },
     {
       path: "/user/profile",
       name: constants.URL_TYPE.USER.PROFILE,
@@ -136,6 +128,12 @@ export default new Router({
       path: "/study/:post_id/board/:board_id/update",
       name: constants.URL_TYPE.BOARD.BOARDUPDATE,
       component: BoardUpdate,
+    },
+    //랭킹
+    {
+      path: "/rank/ranking",
+      name: constants.URL_TYPE.RANK.RANKING,
+      component: Ranking,
     },
     //page not found
     {
