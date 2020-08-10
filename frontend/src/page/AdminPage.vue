@@ -158,9 +158,10 @@
 </template>
 
 <script>
+import constants from "../lib/constants";
 import axios from "axios";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "AdminPage",
@@ -228,6 +229,7 @@ export default {
     givePenalty(user) {
       axios.post(SERVER_URL + "/admin/givepenalty", user).then(() => {
         this.allReport();
+        this.allUser();
       });
     },
     noPenalty(user) {

@@ -2,6 +2,7 @@ export default {
   TITLE: "SSAFY 개발블로그",
   baseUrl:
     "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
+  ServerUrl: "http://localhost:8080",
   LS_KEY: {
     USER_TOKEN: "userToken",
   },
@@ -15,7 +16,6 @@ export default {
       SIGNUP: "signup",
       PROFILE: "profile",
       MEMBERPROFILE:"memberprofile",
-      CONFIRM: "confirm",
       FINDPASSWORD: "findPassword",
     },
     POST: {
@@ -37,6 +37,9 @@ export default {
       BOARDCREATE: "boardcreate",
       BOARDDETAIL: "boarddetail",
       BOARDUPDATE: "boardupdate",
+    },
+    RANK: {
+      RANKING: "ranking"
     },
     ERROR: {
       PAGENOTFOUND: "pagenotfound",

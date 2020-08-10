@@ -192,11 +192,6 @@ public class StudyController {
         } else {
             List<Study> studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
 
-            /*
-             * List<Integer> cnt = indvstudylstDao.countByPidAndIsjoin(request.getPid(),1);
-             * System.out.println("++++++++++++" +cnt); studylist.add(cnt);
-             */
-
             result.status = true;
             result.data = "검색할 키워드가 없어 모두 검색 완료";
             result.object = studylist;
@@ -210,7 +205,7 @@ public class StudyController {
     @PostMapping("/study/write")
     @ApiOperation(value = "스터디 생성")
     public Object signup(@Valid @RequestBody StudyRequest request) {
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
 
         List<Study> check_study = studyDao.findStudyByUid(request.getUid());
         int cnt = 0;
@@ -292,6 +287,7 @@ public class StudyController {
         ResponseEntity<Object> response = null;
         Study study = new Study();
         // 이미지 업로드 부분
+
         study.setPid(request.getPid());
         study.setCategory(request.getCategory());
         study.setData(request.getData());
@@ -399,7 +395,8 @@ public class StudyController {
         Study study = studyDao.findStudyByPid(request.getPid());
         User user = userDao.findUserByUid(request.getUid());
         BasicResponse result = new BasicResponse();
-
+        study.setMemnum(study.getMemnum() + 1);
+        studyDao.save(study);
         Indvstudylst Indv = new Indvstudylst();
         Indv.setIsjoin(1);
         Indv.setIsleader(0);
@@ -590,9 +587,9 @@ public class StudyController {
         for (int i = 0; i < indvstudylsts.size(); i++) {
             User user = indvstudylsts.get(i).getEmpId().getUser();
             Mileage mileage = mileageDao.findByUid(indvstudylsts.get(i).getUid());
-            
-            mileage.setTotal(mileage.getTotal()+200);
-            mileage.setEndpoint(mileage.getEndpoint()+1);
+
+            mileage.setTotal(mileage.getTotal() + 200);
+            mileage.setEndpoint(mileage.getEndpoint() + 1);
             mileageDao.save(mileage);
             userDao.save(user);
         }

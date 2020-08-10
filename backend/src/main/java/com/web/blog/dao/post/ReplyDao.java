@@ -16,4 +16,6 @@ public interface ReplyDao extends JpaRepository<Reply, String> {
 
 	public Reply findReplyByRidAndUidAndPid(int rid, int uid, int pid);
 
+	public int countByReplyparent(int rid);
+
 }

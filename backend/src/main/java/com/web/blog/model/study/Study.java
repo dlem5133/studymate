@@ -72,4 +72,6 @@ public class Study {
 
     private Integer evalcount;
 
+    private Integer memnum;
+
 }

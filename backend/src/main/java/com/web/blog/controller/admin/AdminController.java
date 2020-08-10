@@ -13,7 +13,6 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.study.Indvstudylst;
 import com.web.blog.model.study.Study;
-import com.web.blog.model.user.Report;
 import com.web.blog.model.user.ReportRequest;
 import com.web.blog.model.user.User;
 
@@ -53,7 +52,7 @@ public class AdminController {
     @ApiOperation(value = "모든 회원 조회")
     public Object findAllUser() {
         List<User> user = userDao.findAll();
-        
+
         ResponseEntity<Object> response = null;
         BasicResponse result = new BasicResponse();
         result.status = true;
@@ -80,7 +79,6 @@ public class AdminController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
-
     }
 
     @PostMapping("/admin/report")
@@ -88,17 +86,15 @@ public class AdminController {
     public Object searchReportUser() {
         ResponseEntity<Object> response = null;
         List<Indvstudylst> check = indvStudylstDao.findByIsjoin(1);
-        System.out.println(check);
 
         BasicResponse result = new BasicResponse();
         List<ArrayList<Object>> myset = new ArrayList<>();
 
-        
         for (int i = 0; i < check.size(); i++) {
 
             int reportuser = reportDao.countByPidAndTarget(check.get(i).getPid(), check.get(i).getUid());
 
-            if (reportuser >= (int) Math.round(indvStudylstDao.countByPid(check.get(i).getPid()))/(double) 2) {
+            if (reportuser >= (int) Math.round(indvStudylstDao.countByPid(check.get(i).getPid())) / (double) 2) {
 
                 ArrayList<Object> sublst = new ArrayList<>();
                 sublst.add(reportDao.findByPidAndTarget(check.get(i).getPid(), check.get(i).getUid()));

@@ -15,7 +15,6 @@ import com.web.blog.dao.study.StudyTagDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 
-
 import com.web.blog.model.study.Study;
 
 import com.web.blog.model.study.Indvstudylst;
@@ -37,16 +36,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@ApiResponses(value = {
-    @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-    @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-    @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-    @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class)
-})
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
+        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = {
-    "http://localhost:3000"
-})
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class StudyDetailController {
 
@@ -80,15 +75,16 @@ public class StudyDetailController {
         Indvstudylst indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getUid());
         indv.setIsjoin(2);
         Indvstudylst saved_indv = indvstudylstDao.save(indv);
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
+
         if (saved_indv != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "스터디 탈퇴 신청 완료";
             result.object = saved_indv;
-            response = new ResponseEntity < > (result, HttpStatus.OK);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return response;
@@ -100,36 +96,38 @@ public class StudyDetailController {
         Indvstudylst indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getUid());
         indv.setIsjoin(1);
         Indvstudylst saved_indv = indvstudylstDao.save(indv);
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
+
         if (saved_indv != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "스터디 탈퇴 취소";
             result.object = saved_indv;
-            response = new ResponseEntity < > (result, HttpStatus.OK);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
+
     @GetMapping("/study/detail/deleteList")
     @ApiOperation(value = "회원탈퇴 대기 목록")
     public Object deleteList(@RequestParam(required = true) int pid) {
-        System.out.println("@@@@@@@@@@@test@@@@@@@@@@@@@@@@@@@"+pid);
-        List < Indvstudylst > indv_list = indvstudylstDao.findByPidAndIsjoin(pid, 2);
-        ArrayList < User > user_list = new ArrayList < > ();
+        List<Indvstudylst> indv_list = indvstudylstDao.findByPidAndIsjoin(pid, 2);
+        ArrayList<User> user_list = new ArrayList<>();
+
         for (int i = 0; i < indv_list.size(); i++) {
             // 탈퇴 대기중인 유저 목록
             user_list.add(indv_list.get(i).getEmpId().getUser());
         }
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
 
         BasicResponse result = new BasicResponse();
         result.status = true;
         result.data = "회원탈퇴 대기 목록 조회 완료";
         result.object = user_list;
-        response = new ResponseEntity < > (result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
     }
@@ -139,72 +137,73 @@ public class StudyDetailController {
     public Object delete_apply(@Valid @RequestBody IndvstudylstRequest request) {
         Indvstudylst indv = new Indvstudylst();
         indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getUid());
-        
-        ResponseEntity < Object > response = null;
+
+        ResponseEntity<Object> response = null;
 
         BasicResponse result = new BasicResponse();
-        if(indv.getIsjoin()==2)
-        {
+        if (indv.getIsjoin() == 2) {
+            Study study = indv.getEmpId().getStudy();
+            study.setMemnum(study.getMemnum() - 1);
             indvstudylstDao.delete(indv);
 
             result.status = true;
             result.data = "스터디 탈퇴 승인";
-            response = new ResponseEntity < > (result, HttpStatus.OK);
-        }
-        else{
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
             result.status = false;
             result.data = "탈퇴 신청하지 않은 사용자 입니다";
-            response = new ResponseEntity < > (result, HttpStatus.OK);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-        
-
 
         return response;
     }
+
     @PostMapping("/study/detail/delete_companion")
     @ApiOperation(value = "스터디 탈퇴 반려")
     public Object delete_companion(@Valid @RequestBody IndvstudylstRequest request) {
         Indvstudylst indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getUid());
         indv.setIsjoin(1);
         Indvstudylst saved_indv = indvstudylstDao.save(indv);
-        ResponseEntity < Object > response = null;
+        ResponseEntity<Object> response = null;
+
         if (saved_indv != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "스터디 탈퇴 반려";
             result.object = saved_indv;
-            response = new ResponseEntity < > (result, HttpStatus.OK);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
+
     @PostMapping("/study/detail/delegation")
     @ApiOperation(value = "스터디 위임")
     public Object delegation(@Valid @RequestBody DelegationRequest request) {
         Indvstudylst leader_indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getLeader());
         Indvstudylst member_indv = indvstudylstDao.findByPidAndUid(request.getPid(), request.getMember());
         Study study = studyDao.findStudyByPid(request.getPid());
+
         leader_indv.setIsleader(0);
         member_indv.setIsleader(1);
         study.setUid(request.getMember());
         indvstudylstDao.save(leader_indv);
         indvstudylstDao.save(member_indv);
         studyDao.save(study);
-        ResponseEntity < Object > response = null;
+
+        ResponseEntity<Object> response = null;
         if (member_indv != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
             result.data = "스터디 위임";
             result.object = member_indv.getEmpId().getUser().getNickname();
-            response = new ResponseEntity < > (result, HttpStatus.OK);
-        } else 
-        {
-            response = new ResponseEntity < > (null, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         return response;
     }
-    
 
 }

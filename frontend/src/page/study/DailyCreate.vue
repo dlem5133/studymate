@@ -1,10 +1,6 @@
 <template>
   <div class="container p-5">
-    <h1>Daily</h1>
-
-    <label>제목</label>
     <b-form-input class="my-2" v-model="text" placeholder="제목"></b-form-input>
-    <label>내용</label>
     <!-- <b-form-textarea class="my-2" v-model="content" rows="8"></b-form-textarea> -->
     <editor ref="toastuiEditor" />
 
@@ -49,7 +45,7 @@
   import {
     Editor
   } from '@toast-ui/vue-editor';
-  const SERVER_URL = "http://localhost:8080";
+  const SERVER_URL = constants.ServerUrl;
 
   export default {
     name: "DailyCreate",
@@ -120,6 +116,11 @@
         });
       },
       submitDaily(tmpN) {
+                if(this.text==""){
+          alert("제목을 입력해주세요.")
+        }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""){
+          alert("내용을 입력해주세요.")
+        }else{
         const dailydData = {
           title: this.text,
           body: this.$refs.toastuiEditor.invoke("getMarkdown"),
@@ -142,6 +143,7 @@
           .catch((err) => {
             console.log(err);
           });
+        }
       },
       getTmpDaily() {
         axios.get(SERVER_URL + "/diary/list", {

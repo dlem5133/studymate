@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GugunDao extends JpaRepository<Gugun, String> {
 
-    List<Gugun> findBySidocode(String sidocode);
+	List<Gugun> findBySidocode(String sidocode);
 
 	List<Gugun> findByGugunnameLike(String string);
 
