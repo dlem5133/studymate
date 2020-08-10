@@ -1,10 +1,17 @@
 <template>
-  <div id="main" class="container">
-    <div class="row row-cols-2">
-      <div class="main-table col-12 col-md-12">
-        <div class="container logoimg">
-          <img class="main-table col-12 col-md-6" src="../../assets/img/owl_logo.png" />
-        </div>
+  <div>
+    <div id="mainimg">
+      <div class="main-text">
+        <h4 style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.6);">안녕하세요 스터디메이트에 방문하신걸 환영합니다 :)</h4>
+        <h4 style="font-family: 'Do Hyeon', sans-serif;color:rgba(0,255,255,0.6);">지금 페이지마다 헤더높이 안되있어서 위에 붙어있을거야....고칠거야...</h4>        
+        <h4>
+        <b-icon icon="mouse" variant="warning" class="mt-4" @click="moveBottom"></b-icon>
+        </h4>
+      </div>
+    </div>
+    <div class="container ">
+    <div id="maintext" class="row row-cols-2">
+      <div id="maintable" class="main-table mt-5 col-12 col-md-12">
 
         <!-- ===========================================================================================  -->
           <div class="d-flex justify-content-center">
@@ -90,7 +97,7 @@
                         class="infopplbindo"
                         src="../../assets/img/person.png"
                       />
-                      {{list.memnum}} / {{ list.limitp }} 명<br />
+                      2 / {{ list.limitp }} 명<br />
                       <img
                         class="infopplbindo"
                         src="../../assets/img/calendar.png"
@@ -123,7 +130,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div></div>
 </template>
 
 <script>
@@ -355,24 +362,45 @@ export default {
       }
     },
     moveTop() {
-      window.scrollTo(0, 0);
+      var location = document.querySelector("#mainimg").offsetTop;
+      window.scrollTo({top:location, behavior:'smooth'});
     },
+    moveBottom() {
+      var location = document.querySelector("#maintext").offsetTop;
+      window.scrollTo({top:location-71.8, behavior:'smooth'});
+    },
+    
   },
 };
 </script>
 
 <style scoped>
-#main {
-  padding: 0;
+#mainimg{
+  position: absolute;
+  margin-top: 0;
+  top:0 !important;
+  min-width: 100%;
+  right:0;
+  height:100vh !important;
+  line-height: 100vh;
+  background-image: url('../../assets/img/main.jpg');
+  background-size:cover; 
+  z-index: 6;
 }
-
-h1 {
-  margin: 0 0 1em;
+#maintext{
+  position: relative;
+  top:100vh;
+}
+.main-text{
+  padding-top:40vh;
+  background-color: #000000;
+  background-color: rgba(0,0,0,0.8);
+  height:100vh;
 }
 input[type="radio"] {
   position: absolute;
   opacity: 0;
-  z-index: -1;
+  /* z-index: -1; */
 }
 label {
   position: relative;
