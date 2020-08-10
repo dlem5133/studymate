@@ -41,11 +41,9 @@ public class KakaoAPI {
             bw.write(sb.toString());
             bw.flush();
 
-
             ///////////////////////
             // 결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
-            // System.out.println("++++++++++++ \nresponseCode : " + responseCode);
 
             // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -63,9 +61,6 @@ public class KakaoAPI {
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-            // System.out.println("!!!!!!!!!!!! \naccess_token : " + access_Token);
-            // System.out.println("???????????? \nrefresh_token : " + refresh_Token);
 
             br.close();
             bw.close();
@@ -119,7 +114,6 @@ public class KakaoAPI {
                 userInfo.put("nickname", nickname);
                 userInfo.put("email", email);
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
