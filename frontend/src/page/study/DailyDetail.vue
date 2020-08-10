@@ -1,12 +1,10 @@
 <template>
   <div class="main-table border">
     <div class="container p-5">
-      <h1>DETAIL</h1>
       <div class="card text-left">
         <div class="card-header">
-          {{dailyDetailData.title}}<br />
-          {{dailyDetailData.writer}}<br />
-          {{dailyDetailData.posttime}}
+          <h5>{{dailyDetailData.title}}</h5><br />
+           {{dailyDetailData.writer}} <small>{{dailyDetailData.posttime}}</small>
         </div>
         <div class="card-body">
           <Viewer v-if="dailyDetailData.body != null" :initialValue="dailyDetailData.body" />

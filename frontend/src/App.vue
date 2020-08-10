@@ -4,6 +4,14 @@
     
     <router-view />
     <!-- <Footer :isFooter="isFooter" /> -->
+
+        <button class="backButton" onclick="history.back()">
+      <i class="fas fa-arrow-alt-circle-left"></i>
+    </button>
+
+    <button class="topButton" @click="moveTop">
+      <i class="fas fa-arrow-alt-circle-up"></i>
+    </button>
   </div>
 </template>
 
@@ -53,7 +61,11 @@ export default {
       });
       this.isHeader = isHeader;
       this.isFooter = isFooter;
-    }
+    },
+        moveTop() {
+      var location = document.querySelector("#brandname").offsetTop;
+      window.scrollTo({ top: location, behavior: "smooth" });
+    },
   },
   data: function() {
     return {
@@ -73,5 +85,21 @@ export default {
   text-align: center;
   color: #2c3e50;
   /* margin-top: 60px; */
+}
+
+.backButton {
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+  font-size: 30px;
+  text-shadow: 0px 0px 10px white;
+}
+
+.topButton {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  font-size: 30px;
+  text-shadow: 0px 0px 10px white;
 }
 </style>

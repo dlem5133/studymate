@@ -463,6 +463,7 @@
           .catch((err) => console.log(err));
       },
       handleOk() {
+        
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
           dayString += this.selectedDay[i]
@@ -713,6 +714,13 @@
         });
       },
       expectOk() {
+      if (this.expectData.dodate == null) {
+        alert("날짜가 입력되지 않았습니다.");
+      } else if (this.expectData.doplace == "") {
+        alert("장소가 입력되지 않았습니다.");
+      } else if (this.expectData.assignment == "") {
+        alert("과제가 입력되지 않았습니다.");
+      } else {
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/create", this.expectData)
@@ -721,8 +729,16 @@
             this.getPostTime()
           })
           .catch((err) => console.log(err));
+        }
       },
       expectUpdate() {
+      if (this.expectData.dodate == null) {
+        alert("날짜가 입력되지 않았습니다.");
+      } else if (this.expectData.doplace == "") {
+        alert("장소가 입력되지 않았습니다.");
+      } else if (this.expectData.assignment == "") {
+        alert("과제가 입력되지 않았습니다.");
+      } else {
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
@@ -734,6 +750,7 @@
           })
 
           .catch((err) => console.log(err));
+       }
       },
       expectDelete() {
         this.expectData.eid = this.expectTodo.eid;
