@@ -626,6 +626,9 @@
         var year = date.getFullYear();
         var month = date.getMonth() + 1
         var day = date.getDate();
+
+        var d = this.week[date.getDay()]
+
         if (month < 10) {
           month = "0" + month;
         }
@@ -641,6 +644,10 @@
             flag = true
             break
           }
+        }
+        if (this.days.indexOf(d) !== -1) {
+          alert('일지작성이 불가능한 날입니다.')
+          flag = true
         }
         if (!flag) {
           this.$router.push({
