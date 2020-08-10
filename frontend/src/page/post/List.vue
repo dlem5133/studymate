@@ -15,14 +15,14 @@
 
         <!-- ===========================================================================================  -->
           <div class="d-flex justify-content-center">
-            <div v-for="category in categoryList"
-              :key="category"
-            >
+            <div v-for="category in categoryList" :key="category">
               <input
                 type="radio"
-                @click="addCategory(category)"
+                v-model="selected.category"
+                :value="`${category}`"
                 :id="`${category}`"
                 name="rb"
+                @click="searchData"
               />
               <label :for="`${category}`">{{ category }}</label>
             </div>
@@ -31,31 +31,18 @@
           <!-- =======================================아래 수정====================================================  -->
           <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
             <div class="serach-selectbox">            
-              <select
-                v-model="selected"
-                class="form-control" @click="sendOption">
+              <select v-model="selected.what" @click="searchData" class="form-control">
                 <option value="all" > 전체 </option>
                 <option value="title"> 스터디명 </option>
                 <option value="area"> 지역</option>
                 <option value="tag"> 태그</option>
-               
               </select>
             </div>
 
-            
             <div class="search">
-              <!--<div class="serach-input">
-                <input
-                  v-model="selectCategory.optionstext"
-                  class="form-control"
-                  type="text"
-                  placeholder="검색어를 입력해주세요"
-                />
-              </div>-->
-              <!-- -->
               <div class="input-group md-form form-sm form-2 pl-0">
-                <input class="form-control my-0 py-1 amber-border" v-model="selectCategory.optionstext" type="text" placeholder="검색어를 입력해주세요" aria-label="Search">
-                  <button class="input-group-text" id="addon-wrapping"  @click="categorySubmit">
+                <input @keyup="searchData" v-model="selected.keyword" class="form-control my-0 py-1 amber-border" type="text" placeholder="검색어를 입력해주세요" aria-label="Search">
+                  <button class="input-group-text" id="addon-wrapping">
                     <mdbIcon icon="search"/>
                   </button>
               </div>
@@ -67,19 +54,19 @@
           <ul
             class="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center"
             v-for="(list, i) in searchList"
-            :key="list.pid"
+            :key="list[0].pid"
           >
             <li
               v-if="i < `${scrolled}`"
               class="booking-card"
-              :style="{ backgroundImage: `url(${list.background_image})` }"
+              :style="{ backgroundImage: `url(${list[0].background_image})` }"
             >
               <div class="book-container">
                 <div class="content">
                   <button
                     class="btn"
-                    @click="goDetail(list.pid)"
-                    :key="list.pid"
+                    @click="goDetail(list[0].pid)"
+                    :key="list[0].pid"
                   >
                     Detail
                   </button>
@@ -87,8 +74,8 @@
               </div>
               <div class="informations-container">
                 <div class="categoryandtitle">
-                  <h3 class="title">{{ list.title }}</h3>
-                  <small class="mycategory">{{ list.category }}</small>
+                  <h3 class="title">{{ list[0].title }}</h3>
+                  <small class="mycategory">{{ list[0].category }}</small>
                 </div>
                 <div class="more-information">
                   <div class="info-container">
@@ -97,30 +84,25 @@
                         class="infopplbindo"
                         src="../../assets/img/person.png"
                       />
-                      2 / {{ list.limitp }} 명<br />
+                      2 / {{ list[0].limitp }} 명<br />
                       <img
                         class="infopplbindo"
                         src="../../assets/img/calendar.png"
                       />
-                      주 {{ list.bindo }} 회 <br />
+                      주 {{ list[0].bindo }} 회 <br />
                       <img
                         class="infopplbindo"
                         src="../../assets/img/navi.png"
                       />
-                      <span v-if="list.sido.sidoname=='온라인'">
-                      {{list.sido.sidoname}}</span>
-                      <span v-if="list.sido.sidoname!='온라인' && list.gugun.gugunname != '선택안함'">
-                      {{ list.sido.sidoname }} {{list.gugun.gugunname}}</span>
-                      <span v-if="list.sido.sidoname!='온라인' && list.gugun.gugunname == '선택안함'">
-                      {{ list.sido.sidoname }} (미정) </span>
+                      <span v-if="list[0].sido.sidoname=='온라인'">
+                      {{list[0].sido.sidoname}}</span>
+                      <span v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname != '선택안함'">
+                      {{ list[0].sido.sidoname }} {{list[0].gugun.gugunname}}</span>
+                      <span v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname == '선택안함'">
+                      {{ list[0].sido.sidoname }} (미정) </span>
                     </div>
                   </div>
                 </div>
-                <!-- <div class= "tags">
-                    <b-badge class=" mr-1 mt-2 " variant="warning"  v-for="tag in list.tag_list" 
-                      :key="tag.tid"
-                      >#{{ tag.tagname }}</b-badge>
-                </div>-->
               </div>
             </li>
           </ul>
@@ -158,17 +140,7 @@ export default {
       loginmodal: false,
       profileInfo: [],
       studyLists: [],
-      slide: 0,
-      sliding: null,
-      selectCategory: {
-        category: "%%",
-        options: null,
-        optionstext: null,
-        title: null,
-        sido_code: null,
-        tag: null,
-        tmp: 0,
-      },
+      allStusyList: [],
       categoryList: [
         "알고리즘",
         "공모전",
@@ -179,74 +151,85 @@ export default {
         "전체",
       ],
       whatSearch: ["제목", "지역", "태그"],
-      option: "all",
+      selected: {
+        category: "",
+        what: "all",
+        keyword: "",
+      },
       searchList: [],
       scrolled: 3,
-      timer: null,
-      selected:"all" ,
       readyLists: [],
       leaderLists: [],
       unleaderLists: [],
-
       leaderListsTmp1: [],
-
       leaderListsTmp0: [],
     };
   },
   created() {
     this.addprofileInfo();
-    this.categorySubmit();
+    this.allStusy();
     window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy: function() {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    sendOption() {
-      // console.log(event.target.value);
-      const opt = this.studyLists;
-      // console.log(opt);
-      //this.categorySubmit();
-      if (opt == "all") {
-        this.selectCategory.options = "%%";
-      } else {
-        this.selectCategory.options = opt;
-      }
-      //this.categorySubmit();
+    allStusy() {
+      axios.get(SERVER_URL + "/study/list")
+      .then(res => {
+        this.allStusyList = res.data.object
+        this.searchList = this.allStusyList
+      })
+      .catch(err => {console.log(err);})
     },
-
-    addCategory(catego) {
-      if (catego === "전체") {
-        this.selectCategory.category = "%%";
-      } else {
-        this.selectCategory.category = catego;
-      } //카테고리 정해줌
-      // console.log("애드");
-      // console.log(this.selectCategory);
-      this.categorySubmit();
+    searchData() {
+      var tmpSearch = this.selected
+      setTimeout(() => {
+        var tmpData = this.allStusyList
+        if (tmpSearch.category) {
+          tmpData = tmpData.filter(da => da[0].category == tmpSearch.category)
+        }
+        const word = tmpSearch.keyword
+        var tmpData2 = []
+        if (tmpSearch.what === "all") {
+          for (let i = 0; i < tmpData.length; i++) {
+            if (tmpData[i][0].title.includes(word) || tmpData[i][0].gugun.gugunname.includes(word) || tmpData[i][0].sido.sidoname.includes(word)) {
+              tmpData2.push(tmpData[i])
+            } else {
+              for (let j = 0; j < tmpData[i][1].length; j++) {
+                if (tmpData[i][1][j].tagname.includes(word)) {
+                  tmpData2.push(tmpData[i])
+                  break
+                }
+              }
+            }
+          }
+        } else if (tmpSearch.what === "title") {
+          for (let i = 0; i < tmpData.length; i++) {
+            if (tmpData[i][0].title.includes(word)) {
+              tmpData2.push(tmpData[i])
+            }
+          }
+        } else if (tmpSearch.what === "area") {
+          for (let i = 0; i < tmpData.length; i++) {
+            if (tmpData[i][0].gugun.gugunname.includes(word) || tmpData[i][0].sido.sidoname.includes(word)) {
+              tmpData2.push(tmpData[i])
+            }
+          }
+        } else if (tmpSearch.what === "tag") {
+          for (let i = 0; i < tmpData.length; i++) {
+            for (let j = 0; j < tmpData[i][1].length; j++) {
+              if (tmpData[i][1][j].tagname.includes(word)) {
+                tmpData2.push(tmpData[i])
+                break
+              }
+            }
+          }
+        }
+        tmpData = tmpData2
+        this.searchList = tmpData
+      }, 100);
     },
-
-    categorySubmit() {
-      this.selectCategory.title = this.selectCategory.optionstext;
-      if (this.selected == "title") {
-        this.selectCategory.tmp = 1
-        this.selectCategory.sido_code = null;
-        this.selectCategory.tag = null;
-      } else if (this.selected == "area") {
-        this.selectCategory.tmp = 2
-      } else if (this.selected == "tag") {
-        this.selectCategory.tmp = 3
-      }
-      axios
-        .post(SERVER_URL + "/study/search", this.selectCategory)
-        .then((res) => {
-          this.searchList = res.data.object;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    ////////////////////////////////////////////////////////////////////////////////////////
 
     changeDatedata(time) {
       if (time) {
