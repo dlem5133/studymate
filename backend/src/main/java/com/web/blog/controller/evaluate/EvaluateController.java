@@ -56,7 +56,6 @@ public class EvaluateController {
     @PostMapping("/eva/score")
     @ApiOperation(value = "평점 넘기기")
     public Object evaScore1(@Valid @RequestBody final EvaluateRequest evaluateRequest) {
-
         ResponseEntity < Object > response = null;
         User writer = userDao.findUserByUid(evaluateRequest.getWriter_uid());
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
@@ -64,11 +63,12 @@ public class EvaluateController {
         Evaluate eva = new Evaluate();
         eva.setPid(evaluateRequest.getPid());
         eva.setWriteruid(writer.getUid());
-        eva.setTarget_uid(target.getUid());
+        eva.setTargetuid(target.getUid());
         eva.setScore1(evaluateRequest.getScore1());
         eva.setScore2(evaluateRequest.getScore2());
         eva.setScore3(evaluateRequest.getScore3());
         eva.setSentence(evaluateRequest.getSentence());
+        eva.setCount(evaluateRequest.getCount());
         eva.setStudy(study);
         eva.setUser(writer);
         eva.setUser2(target);
@@ -122,22 +122,44 @@ public class EvaluateController {
         User target = userDao.findUserByUid(evaluateRequest.getTarget_uid());
         Study study = studyDao.findStudyByPid(evaluateRequest.getPid());
 
-        Mileage mileage = mileageDao.findByUid(writer.getUid());
-
-        mileage.setTotal(mileage.getTotal() + 200);
-        mileage.setEndpoint(mileage.getEndpoint() + 1);
-        mileageDao.save(mileage);
-
-
-
         eva.setPid(evaluateRequest.getPid());
         eva.setWriteruid(writer.getUid());
-        eva.setTarget_uid(target.getUid());
+        eva.setTargetuid(target.getUid());
+        eva.setScore1(evaluateRequest.getScore1());
+        eva.setScore2(evaluateRequest.getScore2());
+        eva.setScore3(evaluateRequest.getScore3());
         eva.setSentence(evaluateRequest.getSentence());
+        eva.setCount(evaluateRequest.getCount());
         eva.setStudy(study);
         eva.setUser(writer);
         eva.setUser2(target);
+        if (target.getScore1() == 0) {
+            target.setScore1(evaluateRequest.getScore1());
+        } else {
+            //score 1,2,3 세팅
+            double a = target.getScore1() * target.getTotalscoreper();
+            double b = evaluateRequest.getScore1();
+            double c = (a + b) / (target.getTotalscoreper() + 1);
+            target.setScore1(c);
 
+            a = target.getScore2() * target.getTotalscoreper();
+            b = evaluateRequest.getScore2();
+            c = (a + b) / (target.getTotalscoreper() + 1);
+            target.setScore2(c);
+
+            a = target.getScore3() * target.getTotalscoreper();
+            b = evaluateRequest.getScore3();
+            c = (a + b) / (target.getTotalscoreper() + 1);
+            target.setScore3(c);
+
+            target.setTotalscoreper(target.getTotalscoreper() + 1);
+        }
+
+        Mileage mileage = mileageDao.findByUid(writer.getUid());
+        mileage.setTotal(mileage.getTotal() + 200);
+        mileage.setEndpoint(mileage.getEndpoint() + 1);
+        mileageDao.save(mileage);
+        userDao.save(writer);
         final Evaluate saveEva = this.evaluateDao.save(eva);
         final BasicResponse result = new BasicResponse();
 
@@ -155,13 +177,32 @@ public class EvaluateController {
     public Object evalist(@Valid @RequestBody final EvaluateRequest Request) {
 
         ResponseEntity < Object > response = null;
-
-        final ArrayList < Evaluate > evaList = evaluateDao.findByPidAndWriteruidAndCount(Request.getPid(), Request.getWriter_uid(), Request.getCount());
+        
+        final ArrayList < Evaluate > evaList = evaluateDao.findByPidAndWriteruidAndEvadate(Request.getPid(), Request.getWriter_uid(), Request.getEva_date());
 
         final BasicResponse result = new BasicResponse();
 
         result.status = true;
         result.data = "평가목록 조회";
+        result.object = evaList;
+
+        response = new ResponseEntity < > (result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @PostMapping("/eva/finallist")
+    @ApiOperation(value = "마지막 평가 목록 조회")
+    public Object finalevalist(@Valid @RequestBody final EvaluateRequest Request) {
+
+        ResponseEntity < Object > response = null;
+        
+        final ArrayList < Evaluate > evaList = evaluateDao.findByPidAndWriteruidAndCount(Request.getPid(), Request.getWriter_uid(), 1);
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "마지막평가목록 조회";
         result.object = evaList;
 
         response = new ResponseEntity < > (result, HttpStatus.OK);
@@ -187,23 +228,4 @@ public class EvaluateController {
 
         return response;
     }
-    @PostMapping("/eva/targetlist")
-    @ApiOperation(value = "유저 한줄평")
-    public Object targetlist(@Valid @RequestBody final EvaluateRequest Request) {
-
-        ResponseEntity < Object > response = null;
-
-        final ArrayList < Evaluate > evaList = evaluateDao.findByTargetuidAndSentenceNotNull(Request.getTarget_uid());
-
-        final BasicResponse result = new BasicResponse();
-
-        result.status = true;
-        result.data = "유저 한줄평 조회";
-        result.object = evaList;
-
-        response = new ResponseEntity < > (result, HttpStatus.OK);
-
-        return response;
-    }
-
 }
