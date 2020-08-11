@@ -9,7 +9,14 @@
           style="font-family: 'Do Hyeon', sans-serif;color:rgba(0,255,255,0.6);"
         >지금 페이지마다 헤더높이 안되있어서 위에 붙어있을거야....고칠거야...</h4>
         <h4>
-          <b-icon icon="mouse" variant="warning" class="mt-4" @click="moveBottom"></b-icon>
+          <b-icon
+            animation="fade"
+            icon="mouse"
+            variant="warning"
+            class="mt-4"
+            style="cursor:pointer;"
+            @click="moveBottom"
+          ></b-icon>
         </h4>
       </div>
     </div>
@@ -19,14 +26,14 @@
           <!-- ===========================================================================================  -->
           <div class="d-flex justify-content-center mx-auto ml-5 pl-5 w-25">
             <div v-for="category in categoryList" :key="category">
-              <input 
-                type="radio" 
+              <input
+                type="radio"
                 v-model="selected.category"
                 :value="`${category}`"
-                :id="`${category}`" 
-                name="rb" 
-                @click="searchData" 
-                />
+                :id="`${category}`"
+                name="rb"
+                @click="searchData"
+              />
               <label :for="`${category}`">{{ category }}</label>
             </div>
           </div>
@@ -48,7 +55,7 @@
                 </select>
               </div>
 
-            <div class="search mx-auto w-100" >
+              <div class="search mx-auto w-100">
                 <div class="input-group pb-0 md-form form-sm form-2 pl-0">
                   <input
                     class="form-control my-0 py-1 border-0"
@@ -58,11 +65,7 @@
                     placeholder="검색어를 입력해주세요"
                     aria-label="Search"
                   />
-                  <b-icon
-                    icon="search"
-                    style="color:orange;cursor:pointer;"
-                    class="mx-3 my-auto"
-                  ></b-icon>
+                  <b-icon icon="search" style="color:orange;cursor:pointer;" class="mx-3 my-auto"></b-icon>
                 </div>
               </div>
             </div>
@@ -95,19 +98,19 @@
                     <div class="info-container">
                       <div class="box inform">
                         <img class="infopplbindo" src="../../assets/img/person.png" />
-                         {{list[0].memnum}} / {{ list[0].limitp }} 명
+                        {{list[0].memnum}} / {{ list[0].limitp }} 명
                         <br />
                         <img class="infopplbindo" src="../../assets/img/calendar.png" />
                         주 {{ list[0].bindo }} 회
                         <br />
                         <img class="infopplbindo" src="../../assets/img/navi.png" />
-                        <span v-if="list[0].sido.sidoname=='온라인'"> {{list[0].sido.sidoname}}</span>
+                        <span v-if="list[0].sido.sidoname=='온라인'">{{list[0].sido.sidoname}}</span>
                         <span
                           v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname != '선택안함'"
-                        > {{ list[0].sido.sidoname }} {{list[0].gugun.gugunname}}</span>
+                        >{{ list[0].sido.sidoname }} {{list[0].gugun.gugunname}}</span>
                         <span
                           v-if="list[0].sido.sidoname!='온라인' && list[0].gugun.gugunname == '선택안함'"
-                        > {{ list[0].sido.sidoname }} (미정)</span>
+                        >{{ list[0].sido.sidoname }} (미정)</span>
                       </div>
                     </div>
                   </div>
@@ -115,9 +118,6 @@
               </li>
             </ul>
           </div>
-          <button class="topButton" @click="moveTop">
-            <b-icon style="color:orange;" icon="arrow-up-circle"></b-icon>
-          </button>
         </div>
       </div>
     </div>
@@ -142,7 +142,15 @@ export default {
       studyLists: [],
       allStudyList: [],
       searchList: [],
-      categoryList: ["알고리즘","공모전","자격증","취업","웹","기타","전체",],
+      categoryList: [
+        "알고리즘",
+        "공모전",
+        "자격증",
+        "취업",
+        "웹",
+        "기타",
+        "전체",
+      ],
       whatSearch: ["제목", "지역", "태그"],
       selected: {
         category: "",
@@ -298,7 +306,7 @@ export default {
   position: absolute;
   top: 0 !important;
   min-width: 100%;
-  width:100%;
+  width: 100%;
   right: 0;
   height: 100vh !important;
   line-height: 100vh;
@@ -363,13 +371,6 @@ label::before {
   -webkit-transition: 0.25s all ease;
   -o-transition: 0.25s all ease;
   transition: 0.25s all ease;
-}
-.topButton {
-  position: fixed;
-  bottom: 50px;
-  right: 50px;
-  font-size: 30px;
-  text-shadow: 0px 0px 10px white;
 }
 .input-group.md-form.form-sm.form-2 input {
   border: 1px solid #bdbdbd;

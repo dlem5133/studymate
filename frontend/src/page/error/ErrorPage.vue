@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div style="margin-top:6rem;" class="container">
     <h3>error</h3>
     <hr />
     <div v-if="code.status!=200">
