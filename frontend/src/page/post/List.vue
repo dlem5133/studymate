@@ -15,7 +15,7 @@
     </div>
     <div class="container">
       <div id="maintext" class="row row-cols-2">
-        <div id="maintable" class="main-table mt-5 col-12 col-md-12">
+        <div id="maintable" class="main-table mt-5 col-12 col-md-12" >
           <!-- ===========================================================================================  -->
           <div class="d-flex justify-content-center ml-5 pl-5">
             <div v-for="category in categoryList" :key="category">
@@ -37,7 +37,7 @@
               <div class="serach-selectbox border-0">
                 <select
                   style="background-color:rgba(255,255,255,0)"
-                  v-model="selected"
+                  v-model="selected.what"
                   class="form-control border-0"
                   @click="searchData"
                 >
@@ -149,7 +149,7 @@ export default {
         what: "all",
         keyword: "",
       },
-      scrolled: 3,
+      scrolled: 8,
     };
   },
   created() {
@@ -272,8 +272,8 @@ export default {
     },
     handleScroll() {
       var d = document.documentElement;
-      var offset = d.scrollTop + window.innerHeight + 40;
-      var height = d.offsetHeight;
+      var offset = d.scrollTop + window.innerHeight;
+      var height = d.offsetHeight + 890;
       if (offset >= height) {
         this.scrolled += 3;
       }
