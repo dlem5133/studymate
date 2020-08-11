@@ -8,100 +8,206 @@
             <div class="circle-2"></div>
 
             <div v-if="!profileInfo.profile_image">
-              <img src="../../assets/img/defualt_image.png" width="70" height="70"/>
+              <img src="../../assets/img/defualt_image.png" width="70" height="70" />
             </div>
             <div v-else>
-              <img :src="profileInfo.profile_image" width="70" height="70"/>
+              <img :src="profileInfo.profile_image" width="70" height="70" />
             </div>
-
           </div>
-          
+
           <div class="name">{{ profileInfo.nickname }}</div>
           <div class="job">{{ profileInfo.email }}</div>
-          
-          <!-- <div class="actions">
-            <b-button class="btn" v-b-modal.modal-1>수정</b-button>
-            <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정">
-              <small>닉네임</small>
-              <b-form-input v-model="updateData.nickname"></b-form-input>
-              <small>이메일</small>
-              <b-form-input v-model="updateData.email"></b-form-input>
-              <small>비밀번호</small>
-              <b-form-input type="password" v-model="updateData.password"></b-form-input>
-              <small>자기소개</small>
-              <b-form-textarea v-model="updateData.intro" rows="3" max-rows="6"></b-form-textarea>
-              <small>프로필</small>
-              <div v-if="!updateData.profile_image">
-                <h2>Select an image</h2>
-                <input type="file" @change="onChangeImages">
-              </div>
-              <div v-else>
-                <img :src="updateData.profile_image" style="width: 100%;"/>
-                <button @click="removeImage">Remove image</button>
-              </div>
-            </b-modal>
-
-            <b-button class="btn" v-b-modal.modal-2>탈퇴</b-button>
-            <b-modal @ok="userDelete" id="modal-2" title="회원 탈퇴">
-              <div>
-                <small>이메일</small>
-                <b-form-input v-model="deleteData.email" placeholder="가입 시 작성한 이메일을 입력해주세요"></b-form-input>
-              </div>
-              <div>
-                <small>비밀번호</small>
-                <b-form-input type="password" v-model="deleteData.password" placeholder="가입 시 작성한 비밀번호를 입력해주세요"></b-form-input>
-              </div>
-            </b-modal>
-          </div> -->
         </div>
-        
+
         <div class="stats">
-          <div class="box">
-            <span class="value">5</span>
+          <div class="box" @click="page=0">
+            <span class="value">{{comLists.length + ingLists.length}}</span>
             <span class="parameter">가입중인 스터디</span>
           </div>
-          <div class="box">
-            <span class="value">1387</span>
+          <div class="box" @click="page=1">
+            <span class="value">{{total_mileage}}</span>
             <span class="parameter">마일리지</span>
           </div>
-          <div class="box">
-            <span class="value">4.6</span>
-            <span class="parameter">랭크</span>
+          <div class="box" @click="page=2">
+            <span class="value">{{total_score}} / 5</span>
+            <span class="parameter">평점</span>
           </div>
         </div>
       </div>
-      <div class="side">
-        <div class="text-left pt-3 col-12">
-          <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
-            <div v-for="list in readyLists" :key="list.id" class=" card m-2 px-2 p-2" @click="goStudyMain(list.pid)">
-              <div class="d-flex inline">
-                <small class=" text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
+
+      <div v-if="page === 0">
+        <div class="side">
+          <div class="text-left pt-3 col-12">
+            <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
+            <div
+                v-for="list in ingLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in plusUnleaderLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
+                </div>
+              </div>
+
+              <hr class="mb-0" />
+
+              <div class="my-2">
+                <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
+              </div>
+              <div
+                v-for="list in readyLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in comLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="warning">모집중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in plusLeaderLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="warning">추가모집중</b-badge>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="page===1">
+        <div class="side">
+          <div class="d-flex justify-content-between">
+            <p class="milelog">마일리지 LOG</p>
+            <button @click="goRank" class="rankbnt">랭킹 보러가기</button>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="calendar4-week"></b-icon>
+              <small>일지</small>
+              <div>
+                <span class="milepoint">{{ mileageData.diarypoint }}</span>
+                <small>점</small>
+              </div>
+            </div>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="award"></b-icon>
+              <small>평가</small>
+              <div>
+                <span class="milepoint">{{ mileageData.evalpoint }}</span>
+                <small>점</small>
+              </div>
+            </div>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="book-half"></b-icon>
+              <small>스터디 완료</small>
+              <div>
+                <span class="milepoint">{{ mileageData.endpoint * 200 }}</span>
+                <small>점</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="page===2">
+        <div class="side" >
+          <p class="milelog">상호평가 LOG</p>
+          <div id="ratingbox" class="text-left row mx-auto d-flex justify-content-center">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <div class="text-center border-info">
+                <b-form-rating 
+                  v-model="profileInfo.score1"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+                <p>{{profileInfo.score1}} / 5</p>
+              </div>
+              <div class="text-center">
+                <small class="text-dark font-weight-bold">성실도</small>
+              </div>
+            </div>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <div class="text-center">
+                <b-form-rating
+                  v-model="profileInfo.score2"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+                <p>{{profileInfo.score2}} / 5</p>
+              </div>
+              <div class="text-center">
+                <small class="text-dark font-weight-bold">참여도</small>
+              </div>
+            </div>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <div class="text-center">
+                <b-form-rating
+                  v-model="profileInfo.score3"
+                  readonly
+                  no-border 
+                  inline
+                  color="#feb74d"
+                  size="sm"
+                ></b-form-rating>
+                <p>{{profileInfo.score2}} / 5</p>
+              </div>
+              <div class="text-center">
+                <small class="text-dark font-weight-bold">인싸력</small>
               </div>
             </div>
 
-            <div v-for="list in leaderListsTmp0" :key="list.id" class=" card m-2 px-2 p-2" @click="goStudyMain(list.pid)">
-              <div class="d-flex inline">
-                <small class=" text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="danger">진행중&팀장</b-badge>
-              </div>
             </div>
-
-            <div v-for="list in unleaderLists" :key="list.id" class=" card m-2 px-2 p-2" @click="goStudyMain(list.pid)">
-              <div class="d-flex inline">
-                <small class=" text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="success">신청완료</b-badge>
-              </div>
-            </div>
+            <div>
             <hr>
+            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">한줄평</small>
 
-            <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
-            <div v-for="list in leaderListsTmp1" :key="list.id" class=" card m-2 px-2 p-2" @click="goStudyMain(list.pid)">
-              <div class="d-flex inline">
-                <small class=" text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="warning">모집중&팀장</b-badge>
+            <div v-for="(list1, n) in evalistdata" :key="list1.id" class="card p-1 px-2 m-1 mx-5">
+              <div v-if="n < showEvalist" class="d-flex inline">
+                <small class="text-left text-truncate">{{ list1.sentence }}</small>
+                <b-badge class="ml-auto my-auto" variant="success">{{list1.study.category}}</b-badge>
               </div>
             </div>
+            <button @click="showEvalist += 3" variant="link" class="small">...더보기</button>
+          </div>
         </div>
       </div>
     </div>
@@ -120,8 +226,6 @@ export default {
   data: () => {
     return {
       profileInfo: {},
-      studyLists: {},
-      tmplists: {},
       updateData: {
         email: "",
         nickname: "",
@@ -134,56 +238,100 @@ export default {
         email: "",
         password: "",
       },
-      readyLists:[],
-      leaderLists:[],
-      unleaderLists:[],
-      leaderListsTmp1:[],
-      leaderListsTmp0:[],
+      page: 0,
+      showEvalist: 3,
+
+      // 리스트 7 종류
+      readyLists: [],
+      comLists: [],
+      ingLists: [],
+      endLists: [],
+      plusLists: [],
+      plusLeaderLists: [],
+      plusUnleaderLists: [],
+      
+      evalistdata:{},
+      mileageData:{},
     };
   },
+  computed:{
+    total_score(){
+      return ((this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1)
+    },    
+    total_mileage() {
+      if ("+this.mileageData.total".length > 3) {
+        return this.mileageData.total / 1000 + "K";
+      } else {
+        return this.mileageData.total;
+      }
+    },
+  },
   methods: {
+    evaList(){
+      const targetid = this.profileInfo.uid
+      axios.post(SERVER_URL+'/eva/userlist', {target_uid:targetid})
+      .then(res=>{
+        this.evalistdata = res.data.object
+        console.log(this.evalistdata);
+      })
+      .catch(err=>console.log(err))
+    },
+    mileageList(){
+      axios.get(SERVER_URL+"/mileage/user", {params:{uid:this.profileInfo.uid}})
+      .then(res=>{
+        this.mileageData = res.data.object;
+      })
+      .catch(err=>console.log(err))
+    },
     changeDatedata(time) {
       return time.substring(5, 10) + " " + time.substring(11, 19);
     },
     addprofileInfo() {
       const token = this.$cookies.get("Auth-Token");
-      axios.get(SERVER_URL + "/account/profile", {params: {Token: token}})
-      .then((res) => {
-        this.profileInfo = res.data.object
-        console.log("pro", this.profileInfo)
-        this.updateData.email = res.data.object.email
-        this.updateData.nickname = res.data.object.nickname
-        this.updateData.password = res.data.object.password
-        this.updateData.uid = res.data.object.uid
-        this.updateData.intro = res.data.object.intro
-        this.updateData.profile_image = res.data.object.profile_image
-        this.addTmpList()
-        this.addReadyList() 
-        this.addStudyList()
-      })
-      .catch((err) => {
-        this.$router.push({
-          name: constants.URL_TYPE.ERROR.ERRORPAGE,
-          params: { code: err.response.data },
+      axios
+        .get(SERVER_URL + "/account/profile", { params: { Token: token } })
+        .then((res) => {
+          this.profileInfo = res.data.object;
+          this.updateData.email = res.data.object.email;
+          this.updateData.nickname = res.data.object.nickname;
+          this.updateData.password = res.data.object.password;
+          this.updateData.uid = res.data.object.uid;
+          this.updateData.intro = res.data.object.intro;
+          this.updateData.profile_image = res.data.object.profile_image;
+          this.addReadyList();
+          this.addStudyList();
+          this.mileageList()
+          this.evaList()
+        })
+        .catch((err) => {
+          this.$router.push({
+            name: constants.URL_TYPE.ERROR.ERRORPAGE,
+            params: { code: err.response.data },
+          });
         });
-      });
-    },
-    addTmpList() {
-      axios.post(SERVER_URL + "/account/tmplist", { nickname: this.profileInfo.nickname })
-      .then((res) => {console.log("tmplist", res.data.object);this.tmplists = res.data.object})
-      .catch((err) => {console.log(err)})
     },
     addStudyList() {
       axios
         .post(SERVER_URL + "/account/studylist", this.profileInfo)
         .then((res) => {
-          this.leaderLists = res.data.object.filter(item => item.isleader!=0)
-          this.leaderListsTmp0 = this.leaderLists.filter(item => item.empId.study.tmp == 0)
-          this.leaderListsTmp1 = this.leaderLists.filter(item => item.empId.study.tmp == 1)
-
-
-          this.unleaderLists = res.data.object.filter(item => item.isleader==0)
-          console.log("studylist", this.leaderLists)
+          this.ingLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 0
+          );
+          this.comLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 1
+          );
+          this.endLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 2
+          );
+          this.plusLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 3
+          );
+          this.plusLeaderLists = this.plusLists.filter(
+            (item) => item.isleader == 1
+          );
+          this.plusUnleaderLists = this.plusLists.filter(
+            (item) => item.isleader == 0
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -194,59 +342,73 @@ export default {
         .post(SERVER_URL + "/account/readylist", this.profileInfo)
         .then((res) => {
           this.readyLists = res.data.object;
-          console.log("readylist", res.data.object);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-
-    goStudy(post_id) {
-      this.$router.push({name: constants.URL_TYPE.POST.POSTDETAIL, params: { post_id: post_id },});
+    goPostMain(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.POST.POSTDETAIL,
+        params: { post_id: post_id },
+      });
     },
     goStudyMain(post_id) {
-      this.$router.push({name: constants.URL_TYPE.STUDY.STUDYMAIN, params: { post_id: post_id },});
-    },
-    goTmp(post_id) {
-      this.$router.push({name: constants.URL_TYPE.POST.POSTUPDATE,params: { post_id: post_id },});
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: post_id },
+      });
     },
     onChangeImages(e) {
-      const file = e.target.files[0];
-      this.updateData.profile_image = URL.createObjectURL(file);
+      const selectedImage = e.target.files[0];
+      this.createBase64Image(selectedImage);
+    },
+    createBase64Image(fileObject) {
+      this.updateData.profile_image = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.updateData.profile_image = e.target.result;
+      };
+      reader.readAsDataURL(fileObject);
     },
     removeImage: function (e) {
-      this.updateData.profile_image = '';
+      this.updateData.profile_image = "";
     },
     userUpdate() {
       axios
         .post(SERVER_URL + "/account/update", this.updateData)
-        .then(res => {
+        .then((res) => {
           this.$cookies.remove("Auth-Token");
-          const token = res.data.object
-          this.$cookies.set('Auth-Token', token);
+          const token = res.data.object;
+          this.$cookies.set("Auth-Token", token);
           alert("수정되었습니다.");
-          this.$router.go();
+          this.addprofileInfo()
         })
-        .catch(err => {
+        .catch((err) => {
           // this.$router.push({name: constants.URL_TYPE.ERROR.ERRORPAGE,params:{'code':err.response.data}});
           console.log(err.response.data.errors[0]);
-          alert(err.response.data.errors[0].field + "를 확인해 주세요")
+          alert(err.response.data.errors[0].field + "를 확인해 주세요");
         });
     },
     userDelete() {
       axios
         .post(SERVER_URL + "/account/delete", this.deleteData)
-        .then(res => {
+        .then((res) => {
           this.$cookies.remove("Auth-Token");
           alert("회원탈퇴되었습니다.");
           this.$router.push("/");
           // this.$router.go();
         })
-        .catch(err => {
+        .catch((err) => {
           alert("입력정보를 확인해주세요.");
           console.log(err);
         });
     },
+    goRank () {
+      this.$router.push({
+        name: constants.URL_TYPE.RANK.RANKING
+      });
+    }
   },
   created() {
     this.addprofileInfo();
@@ -258,5 +420,34 @@ export default {
 .clickbtn,
 .tmplist {
   cursor: pointer;
+}
+.form-control{
+ background-color: rgba(0,0,0,0);
+}
+.b-rating .b-rating-star, .b-rating .b-rating-value{
+  padding:0 !important;
+}
+.milelog {
+  margin: 5px;
+  padding-left: 5vw;
+  font-size: 25px;
+  font-weight: bolder;
+  text-align: left;
+}
+.mileicon {
+  font-size: 70px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.milepoint {
+  font-size: 40px;
+  font-weight: bolder;
+  color: orange;
+}
+.rankbnt {
+  margin-right: 5vw;
+  margin-top: auto;
+  height: 25px;
+  font-size: small;
 }
 </style>
