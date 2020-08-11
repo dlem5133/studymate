@@ -1,14 +1,13 @@
 <template>
   <div class="container">
       <div class="p-5">
-        <h1>UPDATE</h1>
         <label>제목</label>
         <b-form-input class="my-2" v-model="boardData.title" placeholder="제목"></b-form-input>
         <label>내용</label>
         <b-form-textarea class="my-2" v-model="boardData.body" placeholder="게시할 내용을 입력해주세요" rows="8"></b-form-textarea>
         <b-form-checkbox v-model="boardData.isnotice" value="1" unchecked-value="0">Top</b-form-checkbox>
         <div class="p-3">
-          <div @click="updateBoard(boardData.bid)" class="btn btn-primary btn-sm">SUBMIT</div>
+          <div @click="updateBoard(boardData.bid)" class="btn btn-primary btn-sm">작성</div>
         </div>
       </div>
     </div>
