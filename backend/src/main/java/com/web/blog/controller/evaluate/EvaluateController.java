@@ -215,7 +215,7 @@ public class EvaluateController {
 
         ResponseEntity<Object> response = null;
 
-        final ArrayList<Evaluate> evaList = evaluateDao.findByWriteruidAndSentenceNotNull(Request.getWriter_uid());
+        final ArrayList<Evaluate> evaList = evaluateDao.findByTargetuidAndSentenceNotNull(Request.getTarget_uid());
 
         final BasicResponse result = new BasicResponse();
 

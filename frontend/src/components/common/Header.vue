@@ -274,6 +274,7 @@ export default {
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: { post_id: post_id },
       });
+      this.$router.go()
     },
   },
   data: function () {
