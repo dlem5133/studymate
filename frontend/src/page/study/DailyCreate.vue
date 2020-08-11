@@ -11,27 +11,26 @@
         <div @click="submitDaily(1)" class="btn btn-warning btn-sm">SUBMIT</div>
       </div>
       <div class="p-3">
-        <div @click="submitDaily(0)" class="btn btn-primary btn-sm">임시저장</div>
+        <div class="btn btn-primary btn-sm">
+          <span @click="submitDaily(0)">임시저장 </span>
+          <b-badge variant="light" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}</b-badge>
+        </div>
       </div>
-      <div class="p-3">
-        <b-button variant="info" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}
-        </b-button>
-        <b-modal id="bv-modal-example" hide-footer>
-          <template v-slot:modal-title>
-            임시저장중인 리스트
-          </template>
-          <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-            <div class="card-body d-flex justify-content-between">
-              <p>{{tmpdaily.title}}</p>
-              <p>
-                {{tmpdaily.posttime}}
-                <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
-              </p>
-            </div>
+      <b-modal id="bv-modal-example" hide-footer>
+        <template v-slot:modal-title>
+          임시저장중인 리스트
+        </template>
+        <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+          <div class="card-body d-flex justify-content-between">
+            <p>{{tmpdaily.title}}</p>
+            <p>
+              {{tmpdaily.posttime}}
+              <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
+            </p>
           </div>
-          <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
-        </b-modal>
-      </div>
+        </div>
+        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -116,7 +115,7 @@
         });
       },
       submitDaily(tmpN) {
-                if(this.text==""){
+        if(this.text==""){
           alert("제목을 입력해주세요.")
         }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""){
           alert("내용을 입력해주세요.")

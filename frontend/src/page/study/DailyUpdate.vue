@@ -1,91 +1,40 @@
 <template>
-  <div class="row p-0">
-    <div
-      class="main-table d-none d-md-block col-md-3 border bg-light"
-      style="height: 100vw;"
-    >
-      <div class="m-5">
-        <div v-if="!profileInfo.profile_image">
-          <img
-            class="rounded-circle"
-            src="../../assets/img/defualt_image.png"
-          />
-        </div>
-        <div v-else>
-          <img class="rounded-circle" :src="profileInfo.profile_image" />
-        </div>
-        <p class="m-0">{{ profileInfo.nickname }}님의 정보</p>
-        <div v-for="studylist of studyLists" :key="studylist.id">
-          <small
-            v-if="studylist.empId.study.tmp == 1"
-            class="clickstudy mt-3 text-primary"
-            @click="goStudyMain(studylist.pid)"
-            >{{ studylist.empId.study.title }}</small
-          >
+  <div class="container p-5">
+    <h1>DailyUpdate</h1>
+    <label>제목</label>
+    <b-form-input
+      class="my-2"
+      v-model="preData.title"
+      placeholder="제목"
+    ></b-form-input>
+    <label>내용</label><editor :initialValue="preData.body" ref="toastuiEditor" />
+    <div class="d-flex inline justify-content-center">
+      <div class="p-3">
+        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">
+          SUBMIT
         </div>
       </div>
-    </div>
-
-    <div class="main-table col-12 col-md-9 border">
-      <div class="container p-5">
-        <h1>DailyUpdate</h1>
-        <label>제목</label>
-        <b-form-input
-          class="my-2"
-          v-model="preData.title"
-          placeholder="제목"
-        ></b-form-input>
-        <label>내용</label><editor ref="toastuiEditor" />
-
-        <div class="d-flex inline justify-content-center">
-          <div class="p-3">
-            <div @click="submitDaily(1)" class="btn btn-warning btn-sm">
-              SUBMIT
-            </div>
-          </div>
-          <div class="p-3">
-            <div @click="submitDaily(0)" class="btn btn-primary btn-sm">
-              임시저장
-            </div>
-          </div>
-          <div class="p-3">
-            <b-button
-              variant="info"
-              id="show-btn"
-              @click="$bvModal.show('bv-modal-example')"
-              >{{ tmpDailyData.length }}</b-button
-            >
-            <b-modal id="bv-modal-example" hide-footer>
-              <template v-slot:modal-title>
-                임시저장중인 리스트
-              </template>
-              <div
-                class="card"
-                v-for="tmpdaily in tmpDailyData"
-                :key="tmpdaily.did"
-              >
-                <div class="card-body d-flex justify-content-between">
-                  <p>{{ tmpdaily.title }}</p>
-                  <p>
-                    {{ tmpdaily.posttime }}
-                    <b-button
-                      @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
-                      variant="outline-success"
-                      >작성</b-button
-                    >
-                  </p>
-                </div>
-              </div>
-              <b-button
-                class="mt-3"
-                block
-                @click="$bvModal.hide('bv-modal-example')"
-                >Close Me</b-button
-              >
-            </b-modal>
-          </div>
+      <div class="p-3">
+        <div class="btn btn-primary btn-sm">
+          <span @click="submitDaily(0)">임시저장 </span>
+          <b-badge variant="light" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}</b-badge>
         </div>
       </div>
+      <b-modal id="bv-modal-example" hide-footer>
+        <template v-slot:modal-title>
+          임시저장중인 리스트
+        </template>
+        <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+          <div v-if="tmpdaily.did != $route.params.daily_id" class="card-body d-flex justify-content-between">
+            <p>{{ tmpdaily.title }}</p>
+            <p @click="$bvModal.hide('bv-modal-example')">
+              {{ tmpdaily.posttime }}
+              <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
+            </p>
+          </div>
+        </div>
+        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -106,6 +55,7 @@ export default {
   },
   data: () => {
     return {
+      editorText: 'This is initialValue.',
       editorOptions: {
         hideModeSwitch: true,
       },
@@ -113,12 +63,11 @@ export default {
       studyLists: [],
       tmpDailyData: [],
       preData: [],
+      body: '',
     };
   },
-  beforeMount() {
-    this.getPreData();
-  },
   created() {
+    this.getPreData();
     this.addprofileInfo();
     this.checkUser();
     this.getTmpDaily();
@@ -191,7 +140,7 @@ export default {
         })
         .catch((err) => console.log(err.data));
     },
-    submitDaily() {
+    submitDaily(tmpN) {
       if (this.text == "") {
         alert("제목을 입력해주세요.");
       } else if (this.$refs.toastuiEditor.invoke("getMarkdown") == "") {
@@ -203,7 +152,7 @@ export default {
           pid: this.$route.params.post_id,
           did: this.$route.params.daily_id,
           uid: this.profileInfo.uid,
-          tmp: 1,
+          tmp: tmpN,
         };
         axios
           .post(SERVER_URL + "/diary/update", dailydData)
@@ -212,7 +161,6 @@ export default {
               name: constants.URL_TYPE.STUDY.DAILYDETAIL,
               params: {
                 post_id: this.$route.params.post_id,
-                daily_id: this.$route.params.daily_id,
               },
             });
           })
@@ -238,14 +186,13 @@ export default {
     },
     continueWrite(post_id, daily_id) {
       this.$router.push({
-        name: constants.URL_TYPE.STUDY.STUDYMAIN,
-        params: { post_id: post_id },
-      });
-      this.$router.push({
         name: constants.URL_TYPE.STUDY.DAILYUPDATE,
         params: { post_id: post_id, daily_id: daily_id },
       });
-      this.$router.go();
+      this.getPreData();
+      this.addprofileInfo();
+      this.checkUser();
+      this.getTmpDaily();
     },
   },
 };
