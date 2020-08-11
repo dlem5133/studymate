@@ -1,17 +1,15 @@
 <template>
   <div class="container p-5">
-    <h1>DailyUpdate</h1>
-    <label>제목</label>
     <b-form-input
       class="my-2"
       v-model="preData.title"
       placeholder="제목"
     ></b-form-input>
-    <label>내용</label><editor :initialValue="preData.body" ref="toastuiEditor" />
+    <editor :initialValue="preData.body" ref="toastuiEditor" />
     <div class="d-flex inline justify-content-center">
       <div class="p-3">
         <div @click="submitDaily(1)" class="btn btn-warning btn-sm">
-          SUBMIT
+          작성하기
         </div>
       </div>
       <div class="p-3">
@@ -33,7 +31,7 @@
             </p>
           </div>
         </div>
-        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">닫기</b-button>
       </b-modal>
     </div>
   </div>
@@ -199,8 +197,8 @@ export default {
     submitDaily(tmpN) {
       if (this.text == "") {
         alert("제목을 입력해주세요.");
-      } else if (this.$refs.toastuiEditor.invoke("getMarkdown") == "") {
-        alert("내용을 입력해주세요.");
+      } else if (this.$refs.toastuiEditor.invoke("getMarkdown") == ""  ||this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent) {
+        alert("새로운 내용을 입력해주세요.");
       } else {
         const dailydData = {
           title: this.preData.title,

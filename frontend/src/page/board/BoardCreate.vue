@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="container p-5">
-      <h1 class="mb-5">BOARD</h1>
       <!-- v-if="studyLists.empId.study.uid==profileInfo.uid" -->
       <div >
         <b-form-checkbox class="ml-4" v-model="isNotice" value="1" unchecked-value="0">공지</b-form-checkbox>
@@ -15,7 +14,7 @@
         <b-form-textarea class="border-bottom my-auto ml-4" v-model="content" placeholder="내용을 입력해주세요" rows="8"></b-form-textarea>
       </div>
       <div class="p-3">
-        <b-button variant="outline-success" @click="submitBoard">SUBMIT</b-button>
+        <b-button variant="outline-success" @click="submitBoard">작성</b-button>
         <!-- <b-button class="ml-2" variant="outline-secondary" @click="goBack(boardDetailData.pid)">취소</b-button> -->
       </div>
     </div>

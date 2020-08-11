@@ -14,7 +14,7 @@
 
     <div class="d-flex inline justify-content-center">
       <div class="p-3">
-        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">SUBMIT</div>
+        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">작성</div>
       </div>
       <div class="p-3">
         <div class="btn btn-primary btn-sm">
@@ -35,7 +35,7 @@
             </p>
           </div>
         </div>
-        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">닫기</b-button>
       </b-modal>
     </div>
   </div>
@@ -177,8 +177,8 @@ export default {
       submitDaily(tmpN) {
         if(this.text==""){
           alert("제목을 입력해주세요.")
-        }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""){
-          alert("내용을 입력해주세요.")
+        }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""  ||this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent){
+          alert("새로운 내용을 입력해주세요.")
         }else{
         const dailydData = {
           title: this.text,
