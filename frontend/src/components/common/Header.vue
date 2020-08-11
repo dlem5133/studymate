@@ -23,9 +23,10 @@
                 <img class="border rounded-circle profileImg" :src="profileInfo.profile_image" />
               </div>
               <div class="nameandemail">
-                <h6 class="mt-2 mb-0" style='font-family: "Do Hyeon", sans-serif;'>
-                  {{ profileInfo.nickname }}
-                  </h6>
+                <h6
+                  class="mt-2 mb-0"
+                  style="font-family: 'Do Hyeon', sans-serif;"
+                >{{ profileInfo.nickname }}</h6>
                 <small class="email">{{ profileInfo.email }}</small>
                 <br />
                 <small class="email">마일리지: {{ total_mileage }} | 평점: {{ total_score }}</small>
@@ -34,10 +35,17 @@
               <b-list-group-item class="listitem" @click="logout">로그아웃</b-list-group-item>
             </div>
             <div v-if="!isLoggedIn">
-              <!-- <img class="border rounded-circle" src="../../assets/img/defualt_image.png" width="70" height="70"/> -->
-              <b-list-group-item class="listitem" variant="warning" @click="openModal">로그인</b-list-group-item>
+              <b-list-group-item
+                class="listitem"
+                style="font-family: 'Do Hyeon', sans-serif;"
+                @click="openModal"
+              >로그인</b-list-group-item>
               <LoginModal v-if="loginmodal" @close="closeModal" />
-              <b-list-group-item class="listitem" variant="warning" @click="kakao">회원가입</b-list-group-item>
+              <b-list-group-item
+                class="listitem"
+                style="font-family: 'Do Hyeon', sans-serif;"
+                @click="kakao"
+              >회원가입</b-list-group-item>
             </div>
           </div>
         </b-dropdown>
@@ -92,7 +100,7 @@
                 v-for="list in readyLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
-                @click="goStudyMain(list.pid)"
+                @click="goPostMain(list.pid)"
               >
                 <div class="d-flex inline">
                   <small class="text-left mr-2">{{ list.empId.study.title }}</small>
@@ -104,7 +112,7 @@
                 v-for="list in comLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
-                @click="goStudyMain(list.pid)"
+                @click="goPostMain(list.pid)"
               >
                 <div class="d-flex inline">
                   <small class="text-left mr-2">{{ list.empId.study.title }}</small>
@@ -116,7 +124,7 @@
                 v-for="list in plusLeaderLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
-                @click="goStudyMain(list.pid)"
+                @click="goPostMain(list.pid)"
               >
                 <div class="d-flex inline">
                   <small class="text-left mr-2">{{ list.empId.study.title }}</small>
@@ -128,11 +136,7 @@
               class="listitem border-0"
               tag="router-link"
               :to="{name:constants.URL_TYPE.POST.POSTCREATE}"
-            >
-              <!-- <b-icon icon="book"></b-icon>
-              <b-icon icon="plus"></b-icon> -->
-              스터디 생성
-            </b-list-group-item>
+            >스터디 생성</b-list-group-item>
           </div>
         </b-dropdown>
       </div>
@@ -157,7 +161,11 @@ export default {
   computed: {
     total_score() {
       return (
-        (this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1);
+        (this.profileInfo.score1 +
+          this.profileInfo.score2 +
+          this.profileInfo.score3) /
+        3
+      ).toFixed(1);
     },
     total_mileage() {
       if ("+this.mileageTotal".length > 3) {
@@ -173,7 +181,7 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
-    handleScroll(){
+    handleScroll() {
       if (
         document.body.scrollTop > 80 ||
         document.documentElement.scrollTop > 80
@@ -181,7 +189,8 @@ export default {
         document.getElementById("container").style.backgroundColor = "white";
         // document.getElementById("container").style.borderBottom = "1px solid orange";
       } else {
-        document.getElementById("container").style.backgroundColor = "rgba(255,255,255,0)";
+        document.getElementById("container").style.backgroundColor =
+          "rgba(255,255,255,0)";
         // document.getElementById("navbar").style.margin = "1.5rem 1.5rem"
       }
     },
@@ -244,6 +253,7 @@ export default {
           this.plusUnleaderLists = this.plusLists.filter(
             (item) => item.isleader == 0
           );
+          console.log(res.data.object)
         })
         .catch((err) => {
           console.log(err);
@@ -252,7 +262,7 @@ export default {
     addReadyList() {
       axios
         .post(SERVER_URL + "/account/readylist", this.profileInfo)
-        .then((res) => {
+        .then((res) => {console.log(res.data.object)
           this.readyLists = res.data.object;
         })
         .catch((err) => {
@@ -272,6 +282,12 @@ export default {
     goStudyMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: post_id },
+      });
+    },
+    goPostMain(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.POST.POSTDETAIL,
         params: { post_id: post_id },
       });
     },
@@ -308,9 +324,8 @@ export default {
   font-size: x-large;
   color: orange;
 }
-
 .dropdown-menu {
-  padding: 0 !important;
+  font-size: 100px !important;
 }
 
 .profileImg {

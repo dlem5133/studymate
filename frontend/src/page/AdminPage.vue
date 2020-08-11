@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div style="margin-top:6rem;" class="container">
     <h1>ADMIN PAGE</h1>
     <hr />
     <div>

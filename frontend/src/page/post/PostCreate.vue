@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-0 mt-0">
+  <div style="margin-top:6rem;" class="container pt-0">
     <div class="card border-0 w-75 mx-auto mx-5">
       <div class="card-text mx-5">
         <img :src="images" class="logo w-25" alt />
@@ -10,11 +10,13 @@
           </b-col>
           <b-col sm="12" md="4" class="px-1 mb-4">
             <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
-              <b-form-file placeholder=" " browse-text="Image" @change="onChangeImages" ></b-form-file>
+              <b-form-file placeholder=" " browse-text="Image" @change="onChangeImages"></b-form-file>
             </div>
             <div class="d-flex" style="transform: translateY(20px);" v-else>
-              <img :src="postCreateDate.background_image" class="w-25" style="height:30px;"/>
-              <b-button class="ml-3" @click="removeImage" variant="border-0"><b-icon icon="trash"></b-icon></b-button>
+              <img :src="postCreateDate.background_image" class="w-25" style="height:30px;" />
+              <b-button class="ml-3" @click="removeImage" variant="border-0">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -60,7 +62,6 @@
           <b-col sm="12" md="6" class="px-1">
             <b-input-group size="sm" class="taggroup mb-2">
               <b-icon icon="tags-fill" variant="warning" class="mx-2 mt-2"></b-icon>
-              <!-- <b-form-input v-model="postCreateDate.tag" placeholder="태그" type="text"></b-form-input> -->
               <b-form-tags
                 input-id="tags-basic"
                 tag-variant="warning"
@@ -76,18 +77,14 @@
           </b-col>
         </b-row>
 
-        <!-- <div v-if="!postCreateDate.background_image">
-          <small>스터디 커버사진을 선택해주세요</small>
-          <input type="file" @change="onChangeImages" />
-        </div>
-        <div v-else>
-          <img :src="postCreateDate.background_image" style="width: 100px;" />
-          <button @click="removeImage">-<b-icon icon="trash"></b-icon></button>
-        </div> -->
-
-        <div class="d-flex inline justify-content-center">
+        <div class="d-flex inline justify-content-center mb-5">
           <div class="p-3">
-            <div @click="postCreate(postCreateDate.tmp=1)" class="btn btn-warning btn-sm">스터디 생성</div>
+            <b-button
+              @click="postCreate(postCreateDate.tmp=1)"
+              style="border:1.5px solid orange;"
+              variant="outline-warning"
+              class="createbtn"
+            >스터디 생성</b-button>
           </div>
         </div>
       </div>
@@ -162,11 +159,9 @@ export default {
     },
     postTmp() {
       this.postCreateDate.uid = this.profileInfo.uid;
-      console.log(this.postCreateDate);
       axios
         .post(SERVER_URL + "/study/write", this.postCreateDate)
         .then((res) => {
-          console.log(res);
           this.$router.push({ name: constants.URL_TYPE.POST.MAIN });
         })
         .catch((err) => {
@@ -176,9 +171,7 @@ export default {
     },
     postCreate() {
       this.postCreateDate.uid = this.profileInfo.uid;
-      console.log(this.postCreateDate);
-           var date = new Date();
-      // console.log(date.getFullYear());
+      var date = new Date();
       if (this.postCreateDate.title == "") {
         alert("스터디 제목이 입력되지 않았습니다. 확인해주세요!");
       } else if (this.postCreateDate.bindo == "") {
@@ -234,19 +227,19 @@ export default {
       } else if (this.postCreateDate.data == "") {
         alert("내용이 입력되지 않았습니다. 스터디를 소개해주세요!");
       } else {
-      axios
-        .post(SERVER_URL + "/study/write", this.postCreateDate)
-        .then((res) => {
-          console.log(res);
-          this.$router.push({
-            name: constants.URL_TYPE.POST.POSTDETAIL,
-            params: { post_id: res.data.object.pid },
+        axios
+          .post(SERVER_URL + "/study/write", this.postCreateDate)
+          .then((res) => {
+            console.log(res);
+            this.$router.push({
+              name: constants.URL_TYPE.POST.POSTDETAIL,
+              params: { post_id: res.data.object.pid },
+            });
+          })
+          .catch((err) => {
+            console.log(err.response);
+            alert("입력정보를 확인해주세요!");
           });
-        })
-        .catch((err) => {
-          console.log(err.response);
-          alert("입력정보를 확인해주세요!");
-        });
       }
     },
     onChangeImages(e) {
@@ -259,7 +252,6 @@ export default {
       reader.onload = (e) => {
         this.postCreateDate.background_image = e.target.result;
       };
-      console.log(this.postCreateDate.background_image);
       reader.readAsDataURL(fileObject);
     },
     removeImage: function (e) {
@@ -277,7 +269,6 @@ export default {
     },
     getgungu() {
       const code = this.postCreateDate.sido_code;
-      console.log(code);
       axios
         .get(SERVER_URL + "/study/getguguncode", { params: { sidocode: code } })
         .then((res) => {
@@ -292,6 +283,13 @@ export default {
 </script>
 
 <style>
+.createbtn {
+  color: orange;
+}
+.createbtn:hover {
+  color: white;
+  background-color: orange;
+}
 label {
   position: relative;
   right: 40%;
@@ -299,7 +297,6 @@ label {
   font-size: small;
 }
 .submit-btn {
-  float: center;
   padding: 7px 35px;
   border-radius: 60px;
   display: inline-block;
@@ -308,9 +305,6 @@ label {
   font-size: 18px;
   cursor: pointer;
 }
-/* .b-form-tags{
-  transform : translateY(20px)
-} */
 .formtitle {
   padding: 0 4px;
   transform: translateY(5px);

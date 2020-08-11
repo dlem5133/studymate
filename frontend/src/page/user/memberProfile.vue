@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div style="margin-top:6rem;" class="container">
     <div class="row d-flex justify-content-center">
       <div class="center">
         <div class="profile">

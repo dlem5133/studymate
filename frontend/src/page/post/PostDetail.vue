@@ -15,7 +15,7 @@
         </div>
         <div
           style="position:absolute;bottom:3%;right:3%;"
-          v-if="profileInfo.uid!=postData.uid&&postData.tmp==1"
+          v-if="profileInfo.uid!=postData.uid&&postData.tmp==1&&isLoggedIn"
         >
           <b-button
             variant="outline-secondary"
@@ -56,8 +56,8 @@
             <div v-for="per in requestListData" :key="per.uid" class="list-group">
               <div v-if="!per.isjoin" class="px-3 d-flex list-group-item">
                 <div class="d-flex" style="cursor:pointer;" @click="goMemberProfile(per.uid)">
-                  <p class="m-0 my-auto">{{ per.empId.user.nickname }}</p>
-                  <b-icon class="ml-1 my-auto" icon="person"></b-icon>
+                  <p class="m-0 p-0 my-auto">{{ per.empId.user.nickname }}</p>
+                  <b-icon variant="warning" class="ml-1 my-auto" icon="person"></b-icon>
                 </div>
                 <div class="ml-auto">
                   <b-button
@@ -104,7 +104,7 @@
         </div>
         <div class="text-left d-flex text-secondary"></div>
         <hr />
-        <div class="text-left d-flex row mx-4 my-4 py-3">
+        <div class="text-left d-flex row mx-4">
           <div class="detailboard col-12 col-md-4">
             <div class="py-5 my-auto justify-content-center">
               <div style="color:orange;" class="text-center mb-2">
@@ -138,6 +138,7 @@
             </div>
           </div>
         </div>
+        <hr class="mb-0">
 
         <div class="float-left mt-4">
           <small class="float-left text-left px-3">{{postData.data}}</small>
@@ -158,6 +159,8 @@
     </div>
 
     <br />
+
+    <!-- 댓글 -->
     <div class="card mb-5 mx-5 mb-1">
       <p class="text-left m-0 px-3 pt-3">
         <b-icon icon="chat-dots" class="mr-1 my-auto" flip-h></b-icon>댓글
@@ -172,14 +175,18 @@
             id="content"
             class="p-2 border rounded-lg w-100"
           />
-          <div class="buttonitems border rounded-lg px-1 ml-2 mt-auto">
+          <div class="buttonitems border rounded-lg px-1 ml-2 my-auto">
             <b-icon icon="pencil" @click="replyCreate(replyparent)"></b-icon>
           </div>
         </div>
       </div>
-      <hr class="mb-0" />
+      <hr class="mb-4" />
 
-      <div class="card-body w-100 text-left px-3 pb-0" v-for="comment in replyData" :key="comment.rid">
+      <div
+        class="card-body w-100 text-left px-3 pt-0"
+        v-for="comment in replyData"
+        :key="comment.rid"
+      >
         <div style="position:relative;" class="d-flex mb-1 w-100">
           <div style="min-height:4rem;" class="p-2 w-100 d-flex border rounded-lg">
             <div class="w-75">
@@ -229,7 +236,6 @@
                 >
                   <b-icon variant="danger" icon="trash" @click="replyDelete(comment)"></b-icon>
                 </div>
-                
               </div>
               <div style="position:absolute;top:35px;right:12px;">
                 <small class="mt-auto text-secondary">{{changeDatedata(comment.reply_time)}}</small>
@@ -274,7 +280,10 @@
             <div class="d-flex my-2 w-100">
               <b-icon icon="reply" class="ml-1 mr-3 my-auto" flip-v></b-icon>
 
-              <div style="background-color:rgba(255,165,0,0.07);"  class="p-2 w-100 border rounded-lg">
+              <div
+                style="background-color:rgba(255,165,0,0.07);"
+                class="p-2 w-100 border rounded-lg"
+              >
                 <div class="d-flex">
                   <div class="d-flex mb-2">
                     <div v-if="!reReply.user.profile_image">
@@ -310,7 +319,7 @@
             </div>
           </div>
         </div>
-            <hr class="mb-0">
+        <!-- <hr class="mb-0" /> -->
       </div>
     </div>
   </div>
@@ -340,10 +349,10 @@ export default {
 
       requestListData: {},
       isRequest: false,
-      
+
       memberListData: {},
       isMember: false,
-      
+
       replyparent: 0,
       isReply: false,
       replyId: 0,
@@ -365,6 +374,7 @@ export default {
   created() {
     window.scrollTo(0, 0);
     this.userCheck();
+    this.likeList();
     // 카카오톡 공유
     Kakao.init("d5e6e1f1140f3ded1483ff360cb5a153");
   },
@@ -410,7 +420,6 @@ export default {
             this.getDetail();
             this.requestPeopleList();
             this.memberList();
-            this.likeList();
           })
           .catch((err) => {
             this.$router.push({
@@ -494,11 +503,13 @@ export default {
       if (this.isUpdate == true) {
         this.isUpdate = false;
         this.replyId = "";
+        this.replyparent = "";
       } else {
         this.isUpdate = true;
         this.isReply = false;
         this.replyId = rid;
         this.updateReply.reply_content = comment;
+        this.replyparent = "";
       }
     },
     replyCreate(replyparent) {
@@ -524,6 +535,7 @@ export default {
           this.getDetail();
           this.newreReply.reply_content = "";
           this.isReply = false;
+          this.replyparent = "";
         })
         .catch((err) => console.log(err));
     },
@@ -566,6 +578,7 @@ export default {
         .then((res) => {
           this.requestLists = res.data.object;
           this.requestPeopleList();
+          this.getDetail();
         })
         .catch((err) => console.log(err));
     },
@@ -590,14 +603,19 @@ export default {
         .catch((err) => console.log(err));
     },
     likePost() {
-      this.likeClickData.pid = this.$route.params.post_id;
-      this.likeClickData.uid = this.profileInfo.uid;
-      axios
-        .post(SERVER_URL + "/likep/likep", this.likeClickData)
-        .then((res) => {
-          this.likeList();
-        })
-        .catch((err) => console.log(err));
+      if (this.isLoggedIn) {
+        this.likeClickData.pid = this.$route.params.post_id;
+        this.likeClickData.uid = this.profileInfo.uid;
+        axios
+          .post(SERVER_URL + "/likep/likep", this.likeClickData)
+          .then((res) => {
+            this.likeList();
+          })
+          .catch((err) => console.log(err));
+      } else {
+        this.islike = false;
+        alert("로그인이 필요합니다.");
+      }
     },
     goStudyMain(post_id) {
       this.$router.push({
