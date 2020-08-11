@@ -2,184 +2,182 @@
   <div class="container">
     <div class="main-table">
       <div class="container p-2">
-        <div class="card p-3">
+        <div class="card px-3">
           <div class="card-body">
-            <div>
-              <div class="d-flex">
+            <div class="d-flex">
+              <div>
+                <h3 class="text-left font-weight-bold">{{ postData.title }} </h3><br>
+                <small class="float-left"> 팀장 : {{ userData.nickname }}    </small><br>
+                <small class="d-flex inline">진행 일정 : {{postData.start_date}} ~ {{postData.end_date}}</small>
+              </div>
+              <div class="ml-auto my-auto float-right">
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                  <template v-slot:button-content class=" float-right">
+                    <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
+                  </template>
+                  <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                  <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                  <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
+                </b-dropdown>
+                <!-- <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                  <template v-slot:button-content>
+                    <b-icon icon="file-text" variant="dark"></b-icon>
+                  </template>
+                  <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                  <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                </b-dropdown> -->
+
+                <!-- 상호평가 -->
+                <div v-if="calculFri == '금요일' || finalCheck < 7">
+                  <b-button v-if="finalCheck > 7" @click="checkEvalue" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                    <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                  </b-button>
+                  <b-button v-if="finalCheck <= 7" @click="checkFinalEva" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
+                    <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                  </b-button>
+
+                  <b-modal id="modal-multi-1" size="lg" title="상호 평가" hide-footer>
+                    <b-list-group v-for="member in memberListData" :key="member.uid">
+                      <b-list-group-item v-if="profileInfo.uid != member.uid" class="m-1 px-3 p-0">
+                        <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
+                        <b-button v-if="alreadyEva.includes(member.uid)" class="float-right" @click="onceEva" variant="link">
+                          <i class="fas fa-star" style="color: orange; font-size: large;"></i>
+                        </b-button>
+                        <b-button v-else class="float-right" @click="evalueData.target_uid = member.uid" variant="link" v-b-modal.modal-multi-2>
+                          <i class="far fa-star" style="color: orange; font-size: large;"></i>
+                        </b-button>
+                      </b-list-group-item>
+                    </b-list-group>
+                  </b-modal>
+
+                  <b-modal v-if="finalCheck > 7" id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
+                    <b-list-group>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>                      
+                    </b-list-group>
+                  </b-modal>
+
+                  <b-modal v-if="finalCheck <= 7" id="modal-multi-2" @ok="setFinEva" title="마지막 상호 평가" ok-only>
+                    <b-list-group>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
+                      </b-list-group-item>
+                      <b-form-input class="p-1 pl-3 m-1" v-model="evalueData.sentence" placeholder="한줄평을 작성해주세요"></b-form-input>                   
+                    </b-list-group>
+                  </b-modal>
+                </div>
+
+                <b-button v-b-modal.modal-2 size="sm" class="border-0 float-right" variant="link">
+                  <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
+                </b-button>
+                <!-- 팀원 모달 -->
                 <div>
-                  <h3 class="text-left font-weight-bold">{{ postData.title }} </h3><br>
-                  <small class="float-left"> 팀장 : {{ userData.nickname }}    </small><br>
-                  <small class="d-flex inline">진행 일정 : {{postData.start_date}} ~ {{postData.end_date}}</small>
-                </div>
-                <div class="ml-auto my-auto float-right">
-                  <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
-                    <template v-slot:button-content class=" float-right">
-                      <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
-                    </template>
-                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
-                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                    <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
-                  </b-dropdown>
-                  <!-- <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-                    <template v-slot:button-content>
-                      <b-icon icon="file-text" variant="dark"></b-icon>
-                    </template>
-                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
-                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                  </b-dropdown> -->
-
-                  <!-- 상호평가 -->
-                  <div v-if="calculFri == '월요일' || finalCheck < 7">
-                    <b-button v-if="finalCheck > 7" @click="checkEvalue" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
-                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
-                    </b-button>
-                    <b-button v-if="finalCheck <= 7" @click="checkFinalEva" size="sm" class="border-0 float-right" variant="link" v-b-modal.modal-multi-1>
-                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
-                    </b-button>
-
-                    <b-modal id="modal-multi-1" size="lg" title="상호 평가" hide-footer>
-                      <b-list-group v-for="member in memberListData" :key="member.uid">
-                        <b-list-group-item v-if="profileInfo.uid != member.uid" class="m-1 px-3 p-0">
-                          <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
-                          <b-button v-if="alreadyEva.includes(member.uid)" class="float-right" @click="onceEva" variant="link">
-                            <i class="fas fa-star" style="color: orange; font-size: large;"></i>
-                          </b-button>
-                          <b-button v-else class="float-right" @click="evalueData.target_uid = member.uid" variant="link" v-b-modal.modal-multi-2>
-                            <i class="far fa-star" style="color: orange; font-size: large;"></i>
-                          </b-button>
-                        </b-list-group-item>
-                      </b-list-group>
-                    </b-modal>
-
-                    <b-modal v-if="finalCheck > 7" id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
-                      <b-list-group>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>                      
-                      </b-list-group>
-                    </b-modal>
-
-                    <b-modal v-if="finalCheck <= 7" id="modal-multi-2" @ok="setFinEva" title="마지막 상호 평가" ok-only>
-                      <b-list-group>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;"></b-form-rating>
-                        </b-list-group-item>
-                        <b-form-input class="p-1 pl-3 m-1" v-model="evalueData.sentence" placeholder="한줄평을 작성해주세요"></b-form-input>                   
-                      </b-list-group>
-                    </b-modal>
-                  </div>
-
-                  <b-button v-b-modal.modal-2 size="sm" class="border-0 float-right" variant="link">
-                    <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
-                  </b-button>
-                  <!-- 팀원 모달 -->
-                  <div>
-                    <b-modal id="modal-2" title="팀원" hide-footer>
-                      <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
-                        <li v-if="per.empId.user.uid==profileInfo.uid" class="list-group-item d-flex">
-                          <div class="d-flex">
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                            {{ per.empId.user.nickname }}
-                            </div>
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              <b-icon scale="0.8" icon="person" ></b-icon>
-                            </div>
+                  <b-modal id="modal-2" title="팀원" hide-footer>
+                    <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
+                      <li v-if="per.empId.user.uid==profileInfo.uid" class="list-group-item d-flex">
+                        <div class="d-flex">
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                          {{ per.empId.user.nickname }}
                           </div>
-                          <div v-if="profileInfo.uid!=postData.uid" class="ml-auto">
-                            <b-button v-if="per.isjoin==2" class="btn-sm" variant="outline-danger" @click="deleteMemberCancel(per.uid)">취소</b-button>
-                            <b-button v-else class="btn-sm" variant="outline-danger" @click="deleteMember(per.uid)">탈퇴</b-button>
-                            
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            <b-icon scale="0.8" icon="person" ></b-icon>
                           </div>
-                          <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
-                          <!-- <div class="ml-auto">
-                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
-                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
-                          </div> -->
-                        </li>
-                        <li v-else class="list-group-item d-flex">
-                          <div class="d-flex">
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                            {{ per.empId.user.nickname }}
-                            </div>
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              <b-icon scale="0.8" icon="person" ></b-icon>
-                            </div>
-                          </div>
-                          <div class="ml-auto">
-                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
-                            <div @click="reportCheck(per.uid)">
-                                <div v-b-modal.modal-9>
-                                  <b-icon class="my-auto" icon="trash" variant="danger"></b-icon><small class="text-danger my-auto"> 신고</small>
-                                </div>
-                                <div v-if="ismodal">
-                                  <b-modal id="modal-9" title="신고 내용" hide-footer>
-                                    <div class="d-flex">
-                                      <textarea class="border w-100 mr-2" v-model="reportdata.reason"></textarea>
-                                      <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success" @click="reportMember(per.uid)"> 신고 </b-button>
-                                    </div>
-                                  </b-modal>
-                                </div>
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </b-modal>
-                  </div>
-
-                <b-modal id="modal-5" title="스터디원 탈퇴 대기 목록" hide-footer>
-                  <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
-                    <li class="list-group-item d-flex">
-                      <div class="d-flex">
-                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                        {{ per.nickname }}
                         </div>
-                        <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                          <b-icon scale="0.8" icon="person" ></b-icon>
+                        <div v-if="profileInfo.uid!=postData.uid" class="ml-auto">
+                          <b-button v-if="per.isjoin==2" class="btn-sm" variant="outline-danger" @click="deleteMemberCancel(per.uid)">취소</b-button>
+                          <b-button v-else class="btn-sm" variant="outline-danger" @click="deleteMember(per.uid)">탈퇴</b-button>
+                          
                         </div>
-                      </div>
-                      <div class="ml-auto">
-                        <b-button class="btn-sm mr-2 float-right " variant="outline-success" @click="DeleteApply(per.uid)"> 승인 </b-button>
-                        <b-button class="btn-sm mr-2 float-right " variant="outline-danger" @click="DeleteCancel(per.uid)"> 취소 </b-button>
-                      </div>
-                    </li>
-                  </ul>
-                </b-modal>
-
-                  <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 float-right" variant="link">
-                    <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;"> BOARD</small>
-                  </b-button>
-                  <b-button size="sm" class="border-0" variant="link"
-                    @click="goPostMain(postData.pid)">
-                  <b-icon style="cursor:pointer;"
-                    variant="dark"
-                    icon="house-door"
-                  ></b-icon><small style="color:black;"> HOME</small>
-                  </b-button>
+                        <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
+                        <!-- <div class="ml-auto">
+                          <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
+                          <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
+                        </div> -->
+                      </li>
+                      <li v-else class="list-group-item d-flex">
+                        <div class="d-flex">
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                          {{ per.empId.user.nickname }}
+                          </div>
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            <b-icon scale="0.8" icon="person" ></b-icon>
+                          </div>
+                        </div>
+                        <div class="ml-auto">
+                          <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
+                          <div @click="reportCheck(per.uid)">
+                              <div v-b-modal.modal-9>
+                                <b-icon class="my-auto" icon="trash" variant="danger"></b-icon><small class="text-danger my-auto"> 신고</small>
+                              </div>
+                              <div v-if="ismodal">
+                                <b-modal id="modal-9" title="신고 내용" hide-footer>
+                                  <div class="d-flex">
+                                    <textarea class="border w-100 mr-2" v-model="reportdata.reason"></textarea>
+                                    <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success" @click="reportMember(per.uid)"> 신고 </b-button>
+                                  </div>
+                                </b-modal>
+                              </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </b-modal>
                 </div>
+
+              <b-modal id="modal-5" title="스터디원 탈퇴 대기 목록" hide-footer>
+                <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
+                  <li class="list-group-item d-flex">
+                    <div class="d-flex">
+                      <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                      {{ per.nickname }}
+                      </div>
+                      <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                        <b-icon scale="0.8" icon="person" ></b-icon>
+                      </div>
+                    </div>
+                    <div class="ml-auto">
+                      <b-button class="btn-sm mr-2 float-right " variant="outline-success" @click="DeleteApply(per.uid)"> 승인 </b-button>
+                      <b-button class="btn-sm mr-2 float-right " variant="outline-danger" @click="DeleteCancel(per.uid)"> 취소 </b-button>
+                    </div>
+                  </li>
+                </ul>
+              </b-modal>
+
+                <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 float-right" variant="link">
+                  <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;"> BOARD</small>
+                </b-button>
+                <b-button size="sm" class="border-0" variant="link"
+                  @click="goPostMain(postData.pid)">
+                <b-icon style="cursor:pointer;"
+                  variant="dark"
+                  icon="house-door"
+                ></b-icon><small style="color:black;"> HOME</small>
+                </b-button>
               </div>
             </div>
           </div>
         </div>
         <div class="card my-1">
-          <div class="card-body text-left" v-if="expectTodo.dodate != null">
+          <div class="card-body text-left p-0 pt-3 px-4" v-if="expectTodo.dodate != null">
             <div class="d-flex">
               <div>
                 <p class="badge badge-pill badge-danger">D-{{decimalDay}}</p>
@@ -199,7 +197,7 @@
             <p>일시 : {{expectTodo.dodate}}</p>
             <p>과제 : {{expectTodo.assignment}}</p>
           </div>
-          <div class="card-body text-left" v-if="expectTodo.dodate == null">
+          <div class="card-body text-left p-0 pt-2 px-4" v-if="expectTodo.dodate == null">
             <div class="d-flex">
               <div>
                 <p class="badge badge-pill badge-danger">D-None</p>
