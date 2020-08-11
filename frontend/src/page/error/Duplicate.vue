@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div style="margin-top:6rem;" class="container">
     <div class="row">
       <b-card class="m-1 col-12 col-md-5">
         <p>이미 계정이 있으신 경우</p>

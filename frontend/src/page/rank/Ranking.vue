@@ -1,5 +1,5 @@
 <template>
-  <div class="container col-7">
+  <div style="margin-top:6rem;" class="container col-7">
     <div class="card border-0">
       <div class="table-responsive">
         <table class="table align-items-center table-flush">

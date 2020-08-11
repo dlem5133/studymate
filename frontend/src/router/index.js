@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
-
 import constants from "../lib/constants";
+
 import AdminPage from "../page/AdminPage.vue";
 // 유저
 import Profile from "../page/user/Profile.vue";
@@ -16,7 +16,6 @@ import PostUpdate from "../page/post/PostUpdate.vue";
 
 // 진행
 import StudyMain from "../page/study/StudyMain";
-import StudyLeaderMain from "../page/study/StudyLeaderMain";
 import DailyDetail from "../page/study/DailyDetail";
 import DailyCreate from "../page/study/DailyCreate";
 import DailyUpdate from "../page/study/DailyUpdate";
@@ -28,7 +27,6 @@ import BoardDetail from "../page/board/BoardDetail.vue"
 import BoardUpdate from "../page/board/BoardUpdate.vue"
 
 // 랭킹
-
 import Ranking from "../page/rank/Ranking.vue"
 
 // 404 오류
@@ -45,7 +43,7 @@ export default new Router({
       name: constants.URL_TYPE.ADMIN,
       component: AdminPage,
     },
-    // 로그인/가입
+    // 유저
     {
       path: "/user/profile",
       name: constants.URL_TYPE.USER.PROFILE,
@@ -87,11 +85,6 @@ export default new Router({
       path: "/study/:post_id",
       name: constants.URL_TYPE.STUDY.STUDYMAIN,
       component: StudyMain,
-    },
-    {
-      path: "/study/leader/:post_id",
-      name: constants.URL_TYPE.STUDY.STUDYLEADERMAIN,
-      component: StudyLeaderMain,
     },
     {
       path: "/study/:post_id/:daily_id/detail",
