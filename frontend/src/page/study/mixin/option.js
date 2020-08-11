@@ -2,8 +2,10 @@ const editorEvents = ['load', 'change', 'stateChange', 'focus', 'blur'];
 const defaultValueMap = {
   initialEditType: 'markdown',
   initialValue: '',
-  height: '300px',
-  previewStyle: 'vertical'
+  height: '500px',
+  previewStyle: 'vertical',
+  placeholder: '내용을 입력해주세요.',
+  
 };
 
 export const optionsMixin = {
@@ -20,6 +22,7 @@ export const optionsMixin = {
       initialValue: this.initialValue,
       height: this.height,
       previewStyle: this.previewStyle,
+      placeholder: this.placeholder,
       events: eventOptions
     };
     Object.keys(defaultValueMap).forEach(key => {
@@ -30,6 +33,8 @@ export const optionsMixin = {
 
     return { editor: null, computedOptions: options };
   },
+
+  
   methods: {
     invoke(methodName, ...args) {
       let result = null;
