@@ -6,7 +6,7 @@
           <h5>{{dailyDetailData.title}}</h5><br />
            {{dailyDetailData.writer}} <small>{{dailyDetailData.posttime}}</small>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="min-height: 500px;">
           <Viewer v-if="dailyDetailData.body != null" :initialValue="dailyDetailData.body" />
         </div>
       </div>
