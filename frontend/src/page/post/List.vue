@@ -15,9 +15,9 @@
     </div>
     <div class="container">
       <div id="maintext" class="row row-cols-2">
-        <div id="maintable" class="main-table mt-5 col-12 col-md-12" >
+        <div id="maintable" class="main-table mt-5 col-12 col-md-12">
           <!-- ===========================================================================================  -->
-          <div class="d-flex justify-content-center ml-5 pl-5">
+          <div class="d-flex justify-content-center mx-auto ml-5 pl-5 w-25">
             <div v-for="category in categoryList" :key="category">
               <input 
                 type="radio" 
@@ -33,7 +33,7 @@
 
           <!-- ======================================= 검색 ====================================================  -->
           <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
-            <div class="searchinput d-flex">
+            <div class="searchinput d-flex w-100">
               <div class="serach-selectbox border-0">
                 <select
                   style="background-color:rgba(255,255,255,0)"
@@ -41,14 +41,14 @@
                   class="form-control border-0"
                   @click="searchData"
                 >
-                  <option value="all" >전체</option>
+                  <option value="all">전체</option>
                   <option value="title">스터디명</option>
                   <option value="area">지역</option>
                   <option value="tag">태그</option>
                 </select>
               </div>
 
-            <div class="search mx-auto" style="width:30rem">
+            <div class="search mx-auto w-100" >
                 <div class="input-group pb-0 md-form form-sm form-2 pl-0">
                   <input
                     class="form-control my-0 py-1 border-0"
@@ -298,6 +298,7 @@ export default {
   position: absolute;
   top: 0 !important;
   min-width: 100%;
+  width:100%;
   right: 0;
   height: 100vh !important;
   line-height: 100vh;

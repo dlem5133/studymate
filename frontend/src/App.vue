@@ -10,7 +10,7 @@
     </button>
 
     <button class="topButton" @click="moveTop">
-      <i class="fas fa-arrow-alt-circle-up"></i>
+      <b-icon style="color:orange;" icon="arrow-up-circle"></b-icon>
     </button>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
       this.isHeader = isHeader;
       this.isFooter = isFooter;
     },
-        moveTop() {
+    moveTop() {
       var location = document.querySelector("#brandname").offsetTop;
       window.scrollTo({ top: location, behavior: "smooth" });
     },

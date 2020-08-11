@@ -1,6 +1,6 @@
 <template>
   <div id="container" class="fixed-top" v-if="isHeader">
-    <b-navbar id="navbar" toggleable="lg" class="px-auto row">
+    <b-navbar id="navbar" toggleable="lg" class="px-5 px-auto row">
       <div class="container pt-2">
         <b-navbar-brand id="brandname" tag="router-link" :to="{name:constants.URL_TYPE.POST.MAIN}">
           <h4 id="brandname" class="mb-0">스터디메이트</h4>
@@ -145,7 +145,7 @@ import constants from "../../lib/constants";
 import LoginModal from "../../modal/LoginModal";
 import axios from "axios";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "Header",
@@ -274,7 +274,6 @@ export default {
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: { post_id: post_id },
       });
-      this.$router.go()
     },
   },
   data: function () {
