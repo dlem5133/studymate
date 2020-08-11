@@ -60,7 +60,7 @@
 
         <div class="stats">
           <div class="box" @click="page=0">
-            <span class="value">{{studyLists.length + readyLists.length}}</span>
+            <span class="value">{{comLists.length + ingLists.length}}</span>
             <span class="parameter">가입중인 스터디</span>
           </div>
           <div class="box" @click="page=1">
@@ -79,95 +79,100 @@
           <div class="text-left pt-3 col-12">
             <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
             <div
-              v-for="list in ingStudy"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              @click="goStudyMain(list.pid)"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
-              </div>
-            </div>
-
-            <hr />
-
-            <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
-            <div
-              v-for="list in readyLists"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              @click="goPostMain(list.pid)"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="warning">승인대기중</b-badge>
-              </div>
-            </div>
-            <div
-              v-for="list in comStudy"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              @click="goPostMain(list.pid)"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="danger">모집중</b-badge>
-              </div>
-            </div>
-
-            
-            <hr />
-
-            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">완료된 스터디</small>
-            
-            <div
-              v-for="list in endStudy"
-              :key="list.id"
-              class="card m-2 px-2 p-2"
-              v-b-modal.modal-3
-             >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list.empId.study.title }}</small>
-                <b-badge class="ml-auto my-auto" variant="secondary">완료</b-badge>
-              </div>
-
-
-              <!-- <b-modal title="한줄평" id="modal-3" hide-footer>
-
-                <div 
-                v-show="list.pid==list1.pid" v-for="list1 in evalistdata" :key="list1.id"
-                class="m-2 px-2 p-2"
+                v-for="list in ingLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
               >
-               <div class="d-flex inline">
-                  <small class="text-left">{{ list1.sentence }}</small>
-                  <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
                 </div>
-             </div>
-             </b-modal> -->
+              </div>
 
-             </div>
-            <hr />
+              <div
+                v-for="list in plusUnleaderLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
+                </div>
+              </div>
+
+              <hr class="mb-0" />
+
+              <div class="my-2">
+                <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
+              </div>
+              <div
+                v-for="list in readyLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in comLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="warning">모집중</b-badge>
+                </div>
+              </div>
+
+              <div
+                v-for="list in plusLeaderLists"
+                :key="list.id"
+                class="card m-2 px-2 p-2"
+                @click="goStudyMain(list.pid)"
+              >
+                <div class="d-flex inline">
+                  <small class="text-left mr-2">{{ list.empId.study.title }}</small>
+                  <b-badge class="ml-auto my-auto" variant="warning">추가모집중</b-badge>
+                </div>
+              </div>
           </div>
         </div>
       </div>
 
-
       <div v-if="page===1">
         <div class="side">
-          <div class="text-left pt-3 col-12">
-            <small class="text-dark font-weight-bold text-left pl-3">마일리지 LOG</small>
-            <div>
-              <small class="text-success font-weight-bold text-left pl-3">일지</small>
-              <small>{{ mileageData.diarypoint }}</small>
-            </div>              
-            <div>
-              <small class="text-success font-weight-bold text-left pl-3">평가</small>
-              <small>{{ mileageData.evalpoint }}</small>
+          <p class="milelog">마일리지 LOG</p>
+          <div class="row d-flex justify-content-center">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="calendar4-week"></b-icon>
+              <small>일지</small>
+              <div>
+                <span class="milepoint">{{ mileageData.diarypoint }}</span>
+                <small>점</small>
+              </div>
             </div>
-            <div>
-              <small class="text-success font-weight-bold text-left pl-3">스터디 완료</small>
-              <small>{{ mileageData.endpoint * 200 }}</small>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="award"></b-icon>
+              <small>평가</small>
+              <div>
+                <span class="milepoint">{{ mileageData.evalpoint }}</span>
+                <small>점</small>
+              </div>
+            </div>
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <b-icon class="mileicon" icon="book-half"></b-icon>
+              <small>스터디 완료</small>
+              <div>
+                <span class="milepoint">{{ mileageData.endpoint * 200 }}</span>
+                <small>점</small>
+              </div>
             </div>
           </div>
         </div>
@@ -175,12 +180,10 @@
 
       <div v-if="page===2">
         <div class="side" >
-          <div class="p-3">
-           <p> {{total_score}}총점인데 이따가 꾸밀게 뭘 해도 못생겼어</p>
-          <hr>
-          <div id="ratingbox" class="text-left row mx-auto">
-            <div class="col-4 py-5">
-              <div class="text-center">
+          <p class="milelog">상호평가 LOG</p>
+          <div id="ratingbox" class="text-left row mx-auto d-flex justify-content-center">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+              <div class="text-center border-info">
                 <b-form-rating 
                   v-model="profileInfo.score1"
                   readonly
@@ -189,12 +192,13 @@
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
+                <p>{{profileInfo.score1}} / 5</p>
               </div>
-              <div class="text-center pt-5">
+              <div class="text-center">
                 <small class="text-dark font-weight-bold">성실도</small>
               </div>
             </div>
-            <div class="col-4 py-5">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
               <div class="text-center">
                 <b-form-rating
                   v-model="profileInfo.score2"
@@ -204,12 +208,13 @@
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
+                <p>{{profileInfo.score2}} / 5</p>
               </div>
-              <div class="text-center pt-5">
+              <div class="text-center">
                 <small class="text-dark font-weight-bold">참여도</small>
               </div>
             </div>
-            <div class="col-4 py-5">
+            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
               <div class="text-center">
                 <b-form-rating
                   v-model="profileInfo.score3"
@@ -219,8 +224,9 @@
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
+                <p>{{profileInfo.score2}} / 5</p>
               </div>
-              <div class="text-center pt-5">
+              <div class="text-center">
                 <small class="text-dark font-weight-bold">인싸력</small>
               </div>
             </div>
@@ -230,20 +236,16 @@
             <hr>
             <small class="text-secondary font-weight-bold text-left pl-3 pb-2">한줄평</small>
 
-            <div 
-              v-for="list1 in evalistdata" :key="list1.id"
-              class="m-2 px-2 p-2"
-            >
-              <div class="d-flex inline">
-                <small class="text-left">{{ list1.sentence }}</small>
-                <b-badge class="ml-auto my-auto" variant="success">{{list1.user.nickname}}</b-badge>
+            <div v-for="(list1, n) in evalistdata" :key="list1.id" class="card p-1 px-2 m-1 mx-5">
+              <div v-if="n < showEvalist" class="d-flex inline">
+                <small class="text-left text-truncate">{{ list1.sentence }}</small>
+                <b-badge class="ml-auto my-auto" variant="success">{{list1.study.category}}</b-badge>
               </div>
-            </div></div>
+            </div>
+            <button @click="showEvalist += 3" variant="link" class="small">...더보기</button>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -273,12 +275,17 @@ export default {
         password: "",
       },
       page: 0,
+      showEvalist: 3,
 
-      studyLists: [],
-      comStudy:[],
-      ingStudy:[],
-      endStudy:[],
+      // 리스트 7 종류
       readyLists: [],
+      comLists: [],
+      ingLists: [],
+      endLists: [],
+      plusLists: [],
+      plusLeaderLists: [],
+      plusUnleaderLists: [],
+      
       evalistdata:{},
       mileageData:{},
     };
@@ -287,28 +294,28 @@ export default {
     total_score(){
       return ((this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1)
     },    
-    total_mileage(){
-      
-      if ("+this.mileageData.total".length > 3){
-        return this.mileageData.total / 1000 + "K"
+    total_mileage() {
+      if ("+this.mileageData.total".length > 3) {
+        return this.mileageData.total / 1000 + "K";
       } else {
-        return this.mileageData.total
+        return this.mileageData.total;
       }
-    }
+    },
   },
   methods: {
     evaList(){
       const targetid = this.profileInfo.uid
-      axios.post(SERVER_URL+'/eva/targetlist', {target_uid:targetid})
+      axios.post(SERVER_URL+'/eva/userlist', {target_uid:targetid})
       .then(res=>{
         this.evalistdata = res.data.object
+        console.log(this.evalistdata);
       })
       .catch(err=>console.log(err))
     },
     mileageList(){
       axios.get(SERVER_URL+"/mileage/user", {params:{uid:this.profileInfo.uid}})
       .then(res=>{
-        this.mileageData = res.data.object
+        this.mileageData = res.data.object;
       })
       .catch(err=>console.log(err))
     },
@@ -343,10 +350,24 @@ export default {
       axios
         .post(SERVER_URL + "/account/studylist", this.profileInfo)
         .then((res) => {
-          this.studyLists = res.data.object
-          this.comStudy = res.data.object.filter((item)=>item.empId.study.tmp===0)
-          this.ingStudy = res.data.object.filter((item)=>item.empId.study.tmp===1)
-          this.endStudy = res.data.object.filter((item)=>item.empId.study.tmp===2)
+          this.ingLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 0
+          );
+          this.comLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 1
+          );
+          this.endLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 2
+          );
+          this.plusLists = res.data.object.filter(
+            (item) => item.empId.study.tmp == 3
+          );
+          this.plusLeaderLists = this.plusLists.filter(
+            (item) => item.isleader == 1
+          );
+          this.plusUnleaderLists = this.plusLists.filter(
+            (item) => item.isleader == 0
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -436,5 +457,22 @@ export default {
 }
 .b-rating .b-rating-star, .b-rating .b-rating-value{
   padding:0 !important;
+}
+.milelog {
+  margin: 5px;
+  padding-left: 5vw;
+  font-size: 25px;
+  font-weight: bolder;
+  text-align: left;
+}
+.mileicon {
+  font-size: 70px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.milepoint {
+  font-size: 40px;
+  font-weight: bolder;
+  color: orange;
 }
 </style>
