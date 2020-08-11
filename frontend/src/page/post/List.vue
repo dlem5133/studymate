@@ -15,7 +15,7 @@
     </div>
     <div class="container">
       <div id="maintext" class="row row-cols-2">
-        <div id="maintable" class="main-table mt-5 col-12 col-md-12">
+        <div id="maintable" class="main-table mt-5 col-12 col-md-12" >
           <!-- ===========================================================================================  -->
           <div class="d-flex justify-content-center ml-5 pl-5">
             <div v-for="category in categoryList" :key="category">

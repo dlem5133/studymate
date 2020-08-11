@@ -44,10 +44,14 @@ import axios from "axios";
 import constants from "../../lib/constants";
 import "codemirror/lib/codemirror.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
-
+import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+import 'highlight.js/styles/github.css';
+import hljs from 'highlight.js';
 import { Editor } from "@toast-ui/vue-editor";
 const SERVER_URL = constants.ServerUrl;
-
+const baekjoon = "/백준";
+const swea = "/swea";
+const git = "/깃";
 export default {
   name: "DailyUpdate",
   components: {
@@ -55,10 +59,62 @@ export default {
   },
   data: () => {
     return {
-      editorText: 'This is initialValue.',
-      editorOptions: {
-        hideModeSwitch: true,
-      },
+        editorOptions: {
+          hideModeSwitch: true,
+          placeholder: '내용을 입력해주세요.',
+          initialEditType:"markdown",
+          previewStyle:"vertical",
+          plugins: [[codeSyntaxHighlight, { hljs }]],
+                  extendedAutolinks: (content) => {
+          //현재 문제 약 20000번 까지 있음
+          //백준1800 입력하면 1800번으로 감
+          for (let index = 0; index < 20000; index++) {
+            var newone = baekjoon;
+            newone += index;
+            const matched = content.match(newone);
+            if (content === newone) {
+              return matched.map((m) => ({
+                text: newone.substring(1,3)+ " " + newone.substring(3)+"번",
+                url: "https://www.acmicpc.net/problem/" + index,
+                range: [0, 8],
+              }));
+            }
+            // /백준
+            else if (content === baekjoon) {
+              const matched = content.match(baekjoon);
+              if (matched) {
+                return matched.map((m) => ({
+                  text: "백준",
+                  url: "https://www.acmicpc.net",
+                  range: [0, 3],
+                }));
+              }
+            }
+            // /SWEA
+            else if (content === swea) {
+              const matched = content.match(swea);
+              if (matched) {
+                return matched.map((m) => ({
+                  text: "SWEA",
+                  url: "https://swexpertacademy.com/main/main.do",
+                  range: [0, 4],
+                }));
+              }
+            }
+            else if (content === git) {
+              const matched = content.match(git);
+              if (matched) {
+                return matched.map((m) => ({
+                  text: "깃허브",
+                  url: "https://github.com/",
+                  range: [0, 4],
+                }));
+              }
+            }
+          }
+          return null;
+        },
+        },
       profileInfo: [],
       studyLists: [],
       tmpDailyData: [],
