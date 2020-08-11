@@ -148,7 +148,10 @@
 
       <div v-if="page===1">
         <div class="side">
-          <p class="milelog">마일리지 LOG</p>
+          <div class="d-flex justify-content-between">
+            <p class="milelog">마일리지 LOG</p>
+            <button @click="goRank" class="rankbnt">랭킹 보러가기</button>
+          </div>
           <div class="row d-flex justify-content-center">
             <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
               <b-icon class="mileicon" icon="calendar4-week"></b-icon>
@@ -440,6 +443,11 @@ export default {
           console.log(err);
         });
     },
+    goRank () {
+      this.$router.push({
+        name: constants.URL_TYPE.RANK.RANKING
+      });
+    }
   },
   created() {
     this.addprofileInfo();
@@ -474,5 +482,11 @@ export default {
   font-size: 40px;
   font-weight: bolder;
   color: orange;
+}
+.rankbnt {
+  margin-right: 5vw;
+  margin-top: auto;
+  height: 25px;
+  font-size: small;
 }
 </style>
