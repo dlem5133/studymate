@@ -2,6 +2,7 @@ package com.web.blog.controller.account;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -215,7 +216,6 @@ public class AccountController {
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-
         return response;
     }
 
@@ -328,6 +328,24 @@ public class AccountController {
         result.status = true;
         result.data = "회원 프로필 조회 완료";
         result.object = user;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+    }
+
+    @GetMapping("/account/memprofile")
+    @ApiOperation(value = "맴버 프로필")
+    public Object memprofile(@RequestParam(required = true) final Integer uid) {
+        // 회원 정보 조회
+        ArrayList<Object> mempro = new ArrayList<>();
+        mempro.add(userDao.findUserByUid(uid));
+        mempro.add(studyDao.findStudyByUid(uid));
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "맴버 프로필 조회 완료";
+        result.object = mempro;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
