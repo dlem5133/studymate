@@ -651,16 +651,16 @@ export default {
           imageUrl:
             "https://cdn.a1news.co.kr/news/photo/202003/5196_6089_1728.png",
           link: {
-            mobileWebUrl: "http://localhost:3000/#/post/" + this.postData.pid,
-            webUrl: "http://localhost:3000/#/post/" + this.postData.pid,
+            mobileWebUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
+            webUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
           },
         },
         buttons: [
           {
             title: "바로가기",
             link: {
-              mobileWebUrl: "http://localhost:3000/#/post/" + this.postData.pid,
-              webUrl: "http://localhost:3000/#/post/" + this.postData.pid,
+              mobileWebUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
+              webUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
             },
           },
         ],
