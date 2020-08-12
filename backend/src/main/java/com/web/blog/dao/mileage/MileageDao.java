@@ -1,5 +1,7 @@
 package com.web.blog.dao.mileage;
 
+import java.util.List;
+
 import com.web.blog.model.mileage.Mileage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
