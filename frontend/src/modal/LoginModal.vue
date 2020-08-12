@@ -79,7 +79,6 @@
 </template>
 
 <script>
-import "../assets/css/user.css";
 import constants from "../lib/constants";
 import axios from "axios";
 
