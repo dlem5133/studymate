@@ -5,7 +5,7 @@
       v-model="preData.title"
       placeholder="제목"
     ></b-form-input>
-    <editor :initialValue="preData.body" ref="toastuiEditor" />
+    <editor v-if="preData.body != null" :initialValue="preData.body" ref="toastuiEditor" />
     <div class="d-flex inline justify-content-center">
       <div class="p-3">
         <div @click="submitDaily(1)" class="btn btn-warning btn-sm">
@@ -191,6 +191,7 @@ export default {
         })
         .then((res) => {
           this.preData = res.data.object;
+          console.log(this.preData)
         })
         .catch((err) => console.log(err.data));
     },
