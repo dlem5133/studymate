@@ -75,7 +75,7 @@
         <br />
 
         <div class="d-flex">
-          <h5 class="mb-0">{{postData.title}}</h5>
+          <h5 class="text-left mb-0">{{postData.title}}</h5>
           <div class="ml-auto">
             <b-icon
               v-if="postData.tmp==0"
@@ -98,8 +98,8 @@
               :icon="changeLike"
               @click="likePost(islike=false)"
             ></b-icon>
-            <small class="mr-2 my-auto">{{likeListData.length}}</small>
-            <b-icon class="mr-1" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
+            <small class=" my-auto">{{likeListData.length}}</small>
+            <b-icon class="" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
           </div>
         </div>
         <div class="text-left d-flex text-secondary"></div>
@@ -146,7 +146,7 @@
         <br />
         <div class="my-5 px-3">
           <b-button
-            class="float-left mr-2 px-1 py-0"
+            class="float-left mr-2 my-1 px-1 py-0"
             variant="outline-secondary"
             size="sm"
             v-for="tag in tagData"
@@ -180,7 +180,7 @@
           </div>
         </div>
       </div>
-      <hr class="mb-4" />
+      <hr v-if="isLoggedIn&&replyData.length>0" class="mb-4" />
 
       <div
         class="card-body w-100 text-left px-3 pt-0"
@@ -312,7 +312,7 @@
                   </div>
                 </div>
 
-                <div class="px-2">
+                <div class="px-2" >
                   <small>{{ reReply.reply_content }}</small>
                 </div>
               </div>

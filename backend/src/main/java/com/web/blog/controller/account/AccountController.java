@@ -337,15 +337,13 @@ public class AccountController {
     @ApiOperation(value = "맴버 프로필")
     public Object memprofile(@RequestParam(required = true) final Integer uid) {
         // 회원 정보 조회
-        ArrayList<Object> mempro = new ArrayList<>();
-        mempro.add(userDao.findUserByUid(uid));
-        mempro.add(studyDao.findStudyByUid(uid));
+        User user = userDao.findUserByUid(uid);
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
 
         result.status = true;
         result.data = "맴버 프로필 조회 완료";
-        result.object = mempro;
+        result.object = user;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
