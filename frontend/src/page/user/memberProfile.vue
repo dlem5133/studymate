@@ -1,73 +1,99 @@
 <template>
   <div style="margin-top:6rem;" class="container">
-    <div class="row d-flex justify-content-center">
-      <div class="center">
-        <div class="profile">
-          <div class="image">
-            <div class="circle-1"></div>
-            <div class="circle-2"></div>
-
-            <div v-if="!profileInfo.profile_image">
-              <img src="../../assets/img/defualt_image.png" width="70" height="70" />
-            </div>
-            <div v-else>
-              <img :src="profileInfo.profile_image" width="70" height="70" />
-            </div>
+    <div class="mx-5 card border-bottom-0">
+      <div class="d-flex p-4">
+        <div>
+          <div v-if="!memberData.empId.user.profile_image">
+            <img
+              class="rounded-circle"
+              style="width:5rem;height:5rem;"
+              src="../../assets/img/defualt_image.png"
+              width="70"
+              height="70"
+            />
           </div>
-
-          <div class="name">{{ profileInfo.nickname }}</div>
-          <div class="job">{{ profileInfo.email }}</div>
+          <div v-else>
+            <img
+              class="rounded-circle"
+              style="width:5rem;height:5rem;"
+              :src="memberData.empId.user.profile_image"
+              width="70"
+              height="70"
+            />
+          </div>
         </div>
-
-        <div class="stats">
-          <div class="box" @click="page=0">
-            <span class="value">{{studyList.length}}</span>
-            <span class="parameter">가입중인 스터디</span>
+        <div style="position:relative;" class="text-left ml-3 my-auto">
+          <div class="d-flex">
+            <p
+              style="font-family: 'Do Hyeon', sans-serif;"
+              class="m-0 p-0"
+            >{{memberData.empId.user.nickname}}님</p>
           </div>
-          <div class="box" @click="page=1">
-            <span class="value">{{total_mileage}}</span>
-            <span class="parameter">마일리지</span>
+          <small
+            style="position:absolute;top:22px;font-family: 'Do Hyeon', sans-serif;"
+            class="m-0 p-0"
+          >{{memberData.empId.user.email}}</small>
+          <br />
+          <small>{{memberData.empId.user.intro}}</small>
+        </div>
+        <div v-if="profileInfo.uid==memberData.empId.user.uid" class="ml-auto">
+          <div class="actions2">
+            <b-button class="btn2" v-b-modal.modal-1>수정</b-button>
           </div>
-          <div class="box" @click="page=2">
-            <span class="value">{{total_score}} / 5</span>
-            <span class="parameter">평점</span>
+          <div class="actions2">
+            <b-button class="btn2" v-b-modal.modal-2>탈퇴</b-button>
           </div>
         </div>
       </div>
-
-      <div v-if="page===0">
-        <div class="side">
-          <p class="milelog px-auto p-0 m-5">리스트는 확인 하실수 없습니다.</p>
+      <div class="d-flex row-cols-2 border-top border-bottom">
+        <div class="selecting col py-4 border-right" style="cursor:pointer;" @click="page=1">
+          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_mileage}}</p>
+          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">MILEAGE</small>
+        </div>
+        <div class="selecting col py-4" style="cursor:pointer;" @click="page=2">
+          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_score}} / 5</p>
+          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">SCORE</small>
         </div>
       </div>
-
-      <div v-if="page===1">
-        <div class="side">
-          <div class="d-flex justify-content-between">
-            <p class="milelog">마일리지 LOG</p>
-            <button @click="goRank" class="rankbnt">랭킹 보러가기</button>
+      <div class="border-bottom" v-if="page===1">
+        <div class="text-left py-3 col-12">
+          <div class="d-flex">
+            <div>
+              <small class="text-dark font-weight-bold text-left pl-3">마일리지 로그</small>
+            </div>
+            <div class="ml-auto mr-4" style="color:orange;cursor:pointer;">
+              <small @click="goRank" class="ranking">
+                <i class="ranking fas fa-crown"></i> 랭킹
+              </small>
+            </div>
           </div>
-          <div class="row d-flex justify-content-center">
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
-              <b-icon class="mileicon" icon="calendar4-week"></b-icon>
-              <small>일지</small>
-              <div>
+          <div class="d-flex m-3 row-cols-3 rounded-lg border">
+            <div class="col py-3 border-right" style="cursor:pointer;">
+              <div class="d-flex">
+                <b-icon icon="calendar-3"></b-icon>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">일지</p>
+              </div>
+              <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.diarypoint }}</span>
                 <small>점</small>
               </div>
             </div>
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
-              <b-icon class="mileicon" icon="award"></b-icon>
-              <small>평가</small>
-              <div>
+            <div class="col py-3 border-right" style="cursor:pointer;">
+              <div class="d-flex">
+                <b-icon icon="award"></b-icon>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">평가</p>
+              </div>
+              <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.evalpoint }}</span>
                 <small>점</small>
               </div>
             </div>
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
-              <b-icon class="mileicon" icon="book-half"></b-icon>
-              <small>스터디 완료</small>
-              <div>
+            <div class="col py-3" style="cursor:pointer;">
+              <div class="d-flex">
+                <b-icon icon="book-half"></b-icon>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">스터디 완료</p>
+              </div>
+              <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.endpoint * 200 }}</span>
                 <small>점</small>
               </div>
@@ -75,75 +101,150 @@
           </div>
         </div>
       </div>
+      <div class="border-bottom" v-if="page===2">
+        <div class="text-left py-3 col-12">
+          <small class="font-weight-bold text-left pl-3">평점</small>
 
-      <div v-if="page===2">
-        <div class="side">
-          <p class="milelog">상호평가 LOG</p>
-          <div id="ratingbox" class="text-left row mx-auto d-flex justify-content-center">
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
-              <div class="text-center border-info">
+          <div class="d-flex m-3 mb-5 row-cols-3 rounded-lg border">
+            <div class="col py-3 border-right" style="cursor:pointer;">
+              <div class="text-center">
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">성실도</p>
+              </div>
+              <div class="w-100 pb-3 text-center">
                 <b-form-rating
-                  v-model="profileInfo.score1"
+                  v-model="memberData.empId.user.score1"
                   readonly
                   no-border
                   inline
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
-                <p>{{profileInfo.score1}} / 5</p>
-              </div>
-              <div class="text-center">
-                <small class="text-dark font-weight-bold">성실도</small>
+                <br />
+                <small>{{memberData.empId.user.score1}} / 5</small>
               </div>
             </div>
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+
+            <div class="col py-3 border-right" style="cursor:pointer;">
               <div class="text-center">
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">참여도</p>
+              </div>
+              <div class="w-100 pb-3 text-center">
                 <b-form-rating
-                  v-model="profileInfo.score2"
+                  v-model="memberData.empId.user.score2"
                   readonly
                   no-border
                   inline
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
-                <p>{{profileInfo.score2}} / 5</p>
-              </div>
-              <div class="text-center">
-                <small class="text-dark font-weight-bold">참여도</small>
+                <br />
+                <small>{{memberData.empId.user.score2}} / 5</small>
               </div>
             </div>
-            <div class="card col-4 col-lg-3 my-1 m-lg-1 p-0 py-5">
+
+            <div class="col py-3" style="cursor:pointer;">
               <div class="text-center">
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">인싸력</p>
+              </div>
+              <div class="w-100 pb-3 text-center">
                 <b-form-rating
-                  v-model="profileInfo.score3"
+                  v-model="memberData.empId.user.score3"
                   readonly
                   no-border
                   inline
                   color="#feb74d"
                   size="sm"
                 ></b-form-rating>
-                <p>{{profileInfo.score2}} / 5</p>
-              </div>
-              <div class="text-center">
-                <small class="text-dark font-weight-bold">인싸력</small>
+                <br />
+                <small>{{memberData.empId.user.score3}} / 5</small>
               </div>
             </div>
           </div>
-          <div>
-            <hr />
-            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">한줄평</small>
+          <small v-if="evalistdata.length>0" class="font-weight-bold text-left text-info pl-3">한줄평</small>
 
-            <div v-for="(list1, n) in evalistdata" :key="list1.id" class="card p-1 px-2 m-1 mx-5">
-              <div v-if="n < showEvalist" class="d-flex inline">
-                <small class="text-left text-truncate">{{ list1.sentence }}</small>
-                <b-badge class="ml-auto my-auto" variant="success">{{list1.study.category}}</b-badge>
-              </div>
+          <div
+            v-for="(list1, n) in evalistdata"
+            :key="list1.id"
+            class="card m-3 px-2 p-2"
+            @click="goStudyMain(list.pid)"
+            style="cursor:pointer;"
+          >
+            <div v-if="n < showEvalist" class="d-flex inline">
+              <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
+              <small class="text-left ml-2">{{ list1.sentence }}</small>
+              <small class="ml-auto">
+                <b-icon icon="person"></b-icon>
+                {{list1.user.nickname}}
+              </small>
             </div>
-            <button @click="showEvalist += 3" variant="link" class="small">...더보기</button>
           </div>
+          <button
+            v-if="evalistdata.length>3"
+            @click="showEvalist += 3"
+            variant="link"
+            class="small"
+          >...더보기</button>
         </div>
       </div>
     </div>
+    <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정" ok-only>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">닉네임</small>
+        <b-card class="baseInput" no-body id="input-email">{{updateData.nickname}}</b-card>
+      </div>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">이메일</small>
+        <b-card class="baseInput" no-body id="input-email">{{updateData.email}}</b-card>
+      </div>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">비밀번호</small>
+        <b-form-input type="password" v-model="updateData.password"></b-form-input>
+      </div>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">자기소개</small>
+        <b-form-textarea v-model="updateData.intro" rows="3" max-rows="6"></b-form-textarea>
+      </div>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">프로필 사진을 선택해주세요</small>
+        <div v-if="!updateData.profile_image">
+          <b-form-file id="file-large" @change="onChangeImages"></b-form-file>
+        </div>
+        <div class="text-center" v-else>
+          <img
+            :src="updateData.profile_image"
+            style="position:relative;width: 10rem;height:10rem;border-radius: 50%;"
+          />
+          <div>
+            <b-button
+              style="position:absolute;bottom:14%;left:43%;z-index:10;"
+              v-if="updateData.profile_image"
+              class="m-2 float-right"
+              variant="danger"
+              size="sm"
+              @click="removeImage"
+            >
+              <b-icon icon="trash"></b-icon>
+              <small>삭제</small>
+            </b-button>
+          </div>
+        </div>
+      </div>
+    </b-modal>
+
+    <b-modal @ok="userDelete" id="modal-2" title="회원 탈퇴" ok-only>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">이메일</small>
+        <b-form-input v-model="deleteData.email" placeholder="가입 시 작성한 이메일을 입력해주세요"></b-form-input>
+      </div>
+      <div class="mb-2">
+        <small style="font-family: 'Do Hyeon', sans-serif;">비밀번호</small>
+        <b-form-input
+          type="password"
+          v-model="deleteData.password"
+          placeholder="가입 시 작성한 비밀번호를 입력해주세요"
+        ></b-form-input>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -155,27 +256,34 @@ import constants from "../../lib/constants";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
-  name: "memberProfile",
+  name: "profile",
   data: () => {
     return {
       profileInfo: {},
-      studyList: {},
-      page: 1,
+      updateData: {
+        email: "",
+        nickname: "",
+        password: "",
+        intro: "",
+        profile_image: "",
+        uid: "",
+      },
+      deleteData: {
+        email: "",
+        password: "",
+      },
+      page: 0,
       showEvalist: 3,
 
-      evalistdata: {},
-      mileageData: {},
+      memberData:{},
+      evalistdata:{},
+      mileageData:{},
     };
   },
-  computed: {
-    total_score() {
-      return (
-        (this.profileInfo.score1 +
-          this.profileInfo.score2 +
-          this.profileInfo.score3) /
-        3
-      ).toFixed(1);
-    },
+  computed:{
+    total_score(){
+      return ((this.memberData.empId.user.score1 + this.memberData.empId.user.score2 + this.memberData.empId.user.score3) / 3).toFixed(1)
+    },    
     total_mileage() {
       if ("+this.mileageData.total".length > 3) {
         return this.mileageData.total / 1000 + "K";
@@ -185,42 +293,121 @@ export default {
     },
   },
   methods: {
-    evaList() {
-      const targetid = this.profileInfo.uid;
-      axios
-        .post(SERVER_URL + "/eva/userlist", { target_uid: targetid })
-        .then((res) => {
-          this.evalistdata = res.data.object;
-        })
-        .catch((err) => console.log(err));
+    getMemberList(){
+      axios.post(SERVER_URL + '/study/memberlist', {
+        pid: this.$route.params.post_id
+      })
+      .then(res => {
+        for (var i = 0; i < res.data.object.length; i++) {
+          if (res.data.object[i].uid == this.$route.params.user_id) {
+            this.memberData = res.data.object[i]
+            break;
+          }
+        }
+        this.evaList()
+        this.mileageList()
+      })
     },
-    mileageList() {
-      axios
-        .get(SERVER_URL + "/mileage/user", {
-          params: { uid: this.profileInfo.uid },
-        })
-        .then((res) => {
-          this.mileageData = res.data.object;
-        })
-        .catch((err) => console.log(err));
+    evaList(){
+      const targetid = this.memberData.empId.user.uid
+      axios.post(SERVER_URL+'/eva/userlist', {target_uid:targetid})
+      .then(res=>{
+        this.evalistdata = res.data.object
+      })
+      .catch(err=>console.log(err))
+    },
+    mileageList(){
+      const targetid = this.memberData.empId.user.uid
+      axios.get(SERVER_URL+"/mileage/user", {params:{uid:targetid}})
+      .then(res=>{
+        this.mileageData = res.data.object;
+      })
+      .catch(err=>console.log(err))
+    },
+    changeDatedata(time) {
+      return time.substring(5, 10) + " " + time.substring(11, 19);
     },
     addprofileInfo() {
-      const userId = this.$route.params.user_id;
+      const token = this.$cookies.get("Auth-Token");
       axios
-        .get(SERVER_URL + "/account/memprofile", { params: { uid: userId } })
+        .get(SERVER_URL + "/account/profile", { params: { Token: token } })
         .then((res) => {
-          this.profileInfo = res.data.object[0];
-          this.studyList = res.data.object[1];
-          this.evaList();
-          this.mileageList();
+          this.profileInfo = res.data.object;
+          this.updateData.email = res.data.object.email;
+          this.updateData.nickname = res.data.object.nickname;
+          this.updateData.password = res.data.object.password;
+          this.updateData.uid = res.data.object.uid;
+          this.updateData.intro = res.data.object.intro;
+          this.updateData.profile_image = res.data.object.profile_image;
+          this.getMemberList()
         })
-        .catch(() => {});
+        .catch((err) => {
+          this.$router.push({
+            name: constants.URL_TYPE.ERROR.ERRORPAGE,
+            params: { code: err.response.data },
+          });
+        });
     },
-    goRank() {
+    onChangeImages(e) {
+      const selectedImage = e.target.files[0];
+      this.createBase64Image(selectedImage);
+    },
+    createBase64Image(fileObject) {
+      this.updateData.profile_image = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.updateData.profile_image = e.target.result;
+      };
+      reader.readAsDataURL(fileObject);
+    },
+    removeImage: function (e) {
+      this.updateData.profile_image = "";
+    },
+    userUpdate() {
+      axios
+        .post(SERVER_URL + "/account/update", this.updateData)
+        .then((res) => {
+          this.$cookies.remove("Auth-Token");
+          const token = res.data.object;
+          this.$cookies.set("Auth-Token", token);
+          alert("수정되었습니다.");
+          this.addprofileInfo()
+        })
+        .catch((err) => {
+          console.log(err.response.data.errors[0]);
+          alert(err.response.data.errors[0].field + "를 확인해 주세요");
+        });
+    },
+    userDelete() {
+      axios
+        .post(SERVER_URL + "/account/delete", this.deleteData)
+        .then((res) => {
+          this.$cookies.remove("Auth-Token");
+          alert("회원탈퇴되었습니다.");
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          alert("입력정보를 확인해주세요.");
+          console.log(err);
+        });
+    },
+    goPostMain(post_id) {
       this.$router.push({
-        name: constants.URL_TYPE.RANK.RANKING,
+        name: constants.URL_TYPE.POST.POSTDETAIL,
+        params: { post_id: post_id },
       });
     },
+    goStudyMain(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: post_id },
+      });
+    },
+    goRank () {
+      this.$router.push({
+        name: constants.URL_TYPE.RANK.RANKING
+      });
+    }
   },
   created() {
     this.addprofileInfo();
@@ -229,6 +416,22 @@ export default {
 </script>
 
 <style scoped>
+.selecting {
+  background-color: rgba(255, 165, 0, 0.1);
+}
+.selecting:hover {
+  background-color: rgba(255, 165, 0, 0.4);
+}
+/* .selecting:active{color:orange;
+  background-color:rgba(255,165,0,0.3);
+}
+.selecting:visited{color:orange;
+  background-color:rgba(255,165,0,0.3);
+} */
+.ranking:hover {
+  color: orange;
+}
+
 .clickbtn,
 .tmplist {
   cursor: pointer;
@@ -253,8 +456,8 @@ export default {
   margin-right: auto;
 }
 .milepoint {
-  font-size: 40px;
-  font-weight: bolder;
+  font-family: "Do Hyeon", sans-serif;
+  font-size: 2.5rem;
   color: orange;
 }
 .rankbnt {
