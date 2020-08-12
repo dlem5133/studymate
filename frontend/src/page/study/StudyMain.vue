@@ -612,6 +612,7 @@
         this.$router.push({
           name: constants.URL_TYPE.USER.MEMBERPROFILE,
           params: {
+            post_id:this.$route.params.post_id,
             user_id: user_id
           },
         })

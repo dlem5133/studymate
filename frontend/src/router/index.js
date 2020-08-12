@@ -54,11 +54,6 @@ export default new Router({
       name: constants.URL_TYPE.USER.SIGNUP,
       component: Signup,
     },
-    {
-      path: "/user/:user_id",
-      name: constants.URL_TYPE.USER.MEMBERPROFILE,
-      component: MemberProfile,
-    },
     // 포스트
     {
       path: "/",
@@ -85,6 +80,11 @@ export default new Router({
       path: "/study/:post_id",
       name: constants.URL_TYPE.STUDY.STUDYMAIN,
       component: StudyMain,
+    },
+    {
+      path: "/study/:post_id/user/:user_id",
+      name: constants.URL_TYPE.USER.MEMBERPROFILE,
+      component: MemberProfile,
     },
     {
       path: "/study/:post_id/:daily_id/detail",
