@@ -240,6 +240,7 @@ public class StudyController {
             study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
             study.setEvalcount(0);
+            study.setMemnum(1);
             Study savedStudy = this.studyDao.save(study);
             int pid = savedStudy.getPid();
 

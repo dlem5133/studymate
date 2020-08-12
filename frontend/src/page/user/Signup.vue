@@ -54,6 +54,8 @@
 <script>
 import constants from "../../lib/constants";
 import axios from "axios";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 const SERVER_URL = constants.ServerUrl;
 
@@ -106,20 +108,33 @@ export default {
       this.signupData.profile_image = '';
     },
     doSign() {
-            if(this.signupData.password == null){
-        alert("비밀번호가 입력되지 않았습니다. 확인해주세요.")
+      if(this.signupData.password == null){
+        this.$swal(
+          "가입 실패",
+          "비밀번호가 입력되지 않았습니다. 확인해주세요.",
+          "error"
+        );
       }
       else if(this.signupData.passwordConfirm == null){
+        this.$swal(
+          "가입 실패",
+          "비밀번호확인이 입력되지 않았습니다. 확인해주세요.",
+          "error"
+        );
         alert("비밀번호확인이 입력되지 않았습니다. 확인해주세요.")
       }
       else if(this.signupData.password != this.signupData.passwordConfirm){
-        alert("비밀번호가 확인값과 틀립니다. 확인해주세요.")
+        this.$swal(
+          "가입 실패",
+          "비밀번호가 확인값과 틀립니다. 확인해주세요.",
+          "error"
+        );
       }
       else{
       axios
         .post(SERVER_URL + "/account/signup", this.signupData)
         .then(res => {
-          alert("회원가입되었습니다.");
+          swal("회원가입되었습니다.", { buttons: false, timer: 1200 });
           this.$router.push("/");
         })
         .catch(err => {

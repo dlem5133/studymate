@@ -53,6 +53,7 @@ export default {
             },
           })
           .then((res) => {
+
             this.profileInfo = res.data.object;
             console.log(this.profileInfo)
           })
