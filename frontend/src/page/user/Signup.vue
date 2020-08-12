@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
-    <img src="../../assets/img/owl_logo.png" alt="로고" style="width: 250px; margin-top: 50px;">
+  <div style="margin-top:6rem;" class="container">
     <p>{{test}}</p>
     <div class="d-flex justify-content-center">
-      <b-card title="회원가입" style="width: 500px;" class="my-5">
-        <div v-if="page == 0">
+      <b-card style="font-family: 'Do Hyeon', sans-serif;width: 500px;" class="my-5">
+        <h3 style="font-family: 'Do Hyeon', sans-serif;">JOIN</h3>
+        <div class="mt-4" v-if="page == 0">
           <b-card-text>
             <b-form-group label="이메일" label-for="input-email">
               <b-card class="baseInput" no-body id="input-email">{{signupData.email}}</b-card>
@@ -17,7 +17,7 @@
             </b-form-group>
           </b-card-text>
         </div>
-        <div v-if="page == 1">
+        <div class="mt-4" v-if="page == 1">
           <b-card-text>
             <b-form-group label="닉네임" label-for="input-nickname">
               <b-card class="baseInput" no-body id="input-nickname">{{signupData.nickname}}</b-card>
@@ -27,23 +27,23 @@
             </b-form-group>
           </b-card-text>
         </div>
-        <div v-if="page == 2">
+        <div class="mt-4" v-if="page == 2">
           <b-card-text>
             <div v-if="!signupData.profile_image">
-              <h2>Select an image</h2>
-              <input type="file" @change="onChangeImages">
+              <p style="font-family: 'Do Hyeon', sans-serif;color:orange;">Profile Image</p>
+              <b-form-file @change="onChangeImages" v-model="file" ref="file-input" class="w-75 mx-auto mb-3"></b-form-file>
             </div>
             <div v-else>
               <img :src="signupData.profile_image" style="width: 100%;"/>
-              <button @click="removeImage">Remove image</button>
+              <b-icon class="my-3" @click="removeImage" font-scale="1.5" icon="trash" variant="danger"></b-icon>
             </div>
           </b-card-text>
         </div>
 
         <div class="d-flex justify-content-between">
           <b-button v-if="0 < page && page < 3" @click="pageSwitch(-1)" pill>이전</b-button>
-          <b-button v-if="page < 2" @click="pageSwitch(1)" pill variant="info">다음</b-button>
-          <b-button v-if="page == 2" @click="doSign" pill variant="success">제출</b-button>
+          <b-button v-if="page < 2" @click="pageSwitch(1)" pill variant="primary">다음</b-button>
+          <b-button v-if="page == 2" @click="doSign" pill variant="success">완료</b-button>
         </div>
       </b-card>
 
@@ -106,16 +106,26 @@ export default {
       this.signupData.profile_image = '';
     },
     doSign() {
+            if(this.signupData.password == null){
+        alert("비밀번호가 입력되지 않았습니다. 확인해주세요.")
+      }
+      else if(this.signupData.passwordConfirm == null){
+        alert("비밀번호확인이 입력되지 않았습니다. 확인해주세요.")
+      }
+      else if(this.signupData.password != this.signupData.passwordConfirm){
+        alert("비밀번호가 확인값과 틀립니다. 확인해주세요.")
+      }
+      else{
       axios
         .post(SERVER_URL + "/account/signup", this.signupData)
         .then(res => {
           alert("회원가입되었습니다.");
-          console.log(this.signupData)
           this.$router.push("/");
         })
         .catch(err => {
           console.log(err.response);
         });
+    }
     },
   },
 }

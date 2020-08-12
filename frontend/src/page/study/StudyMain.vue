@@ -2,7 +2,7 @@
   <div class="container">
     <div class="main-table">
       <div class="container p-2">
-        <div class="card p-3">
+        <div class="card px-3">
           <div class="card-body">
             <div>
               <div class="d-flex">
@@ -197,7 +197,7 @@
 
 
         <div class="card my-1">
-          <div class="card-body text-left">
+          <div class="card-body text-left p-0 pt-3 px-4" v-if="expectTodo.dodate != null">
             <div class="d-flex">
               <div>
                 <p class="badge badge-pill badge-danger">D-{{decimalDay}}</p>
@@ -214,10 +214,29 @@
                 </b-dropdown>
               </div>
             </div>
-
             <p>장소 : {{expectTodo.doplace}}</p>
             <p>일시 : {{expectTodo.dodate}}</p>
             <p>과제 : {{expectTodo.assignment}}</p>
+          </div>
+          <div class="card-body text-left p-0 pt-2 px-4" v-if="expectTodo.dodate == null">
+            <div class="d-flex">
+              <div>
+                <p class="badge badge-pill badge-danger">D-None</p>
+              </div>
+              <div class="ml-auto">
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                  <template v-slot:button-content>
+                    <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
+                  </template>
+                  <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
+                  <b-dropdown-item v-b-modal.modal-4>수정</b-dropdown-item>
+                  <b-dropdown-item @click="expectDelete">삭제</b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
+              <div>
+                예정된 스터디가 없습니다.
+              </div>
           </div>
           <!-- 모달 -->
           <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
@@ -621,6 +640,7 @@
           .catch((err) => console.log(err));
       },
       handleOk() {
+        
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
           dayString += this.selectedDay[i]
@@ -835,7 +855,9 @@
           .then(res => {
             this.expectTodo = res.data.object[1]
             var today = new Date()
+            today.setHours(0,0,0,0)
             var count = new Date(res.data.object[1].dodate)
+            count.setHours(0,0,0,0)
             var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
             if (dday <= 0) {
               this.decimalDay = 'day'
@@ -871,27 +893,42 @@
         });
       },
       expectOk() {
+      if (this.expectData.dodate == null) {
+        alert("날짜가 입력되지 않았습니다.");
+      } else if (this.expectData.doplace == "") {
+        alert("장소가 입력되지 않았습니다.");
+      } else if (this.expectData.assignment == "") {
+        alert("과제가 입력되지 않았습니다.");
+      } else {
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/create", this.expectData)
           .then((res) => {
-            this.expectUpdate()
+            this.expectTodo = res.data.object
             this.getPostTime()
           })
           .catch((err) => console.log(err));
+      }
       },
       expectUpdate() {
+      if (this.expectData.dodate == null) {
+        alert("날짜가 입력되지 않았습니다.");
+      } else if (this.expectData.doplace == "") {
+        alert("장소가 입력되지 않았습니다.");
+      } else if (this.expectData.assignment == "") {
+        alert("과제가 입력되지 않았습니다.");
+      } else {
         this.expectData.eid = this.expectTodo.eid;
         this.expectData.uid = this.profileInfo.uid
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
-
             this.expectTodo = res.data.object
             this.getPostTime()
           })
 
           .catch((err) => console.log(err));
+       }
       },
       expectDelete() {
         this.expectData.eid = this.expectTodo.eid;
@@ -899,7 +936,6 @@
         this.expectData.pid = this.postData.pid
         axios.post(SERVER_URL + "/upcoming/delete", this.expectData)
           .then((res) => {
-
             this.expectTodo = res.data.object
             this.getPostTime()
           })
