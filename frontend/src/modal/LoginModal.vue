@@ -82,6 +82,8 @@
 import "../assets/css/user.css";
 import constants from "../lib/constants";
 import axios from "axios";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 const SERVER_URL = "http://localhost:8080";
 export default {
@@ -105,7 +107,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert("아이디 및 비밀번호를 확인해주세요.");
+          swal("아이디 및 비밀번호를 확인해주세요.", { buttons: false, timer: 1200 });
           this.email = "";
           this.password = "";
         });
@@ -119,14 +121,14 @@ export default {
           },
         })
         .then((res) => {
-          alert("비밀번호가 입력하신 메일주소로 전송되었습니다.");
+          swal("비밀번호가 입력하신 메일주소로 전송되었습니다.", { buttons: false, timer: 1200 });
           this.$router.push("/");
         })
         .catch((err) => {
           console.log(err.response);
           this.findpasswordData.email = "";
           this.findpasswordData.nickname = "";
-          alert("메일 및 닉네임을 다시 확인해주세요.");
+          swal("메일 및 닉네임을 다시 확인해주세요.", { buttons: false, timer: 1200 });
         });
     },
   },

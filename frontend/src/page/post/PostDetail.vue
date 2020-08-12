@@ -10,39 +10,51 @@
           width="100%"
         />
         <div style="position:absolute;top:5px;left:10px;">
-          <b-badge variant="warning" class="my-auto" v-if="postData.tmp==1">모집중</b-badge>
-          <b-badge variant="success" class="my-auto" v-if="postData.tmp==0">진행중</b-badge>
+          <b-badge variant="warning" class="my-auto" v-if="postData.tmp == 1"
+            >모집중</b-badge
+          >
+          <b-badge variant="success" class="my-auto" v-if="postData.tmp == 0"
+            >진행중</b-badge
+          >
         </div>
         <div
           style="position:absolute;bottom:3%;right:3%;"
-          v-if="profileInfo.uid!=postData.uid&&postData.tmp==1&&isLoggedIn"
+          v-if="
+            profileInfo.uid != postData.uid && postData.tmp == 1 && isLoggedIn
+          "
         >
           <b-button
             variant="outline-secondary"
-            v-if="!isRequest&&!isMember"
-            @click="studyRequest(isRequest=true)"
-          >신청</b-button>
+            v-if="!isRequest && !isMember"
+            @click="studyRequest((isRequest = true))"
+            >신청</b-button
+          >
           <b-button
             variant="outline-secondary"
-            v-if="isRequest&&!isMember"
-            @click="studyCancel(isRequest=false)"
-          >취소</b-button>
+            v-if="isRequest && !isMember"
+            @click="studyCancel((isRequest = false))"
+            >취소</b-button
+          >
         </div>
       </div>
       <div class="p-3">
-        <small class="float-left">[{{postData.category}}]</small>
+        <small class="float-left">[{{ postData.category }}]</small>
 
-        <div v-if="userData.uid!=profileInfo.uid">
-          <small @click="goLeaderProfile(userData.uid)" id="leader" class="float-right">
+        <div v-if="userData.uid != profileInfo.uid">
+          <small
+            @click="goLeaderProfile(userData.uid)"
+            id="leader"
+            class="float-right"
+          >
             <b-icon icon="person-badge"></b-icon>
-            팀장 {{userData.nickname}}
+            팀장 {{ userData.nickname }}
           </small>
         </div>
 
         <div v-else>
           <b-button
             style="color:orange;"
-            v-if="profileInfo.uid==postData.uid&&requestListData.length>0"
+            v-if="profileInfo.uid == postData.uid && requestListData.length > 0"
             v-b-modal.modal-1
             size="sm"
             class="p-0 border-0 float-right"
@@ -53,19 +65,32 @@
           </b-button>
           <!-- 팀원 모달 -->
           <b-modal id="modal-1" title="팀원 승인대기" hide-footer>
-            <div v-for="per in requestListData" :key="per.uid" class="list-group">
+            <div
+              v-for="per in requestListData"
+              :key="per.uid"
+              class="list-group"
+            >
               <div v-if="!per.isjoin" class="px-3 d-flex list-group-item">
-                <div class="d-flex" style="cursor:pointer;" @click="goMemberProfile(per.uid)">
+                <div
+                  class="d-flex"
+                  style="cursor:pointer;"
+                  @click="goMemberProfile(per.uid)"
+                >
                   <p class="m-0 p-0 my-auto">{{ per.empId.user.nickname }}</p>
-                  <b-icon variant="warning" class="ml-1 my-auto" icon="person"></b-icon>
+                  <b-icon
+                    variant="warning"
+                    class="ml-1 my-auto"
+                    icon="person"
+                  ></b-icon>
                 </div>
                 <div class="ml-auto">
                   <b-button
-                    v-if="profileInfo.uid==postData.uid"
+                    v-if="profileInfo.uid == postData.uid"
                     @click="approvalStudy(per.uid)"
                     variant="outline-success"
                     class="btn-sm"
-                  >승인</b-button>
+                    >승인</b-button
+                  >
                 </div>
               </div>
             </div>
@@ -75,10 +100,10 @@
         <br />
 
         <div class="d-flex">
-          <h5 class="mb-0">{{postData.title}}</h5>
+          <h5 class="mb-0">{{ postData.title }}</h5>
           <div class="ml-auto">
             <b-icon
-              v-if="postData.tmp==0"
+              v-if="postData.tmp == 0"
               class="mr-2 font-weight-bold"
               variant="outline-secondary"
               @click="goStudyMain(postData.pid)"
@@ -89,17 +114,23 @@
               variant="danger"
               v-if="!islike"
               :icon="changeLike"
-              @click="likePost(islike=true)"
+              @click="likePost((islike = true))"
             ></b-icon>
             <b-icon
               class="mr-1"
               variant="danger"
               v-else
               :icon="changeLike"
-              @click="likePost(islike=false)"
+              @click="likePost((islike = false))"
             ></b-icon>
-            <small class="mr-2 my-auto">{{likeListData.length}}</small>
-            <b-icon class="mr-1" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
+            <small class="mr-2 my-auto">{{ likeListData.length }}</small>
+            <b-icon
+              class="mr-1"
+              @click="test"
+              id="kakao-link"
+              icon="share-fill"
+              size="sm"
+            ></b-icon>
           </div>
         </div>
         <div class="text-left d-flex text-secondary"></div>
@@ -121,27 +152,32 @@
                 <b-icon font-scale="2" icon="calendar2-date"></b-icon>
               </div>
               <div class="my-auto text-center">
-                <p
-                  class="m-0 p-0"
-                >{{changeDate(postData.start_date)}} ~ {{changeDate(postData.end_date)}}</p>
+                <p class="m-0 p-0">
+                  {{ changeDate(postData.start_date) }} ~
+                  {{ changeDate(postData.end_date) }}
+                </p>
               </div>
             </div>
           </div>
           <div class="detailboard col-12 col-md-4">
             <div class="py-5 my-auto justify-content-center">
               <div style="color:orange;" class="text-center mb-2">
-                <b-icon class="my-auto" font-scale="2" icon="calendar2-range-fill"></b-icon>
+                <b-icon
+                  class="my-auto"
+                  font-scale="2"
+                  icon="calendar2-range-fill"
+                ></b-icon>
               </div>
               <div class="my-auto text-center">
-                <p class="m-0 p-0">주 {{postData.bindo}} 회</p>
+                <p class="m-0 p-0">주 {{ postData.bindo }} 회</p>
               </div>
             </div>
           </div>
         </div>
-        <hr class="mb-0">
+        <hr class="mb-0" />
 
         <div class="float-left mt-4">
-          <small class="float-left text-left px-3">{{postData.data}}</small>
+          <small class="float-left text-left px-3">{{ postData.data }}</small>
         </div>
         <br />
         <div class="my-5 px-3">
@@ -152,7 +188,7 @@
             v-for="tag in tagData"
             :key="tag.tid"
           >
-            <small># {{tag.tagname}}</small>
+            <small># {{ tag.tagname }}</small>
           </b-button>
         </div>
       </div>
@@ -188,7 +224,10 @@
         :key="comment.rid"
       >
         <div style="position:relative;" class="d-flex mb-1 w-100">
-          <div style="min-height:4rem;" class="p-2 w-100 d-flex border rounded-lg">
+          <div
+            style="min-height:4rem;"
+            class="p-2 w-100 d-flex border rounded-lg"
+          >
             <div class="w-75">
               <div class="d-flex mb-2">
                 <div v-if="!comment.user.profile_image">
@@ -198,7 +237,10 @@
                   />
                 </div>
                 <div v-else>
-                  <img class="rounded-circle profileImg" :src="comment.user.profile_image" />
+                  <img
+                    class="rounded-circle profileImg"
+                    :src="comment.user.profile_image"
+                  />
                 </div>
                 <small class="my-auto px-1">{{ comment.reply_writer }}</small>
               </div>
@@ -208,7 +250,10 @@
             </div>
             <div class="ml-auto">
               <div class="d-flex float-right">
-                <div title="댓글" class="buttonitems border rounded-circle px-1 mr-1">
+                <div
+                  title="댓글"
+                  class="buttonitems border rounded-circle px-1 mr-1"
+                >
                   <b-icon
                     style="color:orange;"
                     shift-v="2"
@@ -219,33 +264,48 @@
                 </div>
                 <div
                   title="수정"
-                  v-if="comment.uid==profileInfo.uid&&comment.reply_content!='삭제된 댓글입니다.'"
+                  v-if="
+                    comment.uid == profileInfo.uid &&
+                      comment.reply_content != '삭제된 댓글입니다.'
+                  "
                   class="buttonitems border rounded-circle px-1 mr-1"
                 >
                   <b-icon
                     variant="info"
                     icon="pencil"
-                    @click="isReplyUpdate(comment.rid,comment.reply_content)"
+                    @click="isReplyUpdate(comment.rid, comment.reply_content)"
                   ></b-icon>
                 </div>
 
                 <div
                   title="삭제"
-                  v-if="profileInfo.uid==comment.uid&&comment.reply_content!='삭제된 댓글입니다.'"
+                  v-if="
+                    profileInfo.uid == comment.uid &&
+                      comment.reply_content != '삭제된 댓글입니다.'
+                  "
                   class="buttonitems border rounded-circle px-1"
                 >
-                  <b-icon variant="danger" icon="trash" @click="replyDelete(comment)"></b-icon>
+                  <b-icon
+                    variant="danger"
+                    icon="trash"
+                    @click="replyDelete(comment)"
+                  ></b-icon>
                 </div>
               </div>
               <div style="position:absolute;top:35px;right:12px;">
-                <small class="mt-auto text-secondary">{{changeDatedata(comment.reply_time)}}</small>
+                <small class="mt-auto text-secondary">{{
+                  changeDatedata(comment.reply_time)
+                }}</small>
               </div>
             </div>
           </div>
         </div>
 
         <!-- 댓글 수정 -->
-        <div class="d-flex w-100" v-if="isUpdate==true&&comment.rid==replyId">
+        <div
+          class="d-flex w-100"
+          v-if="isUpdate == true && comment.rid == replyId"
+        >
           <textarea
             style="font-size:0.8rem;resize:none;background-color:rgba(0,0,0,0.1)"
             type="text"
@@ -259,7 +319,10 @@
         </div>
 
         <!-- 대댓글 달기 -->
-        <div class="d-flex w-100" v-if="isReply==true&&replyparent==comment.rid">
+        <div
+          class="d-flex w-100"
+          v-if="isReply == true && replyparent == comment.rid"
+        >
           <b-icon class="ml-1 my-auto" icon="reply" flip-v></b-icon>
           <textarea
             style="resize:none;font-size:0.8rem;background-color:rgba(255,165,0,0.07);"
@@ -276,7 +339,11 @@
 
         <!-- 대댓글 보기 -->
         <div class="w-100" v-for="reReply in reReplyData" :key="reReply.id">
-          <div style="position:relative;" class="w-100" v-if="comment.rid === reReply.replyparent">
+          <div
+            style="position:relative;"
+            class="w-100"
+            v-if="comment.rid === reReply.replyparent"
+          >
             <div class="d-flex my-2 w-100">
               <b-icon icon="reply" class="ml-1 mr-3 my-auto" flip-v></b-icon>
 
@@ -293,21 +360,32 @@
                       />
                     </div>
                     <div v-else>
-                      <img class="rounded-circle profileImg" :src="reReply.user.profile_image" />
+                      <img
+                        class="rounded-circle profileImg"
+                        :src="reReply.user.profile_image"
+                      />
                     </div>
-                    <small class="my-auto px-1">{{ reReply.reply_writer }}</small>
+                    <small class="my-auto px-1">{{
+                      reReply.reply_writer
+                    }}</small>
                   </div>
 
                   <div class="ml-auto">
                     <div
                       title="삭제"
-                      v-if="profileInfo.uid==reReply.uid"
+                      v-if="profileInfo.uid == reReply.uid"
                       class="buttonitems border rounded-circle px-1 mr-1"
                     >
-                      <b-icon variant="danger" icon="trash" @click="replyDelete(reReply)"></b-icon>
+                      <b-icon
+                        variant="danger"
+                        icon="trash"
+                        @click="replyDelete(reReply)"
+                      ></b-icon>
                     </div>
                     <div style="position:absolute;top:35px;right:12px;">
-                      <small class="mt-auto text-secondary">{{changeDatedata(reReply.reply_time)}}</small>
+                      <small class="mt-auto text-secondary">{{
+                        changeDatedata(reReply.reply_time)
+                      }}</small>
                     </div>
                   </div>
                 </div>
@@ -329,6 +407,14 @@
 import axios from "axios";
 import constants from "../../lib/constants";
 import "../../assets/css/postdetail.scss";
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
+
+const options = {
+  confirmButtonColor: "orange",
+  cancelButtonColor: "lightgray",
+};
 
 const SERVER_URL = constants.ServerUrl;
 
@@ -376,7 +462,6 @@ export default {
     this.userCheck();
     this.likeList();
     // 카카오톡 공유
-    Kakao.init("d5e6e1f1140f3ded1483ff360cb5a153");
   },
   computed: {
     changeLike() {
@@ -512,53 +597,78 @@ export default {
         this.replyparent = "";
       }
     },
+
     replyCreate(replyparent) {
-      this.newReply.pid = this.postData.pid;
-      this.newReply.uid = this.profileInfo.uid;
-      this.newReply.reply_parent = replyparent;
-      axios
-        .post(SERVER_URL + "/reply/write", this.newReply)
-        .then(() => {
-          this.getDetail();
-          this.newReply.reply_content = "";
-        })
-        .catch((err) => console.log(err));
+      if (this.newReply.reply_content == null ||this.newReply.reply_content == "") {
+        swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
+      } else {
+        console.log(this.newReply);
+
+        this.newReply.pid = this.postData.pid;
+        this.newReply.uid = this.profileInfo.uid;
+        this.newReply.reply_parent = replyparent;
+        axios
+          .post(SERVER_URL + "/reply/write", this.newReply)
+          .then(() => {
+            this.getDetail();
+            this.newReply.reply_content = "";
+          })
+          .catch((err) => console.log(err));
+      }
     },
+
     reReplyCreate(replyparent) {
-      this.newreReply.pid = this.postData.pid;
-      this.newreReply.uid = this.profileInfo.uid;
-      this.newreReply.reply_parent = replyparent;
-      console.log(this.newreReply);
-      axios
-        .post(SERVER_URL + "/reply/write", this.newreReply)
-        .then(() => {
-          this.getDetail();
-          this.newreReply.reply_content = "";
-          this.isReply = false;
-          this.replyparent = "";
-        })
-        .catch((err) => console.log(err));
+      if (this.newreReply.reply_content == null|| this.newreReply.reply_content == "" ) {
+        swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
+      } else {
+        this.newreReply.pid = this.postData.pid;
+        this.newreReply.uid = this.profileInfo.uid;
+        this.newreReply.reply_parent = replyparent;
+        console.log(this.newreReply);
+        axios
+          .post(SERVER_URL + "/reply/write", this.newreReply)
+          .then(() => {
+            this.getDetail();
+            this.newreReply.reply_content = "";
+            this.isReply = false;
+            this.replyparent = "";
+          })
+          .catch((err) => console.log(err));
+      }
     },
+
     replyUpdate(rid) {
-      this.updateReply.pid = this.postData.pid;
-      this.updateReply.uid = this.profileInfo.uid;
-      this.updateReply.rid = rid;
-      axios
-        .post(SERVER_URL + "/reply/update", this.updateReply)
-        .then(() => {
-          this.getDetail();
-          this.updateReply.reply_content = "";
-          this.isUpdate = false;
-        })
-        .catch((err) => console.log(err));
+      if (this.updateReply.reply_content == null ||this.updateReply.reply_content =="") {
+        swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
+      } else {
+        this.updateReply.pid = this.postData.pid;
+        this.updateReply.uid = this.profileInfo.uid;
+        this.updateReply.rid = rid;
+        axios
+          .post(SERVER_URL + "/reply/update", this.updateReply)
+          .then(() => {
+            this.getDetail();
+            this.updateReply.reply_content = "";
+            this.isUpdate = false;
+          })
+          .catch((err) => console.log(err));
+      }
     },
     replyDelete(reply) {
-      axios
-        .post(SERVER_URL + "/reply/delete", reply)
-        .then(() => {
-          this.getDetail();
-        })
-        .catch((err) => console.log(err));
+      swal({
+        text: "댓글을 삭제하시겠습니까?",
+        dangerMode: true,
+        buttons: true,
+      }).then((willDelete) => {
+        if (willDelete){
+          axios
+            .post(SERVER_URL + "/reply/delete", reply)
+            .then(() => {
+              this.getDetail();
+            })
+            .catch((err) => console.log(err));
+        }
+      });
     },
     approvalStudy(uid) {
       this.approvalData.pid = this.$route.params.post_id;

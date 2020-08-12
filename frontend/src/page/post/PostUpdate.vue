@@ -194,21 +194,42 @@ export default {
     },
     postUpdate() {
       const post_id = this.$route.params.post_id;
-
-      this.postCreateDate.uid = this.profileInfo.uid;
-      var date = new Date();
       if (this.postCreateDate.title == "") {
-        alert("스터디 제목이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "스터디 제목이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.bindo == "") {
-        alert("일정이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "일정이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (parseInt(this.postCreateDate.bindo) >= 7) {
-        alert("스터디는 주 7회를 넘을 수 없습니다. ");
+        this.$swal(
+          "가입 실패",
+          "스터디는 주 7회를 넘을 수 없습니다. ",
+          "error"
+        );
       } else if (this.postCreateDate.sido_code == "") {
-        alert("시/도가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시/도가 입력되지 않았습니다.확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.sigungu_code == "") {
-        alert("시/군/구가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시/군/구가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.start_date == "") {
-        alert("시작일이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시작일이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (
         !(
           parseInt(this.postCreateDate.start_date.substring(0, 4)) >=
@@ -219,15 +240,21 @@ export default {
             date.getDate()
         )
       ) {
-        alert(
-          "시작일은 현재 날짜 뒤에 있어야합니다 ㅠ^ㅠ \n오늘은 " +
+        this.$swal(
+          "가입 실패",
+          "시작일은 오늘 이후로 설정해주세요. <br> 오늘은 " +
             (date.getMonth() + 1) +
             "월 " +
             date.getDate() +
-            "일 입니다."
+            "일 입니다.",
+          "error"
         );
       } else if (this.postCreateDate.end_date == "") {
-        alert("종료일이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "종료일이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (
         !(
           parseInt(this.postCreateDate.end_date.substring(0, 4)) >=
@@ -238,23 +265,39 @@ export default {
             this.postCreateDate.start_date.substring(8, 10)
         )
       ) {
-        alert(
-          "종료일은 시작일보다 뒤에 있어야합니다 ㅠ^ㅠ \n스터디 시작일은 " +
+        this.$swal(
+          "가입 실패",
+          "종료일은 시작일보다 뒤에 있어야합니다 <br> 스터디 시작일은 " +
             this.postCreateDate.start_date.substring(5, 7) +
             "월 " +
             this.postCreateDate.start_date.substring(8, 10) +
-            "일 입니다."
+            "일 입니다.",
+          "error"
         );
       } else if (this.postCreateDate.category == null) {
-        alert("카테고리가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "카테고리가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.tag.length == 0) {
-        alert("태그가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "태그가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.data == "") {
-        alert("내용이 입력되지 않았습니다. 스터디를 소개해주세요!");
+        this.$swal(
+          "가입 실패",
+          "내용이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else {
         axios
           .post(SERVER_URL + "/study/update", this.postCreateDate)
           .then((res) => {
+            this.$swal("수정 완료","" , "success");
+
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: post_id },
@@ -262,6 +305,8 @@ export default {
           })
           .catch((err) => {
             console.log(err);
+            this.$swal("수정 실패", "입력정보를 확인해주세요", "error");
+
           });
       }
     },
