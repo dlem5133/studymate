@@ -253,7 +253,6 @@ export default {
           this.plusUnleaderLists = this.plusLists.filter(
             (item) => item.isleader == 0
           );
-          console.log(res.data.object)
         })
         .catch((err) => {
           console.log(err);
@@ -262,7 +261,7 @@ export default {
     addReadyList() {
       axios
         .post(SERVER_URL + "/account/readylist", this.profileInfo)
-        .then((res) => {console.log(res.data.object)
+        .then((res) => {
           this.readyLists = res.data.object;
         })
         .catch((err) => {
@@ -284,12 +283,14 @@ export default {
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: { post_id: post_id },
       });
+      this.$router.go()
     },
     goPostMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTDETAIL,
         params: { post_id: post_id },
       });
+      this.$router.go()
     },
   },
   data: function () {
