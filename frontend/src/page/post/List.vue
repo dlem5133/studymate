@@ -281,7 +281,7 @@ export default {
     handleScroll() {
       var d = document.documentElement;
       var offset = d.scrollTop + window.innerHeight;
-      var height = d.offsetHeight + 890;
+      var height = d.offsetHeight + 690;
       if (offset >= height) {
         this.scrolled += 3;
       }

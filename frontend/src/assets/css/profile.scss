@@ -116,7 +116,29 @@ $height: auto;
 	}
 	
 }
-
+.actions2 {
+	
+	.btn2 {
+		display: block;
+		width: 100px;
+		height: 30px;
+		margin: 0 auto 10px auto;
+		background: none;
+		border: 1px solid orange;
+		border-radius: 15px;
+		font-size: 12px;
+		font-weight: 600;
+		box-sizing: border-box;
+		transition: all .3s ease-in-out;
+		color: orange;
+		
+		&:hover {
+			background: orange;
+			border:0;
+			color: #fff;
+		}
+	}
+}
 .stats {
 	float: left;
 	
