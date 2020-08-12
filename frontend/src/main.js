@@ -10,6 +10,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import JwPagination from 'jw-vue-pagination'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
+import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n);
 
