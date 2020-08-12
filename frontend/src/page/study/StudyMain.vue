@@ -21,13 +21,6 @@
                     <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
                     <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
                   </b-dropdown>
-                  <!-- <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-                    <template v-slot:button-content>
-                      <b-icon icon="file-text" variant="dark"></b-icon>
-                    </template>
-                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
-                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                  </b-dropdown> -->
 
                   <!-- 상호평가 -->
                   <div v-if="calculFri == '월요일' || finalCheck < 7">
@@ -123,10 +116,7 @@
 
                           </div>
                           <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
-                          <!-- <div class="ml-auto">
-                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success" @click="delegation(per.uid)">위임</b-button>
-                            <b-icon class="my-auto" icon="trash" variant="danger"></b-icon>
-                          </div> -->
+
                         </li>
                         <li v-else class="list-group-item d-flex">
                           <div class="d-flex">
@@ -224,7 +214,8 @@
                 <p class="badge badge-pill badge-danger">D-None</p>
               </div>
               <div class="ml-auto">
-                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid"  variant="link" toggle-class="text-decoration-none" no-caret>
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
+                  toggle-class="text-decoration-none" no-caret>
                   <template v-slot:button-content>
                     <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
                   </template>
@@ -234,9 +225,9 @@
                 </b-dropdown>
               </div>
             </div>
-              <div>
-                예정된 스터디가 없습니다.
-              </div>
+            <div>
+              예정된 스터디가 없습니다.
+            </div>
           </div>
           <!-- 모달 -->
           <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
@@ -291,23 +282,15 @@
           </b-modal>
         </div>
 
-        <div @click="getDaily">
-          <b-calendar :date-info-fn="dateClass" v-model="value" block locale="ko-kr"></b-calendar>
-        </div>
-        <div id="calendar"></div>
+        <!-- <div id="calendar"></div> -->
+        
         <hr />
         <div class="card" style="width: 100%;">
           <div class="card-header">
-            {{value}}
+            일지 목록
             <i @click="goDailyCreate" class="fas fa-pen-square createpoint"> 새글 작성</i>
           </div>
-          <ul v-for="(dailyList, i) in dailyLists" :key="dailyList.did" class="list-group text-left list-group-flush">
-            <li @click="goDailyDetail(dailyList.did)" class="list-group-item dailyc;-ss">
-              {{i+1}}. {{dailyList.title}}
-              <b-badge variant="success">{{dailyList.writer}}</b-badge>
-
-            </li>
-          </ul>
+          <FullCalendar :options="calendarOptions" />
         </div>
       </div>
     </div>
@@ -322,81 +305,19 @@
   import {
     Calendar
   } from '@fullcalendar/core';
+  import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid';
   import interactionPlugin from '@fullcalendar/interaction';
   import listPlugin from '@fullcalendar/list';
 
-
-  document.addEventListener('DOMContentLoaded', function () {
-    let calendarEl = document.getElementById('calendar');
-
-    let calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-      headerToolbar: {
-        start: 'prevYear,prev,next,nextYear,today', // will normally be on the left. if RTL, will be on the right
-        center: 'title',
-        end: 'dayGridMonth,dayGridWeek,listMonth'
-      },
-      events: [{
-          title: "t",
-          start: '2020-08-03T13:00:00',
-          constraint: 'businessHours'
-        },
-        {
-          title: 'Meeting test',
-          start: '2020-08-13T11:00:00',
-          constraint: 'availableForMeeting', // defined below
-          color: '#257e4a'
-        },
-        {
-          title: 'Conference',
-          start: '2020-08-18',
-          end: '2020-06-20'
-        },
-        {
-          title: 'Party',
-          start: '2020-08-29T20:00:00'
-        },
-
-        // areas where "Meeting" must be dropped
-        {
-          groupId: 'availableForMeeting',
-          start: '2020-06-11T10:00:00',
-          end: '2020-06-11T16:00:00',
-          display: 'background'
-        },
-        {
-          groupId: 'availableForMeeting',
-          start: '2020-06-13T10:00:00',
-          end: '2020-06-13T16:00:00',
-          display: 'background'
-        },
-
-        // red areas where no events can be dropped
-        {
-          start: '2020-06-24',
-          end: '2020-06-28',
-          overlap: false,
-          display: 'background',
-          color: '#ff9f89'
-        },
-        {
-          start: '2020-06-06',
-          end: '2020-06-08',
-          overlap: false,
-          display: 'background',
-          color: '#ff9f89'
-        }
-      ]
-    });
-
-    calendar.render();
-  });
   export default {
     name: "PostDetail",
+    components: {
+      FullCalendar
+    },
     data: () => {
       return {
-//        calendar: null,
+        //  calendar: null,
         profileInfo: [],
         memberListData: [],
         postData: [],
@@ -460,6 +381,20 @@
           count: 0
         },
         alreadyEva: [],
+        calendarOptions: {
+          plugins: [dayGridPlugin, interactionPlugin, listPlugin],
+
+          headerToolbar: {
+            start: 'prevYear,prev,next,nextYear', // will normally be on the left. if RTL, will be on the right
+            center: 'title',
+            end: 'dayGridMonth,dayGridWeek,listMonth'
+          },
+
+          initialView: 'dayGridMonth',
+          events: [
+
+          ]
+        }
       };
     },
     computed: {
@@ -481,77 +416,30 @@
       this.memberList()
       this.getDetail()
       this.DeleteMemberList()
-   //   this.createCalendar();
+
+      // this.createCalendar();
     },
     mounted() {
       this.getPostTime()
+      this.updateCalendar()
     },
     methods: {
-      // createCalendar() {
-      //   let calendarEl = document.getElementById('calendar');
-
-      //   this.calendar = new Calendar(calendarEl, {
-      //     plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-      //     headerToolbar: {
-      //       start: 'prevYear,prev,next,nextYear,today', // will normally be on the left. if RTL, will be on the right
-      //       center: 'title',
-      //       end: 'dayGridMonth,dayGridWeek,listMonth'
-      //     },
-      //     events: [{
-      //         title: 'tets',
-      //         start: '2020-08-03T13:00:00',
-      //         constraint: 'businessHours'
-      //       },
-      //       {
-      //         title: 'Meeting t',
-      //         start: '2020-08-13T11:00:00',
-      //         constraint: 'availableForMeeting', // defined below
-      //         color: '#257e4a'
-      //       },
-      //       {
-      //         title: 'Conference',
-      //         start: '2020-08-18',
-      //         end: '2020-06-20'
-      //       },
-      //       {
-      //         title: 'Party',
-      //         start: '2020-08-29T20:00:00'
-      //       },
-
-      //       // areas where "Meeting" must be dropped
-      //       {
-      //         groupId: 'availableForMeeting',
-      //         start: '2020-06-11T10:00:00',
-      //         end: '2020-06-11T16:00:00',
-      //         display: 'background'
-      //       },
-      //       {
-      //         groupId: 'availableForMeeting',
-      //         start: '2020-06-13T10:00:00',
-      //         end: '2020-06-13T16:00:00',
-      //         display: 'background'
-      //       },
-
-      //       // red areas where no events can be dropped
-      //       {
-      //         start: '2020-06-24',
-      //         end: '2020-06-28',
-      //         overlap: false,
-      //         display: 'background',
-      //         color: '#ff9f89'
-      //       },
-      //       {
-      //         start: '2020-06-06',
-      //         end: '2020-06-08',
-      //         overlap: false,
-      //         display: 'background',
-      //         color: '#ff9f89'
-      //       }
-      //     ]
-      //   });
-
-      //   calendar.render();
+      // handleDateClick(arg) {
+      //   alert('date click! ' + arg.dateStr)
       // },
+      updateCalendar() {
+        let test = {
+          title: 'kkkkkk',
+          date: '2020-08-02'
+        }
+        console.log(this.allDailyLists);
+        for (var i = 0; i < this.allDailyLists.length; i++) {
+          test.title = this.allDailyLists[i].title
+          test.date = this.allDailyList[i].posttime
+          this.calendarOptions.events.push(test)
+        }
+        this.calendarOptions.events.push(test)
+      },
 
       reportCheck(target) {
         this.reportdata.target = target
@@ -640,7 +528,7 @@
           .catch((err) => console.log(err));
       },
       handleOk() {
-        
+
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
           dayString += this.selectedDay[i]
@@ -855,9 +743,9 @@
           .then(res => {
             this.expectTodo = res.data.object[1]
             var today = new Date()
-            today.setHours(0,0,0,0)
+            today.setHours(0, 0, 0, 0)
             var count = new Date(res.data.object[1].dodate)
-            count.setHours(0,0,0,0)
+            count.setHours(0, 0, 0, 0)
             var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60)
             if (dday <= 0) {
               this.decimalDay = 'day'
@@ -865,9 +753,24 @@
               this.decimalDay = dday
             }
             this.allDailyLists = res.data.object[0]
+            console.log(this.allDailyLists)
             var i = 0;
+            const post_id = this.$route.params.post_id
             while (i < this.allDailyLists.length) {
               this.checkPost.push(this.allDailyLists[i].posttime)
+              var d = this.allDailyLists[i].title
+              var s = this.allDailyLists[i].posttime
+              var daily_id = this.allDailyLists[i].did
+              const test = {
+                title: d,
+                date: s,
+                color: 'yellow', // an option!
+                textColor: 'black', // an option!
+                url: 'http://localhost:3000/#/study/' + post_id + '/' + daily_id + '/detail'
+              }
+
+              this.calendarOptions.events.push(test)
+
               i++;
             }
           })
@@ -893,42 +796,42 @@
         });
       },
       expectOk() {
-      if (this.expectData.dodate == null) {
-        alert("날짜가 입력되지 않았습니다.");
-      } else if (this.expectData.doplace == "") {
-        alert("장소가 입력되지 않았습니다.");
-      } else if (this.expectData.assignment == "") {
-        alert("과제가 입력되지 않았습니다.");
-      } else {
-        this.expectData.uid = this.profileInfo.uid
-        this.expectData.pid = this.postData.pid
-        axios.post(SERVER_URL + "/upcoming/create", this.expectData)
-          .then((res) => {
-            this.expectTodo = res.data.object
-            this.getPostTime()
-          })
-          .catch((err) => console.log(err));
-      }
+        if (this.expectData.dodate == null) {
+          alert("날짜가 입력되지 않았습니다.");
+        } else if (this.expectData.doplace == "") {
+          alert("장소가 입력되지 않았습니다.");
+        } else if (this.expectData.assignment == "") {
+          alert("과제가 입력되지 않았습니다.");
+        } else {
+          this.expectData.uid = this.profileInfo.uid
+          this.expectData.pid = this.postData.pid
+          axios.post(SERVER_URL + "/upcoming/create", this.expectData)
+            .then((res) => {
+              this.expectTodo = res.data.object
+              this.getPostTime()
+            })
+            .catch((err) => console.log(err));
+        }
       },
       expectUpdate() {
-      if (this.expectData.dodate == null) {
-        alert("날짜가 입력되지 않았습니다.");
-      } else if (this.expectData.doplace == "") {
-        alert("장소가 입력되지 않았습니다.");
-      } else if (this.expectData.assignment == "") {
-        alert("과제가 입력되지 않았습니다.");
-      } else {
-        this.expectData.eid = this.expectTodo.eid;
-        this.expectData.uid = this.profileInfo.uid
-        this.expectData.pid = this.postData.pid
-        axios.post(SERVER_URL + "/upcoming/update", this.expectData)
-          .then((res) => {
-            this.expectTodo = res.data.object
-            this.getPostTime()
-          })
+        if (this.expectData.dodate == null) {
+          alert("날짜가 입력되지 않았습니다.");
+        } else if (this.expectData.doplace == "") {
+          alert("장소가 입력되지 않았습니다.");
+        } else if (this.expectData.assignment == "") {
+          alert("과제가 입력되지 않았습니다.");
+        } else {
+          this.expectData.eid = this.expectTodo.eid;
+          this.expectData.uid = this.profileInfo.uid
+          this.expectData.pid = this.postData.pid
+          axios.post(SERVER_URL + "/upcoming/update", this.expectData)
+            .then((res) => {
+              this.expectTodo = res.data.object
+              this.getPostTime()
+            })
 
-          .catch((err) => console.log(err));
-       }
+            .catch((err) => console.log(err));
+        }
       },
       expectDelete() {
         this.expectData.eid = this.expectTodo.eid;
