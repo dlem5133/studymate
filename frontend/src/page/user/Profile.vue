@@ -1,28 +1,26 @@
 <template>
   <div style="margin-top:6rem;" class="container">
     <div class="mx-5 card border-bottom-0">
-      <div class="d-flex p-4">
-        <div>
-          <div v-if="!profileInfo.profile_image">
-            <img
-              class="rounded-circle"
-              style="width:5rem;height:5rem;"
-              src="../../assets/img/defualt_image.png"
-              width="70"
-              height="70"
-            />
-          </div>
-          <div v-else>
-            <img
-              class="rounded-circle"
-              style="width:5rem;height:5rem;"
-              :src="profileInfo.profile_image"
-              width="70"
-              height="70"
-            />
-          </div>
+      <div class="row" style="margin: 0;">
+        <div class="col-12 col-md-2 px-0 py-3" v-if="!profileInfo.profile_image">
+          <img
+            class="rounded-circle"
+            style="width:5rem;height:5rem;"
+            src="../../assets/img/defualt_image.png"
+            width="70"
+            height="70"
+          />
         </div>
-        <div style="position:relative;" class="text-left ml-3 my-auto">
+        <div class="col-12 col-md-2 px-0 py-3" v-else>
+          <img
+            class="rounded-circle"
+            style="width:5rem;height:5rem;"
+            :src="profileInfo.profile_image"
+            width="70"
+            height="70"
+          />
+        </div>
+        <div class="col-12 col-md-6 py-3 ml-5 text-left my-auto" style="position:relative;" >
           <div class="d-flex">
             <p
               style="font-family: 'Do Hyeon', sans-serif;"
@@ -30,34 +28,34 @@
             >{{profileInfo.nickname}}님</p>
           </div>
           <small
-            style="position:absolute;top:22px;font-family: 'Do Hyeon', sans-serif;"
+            style="position:absolute;top:37px;font-family: 'Do Hyeon', sans-serif;"
             class="m-0 p-0"
           >{{profileInfo.email}}</small>
           <br />
-          <small>{{profileInfo.intro}}</small>
+          <small class="mb-4">{{profileInfo.intro}}</small>
         </div>
-        <div class="ml-auto">
+        <div class="col-12 col-md-3 py-3 my-auto ml-auto">
           <div class="actions2">
-            <b-button class="btn2" v-b-modal.modal-1>수정</b-button>
+            <b-button class="btn2 mb-0" v-b-modal.modal-1>수정</b-button>
           </div>
           <div class="actions2">
-            <b-button class="btn2" v-b-modal.modal-2>탈퇴</b-button>
+            <b-button class="btn2 mt-2 mb-0" v-b-modal.modal-2>탈퇴</b-button>
           </div>
         </div>
       </div>
-      <div class="d-flex row-cols-3 border-top border-bottom">
-        <div class="selecting col py-4 border-right" style="cursor:pointer;" @click="page=0">
+      <div class="row mt-3 border-top border-bottom" style="margin:0;">
+        <div class="selecting col-12 col-md-4 py-4 border-bottom border-right" style="cursor:pointer;" @click="page=0">
           <p
             style="font-family: 'Do Hyeon', sans-serif;"
             class="m-0"
           >{{comLists.length + ingLists.length}}</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">STUDY</small>
         </div>
-        <div class="selecting col py-4 border-right" style="cursor:pointer;" @click="page=1">
+        <div class="selecting col-12 col-md-4 py-4 border-bottom border-right" style="cursor:pointer;" @click="page=1">
           <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_mileage}}</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">MILEAGE</small>
         </div>
-        <div class="selecting col py-4" style="cursor:pointer;" @click="page=2">
+        <div class="selecting col-12 col-md-4 py-4" style="cursor:pointer;" @click="page=2">
           <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_score}} / 5</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">SCORE</small>
         </div>
@@ -150,6 +148,7 @@
           </div>
         </div>
       </div>
+
       <div class="border-bottom" v-if="page===1">
         <div class="text-left py-3 col-12">
           <div class="d-flex">
@@ -162,8 +161,9 @@
               </small>
             </div>
           </div>
-          <div class="d-flex m-3 row-cols-3 rounded-lg border">
-            <div class="col py-3 border-right" style="cursor:pointer;">
+          <div class="m-3 row rounded-lg border">
+            
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="calendar-3"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">일지</p>
@@ -173,7 +173,8 @@
                 <small>점</small>
               </div>
             </div>
-            <div class="col py-3 border-right" style="cursor:pointer;">
+            
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="award"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">평가</p>
@@ -183,7 +184,8 @@
                 <small>점</small>
               </div>
             </div>
-            <div class="col py-3" style="cursor:pointer;">
+            
+            <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="book-half"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">스터디 완료</p>
@@ -196,12 +198,13 @@
           </div>
         </div>
       </div>
+
       <div class="border-bottom" v-if="page===2">
         <div class="text-left py-3 col-12">
           <small class="font-weight-bold text-left pl-3">평점</small>
 
-          <div class="d-flex m-3 mb-5 row-cols-3 rounded-lg border">
-            <div class="col py-3 border-right" style="cursor:pointer;">
+          <div class="d-flex m-3 mb-5 row rounded-lg border">
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="text-center">
                 <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">성실도</p>
               </div>
@@ -219,7 +222,7 @@
               </div>
             </div>
 
-            <div class="col py-3 border-right" style="cursor:pointer;">
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="text-center">
                 <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">참여도</p>
               </div>
@@ -237,7 +240,7 @@
               </div>
             </div>
 
-            <div class="col py-3" style="cursor:pointer;">
+            <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="text-center">
                 <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">인싸력</p>
               </div>
@@ -267,8 +270,7 @@
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
               <small class="text-left ml-2">{{ list1.sentence }}</small>
-              <small class="ml-auto">
-                <b-icon icon="person"></b-icon>
+              <small class="ml-auto text-secondary">
                 {{list1.user.nickname}}
               </small>
             </div>
@@ -281,7 +283,10 @@
           >...더보기</button>
         </div>
       </div>
+
     </div>
+
+
     <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정" ok-only>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">닉네임</small>
@@ -340,6 +345,7 @@
         ></b-form-input>
       </div>
     </b-modal>
+
   </div>
 </template>
 
@@ -586,20 +592,9 @@ export default {
   font-weight: bolder;
   text-align: left;
 }
-.mileicon {
-  font-size: 70px;
-  margin-left: auto;
-  margin-right: auto;
-}
 .milepoint {
   font-family: "Do Hyeon", sans-serif;
   font-size: 2.5rem;
   color: orange;
-}
-.rankbnt {
-  margin-right: 5vw;
-  margin-top: auto;
-  height: 25px;
-  font-size: small;
 }
 </style>

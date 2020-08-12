@@ -1,10 +1,6 @@
 <template>
-    <div class="container col-10 mt-5">
-
-        <div class="mt-5" id="calendar">
-
-        </div>
-        <div class="card border-0">
+    <div style="margin-top:6rem;" class="container">
+        <div class="card border-0 mx-5">
             <div class="table-responsive">
                 <table class="table align-items-center table-flush">
                     <thead style="Orange">
