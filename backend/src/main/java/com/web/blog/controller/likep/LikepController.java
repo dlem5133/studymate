@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-        @CrossOrigin(origins = { "http://i3b205.p.ssafy.io:80" })
+        @CrossOrigin(origins = { "http://i3b205.p.ssafy.io" })
 @RestController
 public class LikepController {
 
