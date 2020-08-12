@@ -37,8 +37,6 @@
 <script>
     import axios from "axios";
     import constants from "../../lib/constants";
-    // import {Calendar} from 'vue-bootstrap-calendar';
-    // import {messages} from 'vue-bootstrap-calendar';
     import {
         Calendar
     } from '@fullcalendar/core';
@@ -48,67 +46,7 @@
 
 
     const SERVER_URL = "http://localhost:8080";
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     let calendarEl = document.getElementById('calendar');
 
-    //     let calendar = new Calendar(calendarEl, {
-    //         plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-    //         headerToolbar: {
-    //             start: 'prevYear,prev,next,nextYear,today', // will normally be on the left. if RTL, will be on the right
-    //             center: 'title',
-    //             end: 'dayGridMonth,dayGridWeek,listMonth'
-    //         },
-    //         events: [
-    //             {
-    //                 title: this.RankData,
-    //                 start: '2020-08-13T11:00:00',
-    //                 constraint: 'availableForMeeting', // defined below
-    //                 color: '#257e4a'
-    //             },
-    //             {
-    //                 title: 'Conference',
-    //                 start: '2020-08-18',
-    //                 end: '2020-06-20'
-    //             },
-    //             {
-    //                 title: 'Party',
-    //                 start: '2020-08-29T20:00:00'
-    //             },
-
-    //             // areas where "Meeting" must be dropped
-    //             {
-    //                 groupId: 'availableForMeeting',
-    //                 start: '2020-06-11T10:00:00',
-    //                 end: '2020-06-11T16:00:00',
-    //                 display: 'background'
-    //             },
-    //             {
-    //                 groupId: 'availableForMeeting',
-    //                 start: '2020-06-13T10:00:00',
-    //                 end: '2020-06-13T16:00:00',
-    //                 display: 'background'
-    //             },
-
-    //             // red areas where no events can be dropped
-    //             {
-    //                 start: '2020-06-24',
-    //                 end: '2020-06-28',
-    //                 overlap: false,
-    //                 display: 'background',
-    //                 color: '#ff9f89'
-    //             },
-    //             {
-    //                 start: '2020-06-06',
-    //                 end: '2020-06-08',
-    //                 overlap: false,
-    //                 display: 'background',
-    //                 color: '#ff9f89'
-    //             }
-    //         ]
-    //     });
-
-    //     calendar.render();
-    // });
 
     export default {
         name: "Ranking",

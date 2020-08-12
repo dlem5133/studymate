@@ -421,26 +421,8 @@
     },
     mounted() {
       this.getPostTime()
-      this.updateCalendar()
     },
     methods: {
-      // handleDateClick(arg) {
-      //   alert('date click! ' + arg.dateStr)
-      // },
-      updateCalendar() {
-        let test = {
-          title: 'kkkkkk',
-          date: '2020-08-02'
-        }
-        console.log(this.allDailyLists);
-        for (var i = 0; i < this.allDailyLists.length; i++) {
-          test.title = this.allDailyLists[i].title
-          test.date = this.allDailyList[i].posttime
-          this.calendarOptions.events.push(test)
-        }
-        this.calendarOptions.events.push(test)
-      },
-
       reportCheck(target) {
         this.reportdata.target = target
         this.reportdata.pid = this.$route.params.post_id
@@ -756,6 +738,7 @@
             console.log(this.allDailyLists)
             var i = 0;
             const post_id = this.$route.params.post_id
+            const ecolor = ['#FFB900','#FF7E9D','#D2FFD2','#00CDFF','#28A0FF']
             while (i < this.allDailyLists.length) {
               this.checkPost.push(this.allDailyLists[i].posttime)
               var d = this.allDailyLists[i].title
@@ -764,7 +747,7 @@
               const test = {
                 title: d,
                 date: s,
-                color: 'yellow', // an option!
+                color: ecolor[i%5], // an option!
                 textColor: 'black', // an option!
                 url: 'http://localhost:3000/#/study/' + post_id + '/' + daily_id + '/detail'
               }
