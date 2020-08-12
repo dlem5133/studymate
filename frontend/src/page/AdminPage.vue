@@ -265,7 +265,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 tbody :hover {
   background-color: #eee;
 }

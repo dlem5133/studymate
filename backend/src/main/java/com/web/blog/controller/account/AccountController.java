@@ -2,6 +2,7 @@ package com.web.blog.controller.account;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestBody;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+        @CrossOrigin(origins = { "*" })
 @RestController
 public class AccountController {
 
@@ -75,7 +76,7 @@ public class AccountController {
     @GetMapping(value = "/k/klogin")
     public Object lgin() {
 
-        String URL = "https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://localhost:8080/account/kakaologin&response_type=code";
+        String URL = "https://kauth.kakao.com/oauth/authorize?client_id=a61b27fc4e535f7a22983d0d0da6eb9d&redirect_uri=http://i3b205.p.ssafy.io:8080/account/kakaologin&response_type=code";
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
         result.status = true;
@@ -99,7 +100,7 @@ public class AccountController {
             // 이메일 동의 안했을 경우 백 처리
             // front에서 alert창으로 카카오에서 지우라고 띄워주기
 
-            return new RedirectView("http://localhost:3000/#/duplicate");
+            return new RedirectView("http://i3b205.p.ssafy.io:8081/#/duplicate");
         }
 
         // 그 밑은 그럴일이 없다.
@@ -120,13 +121,13 @@ public class AccountController {
 
             if (userOpt != null) {
                 // 회원 정보 있으면, 아무것도 하지않고, front에서 alert창으로 회원정보가 있다고 띄워주기
-                return new RedirectView("http://localhost:3000/#/duplicate");
+                return new RedirectView("http://i3b205.p.ssafy.io:8081/#/duplicate");
             } else {
 
                 // 회원가입 창으로 가기
                 String namee = URLEncoder.encode(user_name, StandardCharsets.UTF_8);
 
-                String url = "http://localhost:3000/#/user/signup?email=" + user_email + "&nickname=" + namee + "&pass="
+                String url = "http://i3b205.p.ssafy.io:8081/#/user/signup?email=" + user_email + "&nickname=" + namee + "&pass="
                         + "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc";
                 return new RedirectView(url);
 
@@ -215,7 +216,6 @@ public class AccountController {
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-
         return response;
     }
 
@@ -328,6 +328,24 @@ public class AccountController {
         result.status = true;
         result.data = "회원 프로필 조회 완료";
         result.object = user;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+    }
+
+    @GetMapping("/account/memprofile")
+    @ApiOperation(value = "맴버 프로필")
+    public Object memprofile(@RequestParam(required = true) final Integer uid) {
+        // 회원 정보 조회
+        ArrayList<Object> mempro = new ArrayList<>();
+        mempro.add(userDao.findUserByUid(uid));
+        mempro.add(studyDao.findStudyByUid(uid));
+        ResponseEntity<Object> response = null;
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "맴버 프로필 조회 완료";
+        result.object = mempro;
 
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;

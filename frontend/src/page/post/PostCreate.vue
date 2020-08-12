@@ -374,7 +374,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .createbtn {
   color: orange;
 }

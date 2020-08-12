@@ -11,6 +11,14 @@ import JwPagination from 'jw-vue-pagination'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 
+Vue.use(VueI18n);
+
+import {messages} from 'vue-bootstrap-calendar';
+
+window.i18n = new VueI18n({
+  locale: 'en',
+  messages
+});
 Vue.component('jw-pagination', JwPagination)
 Vue.use(ToastPlugin)
 Vue.use(VueCookies)
@@ -33,6 +41,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   components: { App },
   template: '<App/>'
 })

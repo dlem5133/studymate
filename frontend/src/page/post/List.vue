@@ -184,7 +184,7 @@ export default {
       var tmpSearch = this.selected;
       setTimeout(() => {
         var tmpData = this.allStudyList;
-        if (tmpSearch.category) {
+        if (tmpSearch.category != "" && tmpSearch.category != "전체") {
           tmpData = tmpData.filter(
             (da) => da[0].category == tmpSearch.category
           );
@@ -281,7 +281,8 @@ export default {
     handleScroll() {
       var d = document.documentElement;
       var offset = d.scrollTop + window.innerHeight;
-      var height = d.offsetHeight + 890;
+      var height = d.offsetHeight + 685;
+      // console.log(offset, height);
       if (offset >= height) {
         this.scrolled += 3;
       }

@@ -79,13 +79,12 @@
 </template>
 
 <script>
-import "../assets/css/user.css";
 import constants from "../lib/constants";
 import axios from "axios";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL =  constants.ServerUrl;
 export default {
   methods: {
     doLogin() {

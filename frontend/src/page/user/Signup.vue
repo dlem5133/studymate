@@ -146,7 +146,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 .baseInput {
   text-align: left;
   height: 38px;
