@@ -540,7 +540,7 @@ public class StudyController {
     // 전체 글 가져오기
     public Object recruitstart(@RequestParam(required = true) int pid) {
         Study study = studyDao.findStudyByPid(pid);
-        study.setTmp(1);
+        study.setTmp(3);
         Study savedstudy = studyDao.save(study);
         ResponseEntity<Object> response = null;
         if (study != null) {
