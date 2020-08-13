@@ -102,7 +102,7 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="info">승인대기중</b-badge>
+              <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
             </div>
           </div>
 
@@ -128,7 +128,7 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="warning">추가모집중</b-badge>
+              <b-badge class="ml-auto my-auto" variant="info">추가모집중</b-badge>
             </div>
           </div>
 
