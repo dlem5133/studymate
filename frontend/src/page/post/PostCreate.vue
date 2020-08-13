@@ -260,9 +260,9 @@ export default {
       } else if (
         !(
           parseInt(this.postCreateDate.start_date.substring(0, 4)) >=
-            date.getFullYear() &&
+            date.getFullYear() ||
           parseInt(this.postCreateDate.start_date.substring(5, 7)) >=
-            date.getMonth() + 1 &&
+            date.getMonth() + 1 ||
           parseInt(this.postCreateDate.start_date.substring(8, 10)) >
             date.getDate()
         )
@@ -285,9 +285,9 @@ export default {
       } else if (
         !(
           parseInt(this.postCreateDate.end_date.substring(0, 4)) >=
-            this.postCreateDate.start_date.substring(0, 4) &&
+            this.postCreateDate.start_date.substring(0, 4) ||
           parseInt(this.postCreateDate.end_date.substring(5, 7)) >=
-            this.postCreateDate.start_date.substring(5, 7) &&
+            this.postCreateDate.start_date.substring(5, 7) ||
           parseInt(this.postCreateDate.end_date.substring(8, 10)) >
             this.postCreateDate.start_date.substring(8, 10)
         )
