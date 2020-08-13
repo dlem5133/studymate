@@ -185,7 +185,6 @@
           </div>
         </div>
 
-
         <div class="card my-1">
           <div class="card-body text-left p-0 pt-3 px-4" v-if="expectTodo.dodate != null">
             <div class="d-flex">
@@ -281,8 +280,6 @@
             </form>
           </b-modal>
         </div>
-
-        <!-- <div id="calendar"></div> -->
         
         <hr />
         <div class="card" style="width: 100%;">
@@ -317,17 +314,12 @@
     },
     data: () => {
       return {
-        //  calendar: null,
         profileInfo: [],
         memberListData: [],
         postData: [],
         tagData: [],
         userData: [],
-        studyLists: [],
-        value: "날짜를 선택해주세요.",
-        allDailyLists: [],
-        dailyLists: [],
-        checkPost: [],
+
         expectTodo: [],
         expectData: {
           dodate: null,
@@ -338,30 +330,15 @@
           eid: 0
         },
         decimalDay: "",
-        updateData: {
-          study: [],
-          tag: []
-        },
-        expectDataList: [],
+
         selectedDay: [],
         week: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
         days: [],
-        delegationData: {
-          leader: "",
-          member: "",
-          pid: 0
-        },
-        readyLists: [],
-        leaderLists: [],
-        unleaderLists: [],
-        indvData: {},
-        leaderListsTmp1: [],
+
         DeleteMemberListData: [],
-        leaderListsTmp0: [],
-        deleteData: {
-          pid: "",
-          uid: "",
-        },
+        // 일지
+        allDailyLists: [],
+        // 신고
         reportdata: {
           pid: "",
           target: "",
@@ -381,6 +358,7 @@
           count: 0
         },
         alreadyEva: [],
+        // 달력
         calendarOptions: {
           plugins: [dayGridPlugin, interactionPlugin, listPlugin],
 
@@ -416,8 +394,6 @@
       this.memberList()
       this.getDetail()
       this.DeleteMemberList()
-
-      // this.createCalendar();
     },
     mounted() {
       this.getPostTime()
@@ -449,40 +425,48 @@
           .catch(err => console.log(err))
       },
       deleteMember(user_id) {
-        this.deleteData.pid = this.$route.params.post_id
-        this.deleteData.uid = user_id
-        axios.post(SERVER_URL + "/study/detail/delete_request", this.deleteData)
+        const deleteData = {
+          pid: this.$route.params.post_id,
+          uid: user_id
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_request", deleteData)
           .then(res => {
             this.memberList()
           })
           .catch(err => console.log(err))
       },
       DeleteApply(memberid) {
-        this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
+        indvData = {
+          uid: memberid,
+          pid: this.postData.pid,
+          isLeader: 0,
+          isJoin: 1
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_apply", indvData)
           .then((res) => {
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
       },
       DeleteCancel(memberid) {
-        this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
+        indvData = {
+          uid: memberid,
+          pid: this.postData.pid,
+          isLeader: 0,
+          isJoin: 1
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_companion", indvData)
           .then((res) => {
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
       },
       deleteMemberCancel(user_id) {
-        this.deleteData.pid = this.$route.params.post_id
-        this.deleteData.uid = user_id
-        axios.post(SERVER_URL + '/study/detail/delete_cancel', this.deleteData)
+        const deleteData = {
+          pid: this.$route.params.post_id,
+          uid: user_id
+        }
+        axios.post(SERVER_URL + '/study/detail/delete_cancel', deleteData)
           .then(res => {
             this.memberList()
           })
@@ -499,57 +483,35 @@
           }).catch(err => console.log(err))
       },
       delegation(memberid) {
-        this.delegationData.pid = this.postData.pid;
-        this.delegationData.leader = this.postData.uid;
-        this.delegationData.member = memberid;
-        axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
+        const delegationData = {
+          leader: this.postData.uid,
+          member: memberid,
+          pid: this.postData.pid
+        }
+        axios.post(SERVER_URL + "/study/detail/delegation", delegationData)
           .then((res) => {
             this.getDetail()
           })
-
           .catch((err) => console.log(err));
       },
       handleOk() {
-
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
           dayString += this.selectedDay[i]
         }
         this.postData.days = dayString
-        this.updateData.study = this.postData
-        this.updateData.tag = this.tagData
-        console.log(this.updateData);
+        const updateData= {
+          study: this.postData,
+          tag: this.tagData
+        }
         axios
-          .post(SERVER_URL + "/study/daysupdate", this.updateData)
+          .post(SERVER_URL + "/study/daysupdate", updateData)
           .then(res => {
             this.getDetail()
           })
           .catch(err => {
             console.log(err)
           })
-      },
-      addStudyList() {
-        axios
-          .post(SERVER_URL + "/account/studylist", this.profileInfo)
-          .then((res) => {
-            this.leaderLists = res.data.object.filter(item => item.isleader != 0)
-            this.leaderListsTmp0 = this.leaderLists.filter(item => item.empId.study.tmp == 0)
-            this.leaderListsTmp1 = this.leaderLists.filter(item => item.empId.study.tmp == 1)
-            this.unleaderLists = res.data.object.filter(item => item.isleader == 0)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-      addReadyList() {
-        axios
-          .post(SERVER_URL + "/account/readylist", this.profileInfo)
-          .then((res) => {
-            this.readyLists = res.data.object;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
       },
       addprofileInfo() {
         if (this.$cookies.isKey("Auth-Token")) {
@@ -561,15 +523,11 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
-              this.addStudyList();
-              this.addReadyList()
             })
             .catch((err) => {
               this.$router.push({
                 name: constants.URL_TYPE.ERROR.ERRORPAGE,
-                params: {
-                  code: err.response.data
-                },
+                params: { code: err.response.data },
               });
             });
         }
@@ -655,21 +613,6 @@
           })
           .catch((err) => console.log(err.response));
       },
-      getDaily() {
-        axios.get(SERVER_URL + "/diary/list", {
-            params: {
-              pid: this.$route.params.post_id,
-              tmp: 1
-            }
-          })
-          .then(res => {
-            const tmpData = res.data.object[0]
-            this.dailyLists = tmpData.filter(tmpData => tmpData.posttime === this.valxue)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      },
       goDailyCreate() {
         var date = new Date();
         var year = date.getFullYear();
@@ -707,15 +650,6 @@
           });
         }
       },
-      goDailyDetail(daily_id) {
-        this.$router.push({
-          name: constants.URL_TYPE.STUDY.DAILYDETAIL,
-          params: {
-            post_id: this.$route.params.post_id,
-            daily_id: daily_id
-          },
-        });
-      },
       getPostTime() {
         axios.get(SERVER_URL + "/diary/list", {
             params: {
@@ -736,12 +670,10 @@
               this.decimalDay = dday
             }
             this.allDailyLists = res.data.object[0]
-            console.log(this.allDailyLists)
             var i = 0;
             const post_id = this.$route.params.post_id
             const ecolor = ['#FFB900','#FF7E9D','#D2FFD2','#00CDFF','#28A0FF']
             while (i < this.allDailyLists.length) {
-              this.checkPost.push(this.allDailyLists[i].posttime)
               var d = this.allDailyLists[i].title
               var s = this.allDailyLists[i].posttime
               var daily_id = this.allDailyLists[i].did
@@ -761,15 +693,6 @@
           .catch(err => {
             console.log(err)
           })
-      },
-      dateClass(ymd, date) {
-        var d = this.week[date.getDay()]
-        if (this.checkPost.indexOf(ymd) !== -1) {
-          return 'table-success'
-        }
-        if (this.days.indexOf(d) !== -1) {
-          return 'table-secondary'
-        }
       },
       goBoard(post_id) {
         this.$router.push({
@@ -931,14 +854,12 @@
   .clickstudy {
     cursor: pointer;
   }
-
   .createpoint {
     position: absolute;
     right: 2%;
     cursor: pointer;
     font-size: large;
   }
-
   .dailycss:hover {
     cursor: pointer;
     background-color: #eee;
