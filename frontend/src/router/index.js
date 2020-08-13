@@ -82,7 +82,7 @@ export default new Router({
       component: StudyMain,
     },
     {
-      path: "/study/:post_id/user/:user_id",
+      path: "/user/:user_id",
       name: constants.URL_TYPE.USER.MEMBERPROFILE,
       component: MemberProfile,
     },
