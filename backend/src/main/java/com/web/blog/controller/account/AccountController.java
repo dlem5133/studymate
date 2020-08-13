@@ -184,7 +184,7 @@ public class AccountController {
             user.setNickname(request.getNickname());
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
-
+            
             User saveduser = this.userDao.save(user);
 
             Mileage mileage = new Mileage();
@@ -320,8 +320,12 @@ public class AccountController {
     @ApiOperation(value = "회원 프로필")
     public Object profile(@RequestParam(required = true) final String Token) { // 회원 정보 조회
         // 이메일로 조회
+        ArrayList<Object> userAndStudy = new ArrayList<>();
         User user2 = (jwtService.getUser(Token));
         User user = userDao.findUserByEmailAndPassword(user2.getEmail(), user2.getPassword());
+        userAndStudy.add(user);
+        userAndStudy.add(studyDao.findAll());
+
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
         result.status = true;
