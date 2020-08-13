@@ -591,6 +591,11 @@
           .then(res => {
             this.memberListData = res.data.object
           })
+          .catch((err) => { 
+            this.$router.push({
+              name: constants.URL_TYPE.POST.MAIN
+            });
+          })
       },
       getDetail() {
         const post_id = this.$route.params.post_id;
