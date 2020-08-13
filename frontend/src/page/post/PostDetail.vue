@@ -182,7 +182,7 @@
         <br />
         <div class="my-5 px-3">
           <b-button
-            class="float-left mr-2 px-1 py-0"
+            class="float-left mr-2 my-1 px-1 py-0"
             variant="outline-secondary"
             size="sm"
             v-for="tag in tagData"
@@ -216,7 +216,7 @@
           </div>
         </div>
       </div>
-      <hr class="mb-4" />
+      <hr v-if="isLoggedIn&&replyData.length>0" class="mb-4" />
 
       <div
         class="card-body w-100 text-left px-3 pt-0"
@@ -390,7 +390,7 @@
                   </div>
                 </div>
 
-                <div class="px-2">
+                <div class="px-2" >
                   <small>{{ reReply.reply_content }}</small>
                 </div>
               </div>

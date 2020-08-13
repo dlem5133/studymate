@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div style="margin-top:6rem;" class="container">
     <div class="main-table">
       <div class="container p-2">
         <div class="card px-3">
