@@ -51,6 +51,8 @@ import { Editor } from "@toast-ui/vue-editor";
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import "highlight.js/styles/github.css";
 import hljs from "highlight.js";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 const SERVER_URL = constants.ServerUrl;
 const baekjoon = "/백준";
@@ -176,9 +178,9 @@ export default {
       },
       submitDaily(tmpN) {
         if(this.text==""){
-          alert("제목을 입력해주세요.")
+        swal("제목을 입력해주세요", { buttons: false, timer: 1200 });
         }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""  ||this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent){
-          alert("새로운 내용을 입력해주세요.")
+        swal("내용을 입력해주세요", { buttons: false, timer: 1200 });
         }else{
         const dailydData = {
           title: this.text,

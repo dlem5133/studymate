@@ -6,14 +6,29 @@
         <b-row class="m-3">
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
-            <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.title"
+              placeholder="제목"
+              type="text"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="4" class="px-1 mb-4">
-            <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
-              <b-form-file placeholder=" " browse-text="Image" @change="onChangeImages"></b-form-file>
+            <div
+              style="transform: translateY(21px);"
+              v-if="!postCreateDate.background_image"
+            >
+              <b-form-file
+                placeholder=" "
+                browse-text="Image"
+                @change="onChangeImages"
+              ></b-form-file>
             </div>
             <div class="d-flex" style="transform: translateY(20px);" v-else>
-              <img :src="postCreateDate.background_image" class="w-25" style="height:30px;" />
+              <img
+                :src="postCreateDate.background_image"
+                class="w-25"
+                style="height:30px;"
+              />
               <b-button class="ml-3" @click="removeImage" variant="border-0">
                 <b-icon icon="trash"></b-icon>
               </b-button>
@@ -21,20 +36,34 @@
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정</small>
-            <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.bindo"
+              placeholder="주 _회"
+              type="text"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton id="demo-sb" v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
+            <b-form-spinbutton
+              id="demo-sb"
+              v-model="postCreateDate.limitp"
+              min="3"
+              max="100"
+            ></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
-            <select @click="getgungu" v-model="postCreateDate.sido_code" class="custom-select">
+            <select
+              @click="getgungu"
+              v-model="postCreateDate.sido_code"
+              class="custom-select"
+            >
               <option
                 v-for="sido in allSidoCode"
                 :key="sido.sidocode"
                 :value="sido.sidocode"
-              >{{sido.sidoname}}</option>
+                >{{ sido.sidoname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -44,24 +73,39 @@
                 v-for="sido in allGugunCode"
                 :key="sido.guguncode"
                 :value="sido.guguncode"
-              >{{sido.gugunname}}</option>
+                >{{ sido.gugunname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시작일</small>
-            <b-form-input v-model="postCreateDate.start_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.start_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">종료일</small>
-            <b-form-input v-model="postCreateDate.end_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.end_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">카테고리</small>
-            <b-form-select value="f02c" v-model="postCreateDate.category" :options="options"></b-form-select>
+            <b-form-select
+              value="f02c"
+              v-model="postCreateDate.category"
+              :options="options"
+            ></b-form-select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <b-input-group size="sm" class="taggroup mb-2">
-              <b-icon icon="tags-fill" variant="warning" class="mx-2 mt-2"></b-icon>
+              <b-icon
+                icon="tags-fill"
+                variant="warning"
+                class="mx-2 mt-2"
+              ></b-icon>
               <b-form-tags
                 input-id="tags-basic"
                 tag-variant="warning"
@@ -73,18 +117,23 @@
           </b-col>
           <b-col sm="12" class="px-1">
             <small class="formtitle ml-3 float-left">내용</small>
-            <b-form-textarea v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
+            <b-form-textarea
+              v-model="postCreateDate.data"
+              placeholder="내용"
+              rows="3"
+            ></b-form-textarea>
           </b-col>
         </b-row>
 
         <div class="d-flex inline justify-content-center mb-5">
           <div class="p-3">
             <b-button
-              @click="postCreate(postCreateDate.tmp=1)"
+              @click="postCreate((postCreateDate.tmp = 1))"
               style="border:1.5px solid orange;"
               variant="outline-warning"
               class="createbtn"
-            >스터디 생성</b-button>
+              >스터디 생성</b-button
+            >
           </div>
         </div>
       </div>
@@ -166,24 +215,48 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert("입력정보를 확인해주세요!");
+          this.$swal("생성 실패", "입력정보를 확인해주세요", "error");
         });
     },
     postCreate() {
       this.postCreateDate.uid = this.profileInfo.uid;
       var date = new Date();
       if (this.postCreateDate.title == "") {
-        alert("스터디 제목이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "생성 실패",
+          "스터디 제목이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.bindo == "") {
-        alert("일정이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "일정이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (parseInt(this.postCreateDate.bindo) >= 7) {
-        alert("스터디는 주 7회를 넘을 수 없습니다. ");
+        this.$swal(
+          "가입 실패",
+          "스터디는 주 7회를 넘을 수 없습니다. ",
+          "error"
+        );
       } else if (this.postCreateDate.sido_code == "") {
-        alert("시/도가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시/도가 입력되지 않았습니다.확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.sigungu_code == "") {
-        alert("시/군/구가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시/군/구가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.start_date == "") {
-        alert("시작일이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "시작일이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (
         !(
           parseInt(this.postCreateDate.start_date.substring(0, 4)) >=
@@ -194,15 +267,21 @@ export default {
             date.getDate()
         )
       ) {
-        alert(
-          "시작일은 현재 날짜 뒤에 있어야합니다 ㅠ^ㅠ \n오늘은 " +
+        this.$swal(
+          "가입 실패",
+          "시작일은 오늘 이후로 설정해주세요. <br> 오늘은 " +
             (date.getMonth() + 1) +
             "월 " +
             date.getDate() +
-            "일 입니다."
+            "일 입니다.",
+          "error"
         );
       } else if (this.postCreateDate.end_date == "") {
-        alert("종료일이 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "종료일이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (
         !(
           parseInt(this.postCreateDate.end_date.substring(0, 4)) >=
@@ -213,32 +292,45 @@ export default {
             this.postCreateDate.start_date.substring(8, 10)
         )
       ) {
-        alert(
-          "종료일은 시작일보다 뒤에 있어야합니다 ㅠ^ㅠ \n스터디 시작일은 " +
+        this.$swal(
+          "가입 실패",
+          "종료일은 시작일보다 뒤에 있어야합니다 <br> 스터디 시작일은 " +
             this.postCreateDate.start_date.substring(5, 7) +
             "월 " +
             this.postCreateDate.start_date.substring(8, 10) +
-            "일 입니다."
+            "일 입니다.",
+          "error"
         );
       } else if (this.postCreateDate.category == null) {
-        alert("카테고리가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "카테고리가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.tag.length == 0) {
-        alert("태그가 입력되지 않았습니다. 확인해주세요!");
+        this.$swal(
+          "가입 실패",
+          "태그가 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else if (this.postCreateDate.data == "") {
-        alert("내용이 입력되지 않았습니다. 스터디를 소개해주세요!");
+        this.$swal(
+          "가입 실패",
+          "내용이 입력되지 않았습니다. 확인해주세요!",
+          "error"
+        );
       } else {
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
-            console.log(res);
+          swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
             });
           })
           .catch((err) => {
-            console.log(err.response);
-            alert("입력정보를 확인해주세요!");
+            this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
           });
       }
     },
@@ -254,7 +346,7 @@ export default {
       };
       reader.readAsDataURL(fileObject);
     },
-    removeImage: function (e) {
+    removeImage: function(e) {
       this.postCreateDate.background_image = "";
     },
     getSidoCode() {
