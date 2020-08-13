@@ -328,7 +328,6 @@ public class AccountController {
 
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
-
         result.status = true;
         result.data = "회원 프로필 조회 완료";
         result.object = user;

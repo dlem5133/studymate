@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-        @CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "*" })
 @RestController
 public class ReplyController {
 
@@ -105,11 +105,15 @@ public class ReplyController {
         ResponseEntity<Object> response = null;
         BasicResponse result = new BasicResponse();
 
+        // 첫댓글이 아닐 때
         if (reply_rid.getReplyparent() != 0) {
-            // 첫 댓이 살아있지 않으면 첫댓 아예 DB에서 지워요
-            if ((replyDao.findReplyByRid(reply_rid.getReplyparent())).getReply_writer().equals("")) {
-                replyDao.delete(replyDao.findReplyByRid(reply_rid.getReplyparent()));
+            if (replyDao.countByReplyparent(reply_rid.getReplyparent()) <= 1) {
+                // 첫 댓이 살아있지 않으면 첫댓 아예 DB에서 지워요
+                if ((replyDao.findReplyByRid(reply_rid.getReplyparent())).getReply_writer().equals("")) {
+                    replyDao.delete(replyDao.findReplyByRid(reply_rid.getReplyparent()));
+                }
             }
+
             replyDao.delete(reply_rid);
             result.status = true;
             result.data = "댓글 삭제 완료";
@@ -119,6 +123,7 @@ public class ReplyController {
             // 첫댓글이고
             // 해당 댓글에 답댓글이 있을 때
             if (replyDao.countByReplyparent(reply_rid.getRid()) != 0) {
+                System.out.println(reply_rid.getReply_content());
                 reply_rid.setReply_content("삭제된 댓글입니다.");
                 reply_rid.setReply_writer("");
                 replyDao.save(reply_rid);
