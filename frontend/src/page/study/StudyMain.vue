@@ -390,15 +390,25 @@
       }
     },
     created() {
+      this.getDetail()
       this.addprofileInfo();
       this.memberList()
-      this.getDetail()
       this.DeleteMemberList()
     },
     mounted() {
       this.getPostTime()
     },
     methods: {
+      memberCheck () {
+        var member = []
+        for (let i = 0; i < this.memberListData.length; i++) {
+          member.push(this.memberListData[i].uid)
+        }
+        if (member.indexOf(this.profileInfo.uid) == -1) {
+          alert("스터디 맴버가 아닙니다.")
+          this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
+        }
+      },
       reportCheck(target) {
         this.reportdata.target = target
         this.reportdata.pid = this.$route.params.post_id
@@ -523,6 +533,7 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
+              this.memberCheck()
             })
             .catch((err) => {
               this.$router.push({
@@ -530,6 +541,10 @@
                 params: { code: err.response.data },
               });
             });
+        } else {
+          this.$router.push({
+            name: constants.URL_TYPE.POST.MAIN,
+          });
         }
       },
       goPostMain(post_id) {
@@ -592,9 +607,7 @@
             this.memberListData = res.data.object
           })
           .catch((err) => { 
-            this.$router.push({
-              name: constants.URL_TYPE.POST.MAIN
-            });
+            console.log(err.response)
           })
       },
       getDetail() {
@@ -616,7 +629,15 @@
             }
             this.days = tmpdays
           })
-          .catch((err) => console.log(err.response));
+          .catch((err) => {
+            if (err.response.data.status == 400) {
+              this.$router.push({
+                name: constants.URL_TYPE.POST.MAIN
+              });
+            } else {
+              console.log(err.response);
+            }
+          });
       },
       goDailyCreate() {
         var date = new Date();
@@ -687,11 +708,9 @@
                 date: s,
                 color: ecolor[i%5], // an option!
                 textColor: 'black', // an option!
-                url: 'http://localhost:3000/#/study/' + post_id + '/' + daily_id + '/detail'
+                url: SERVER_URL + '/#/study/' + post_id + '/' + daily_id + '/detail'
               }
-
               this.calendarOptions.events.push(test)
-
               i++;
             }
           })
