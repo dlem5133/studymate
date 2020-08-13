@@ -324,7 +324,6 @@ public class AccountController {
         User user = userDao.findUserByEmailAndPassword(user2.getEmail(), user2.getPassword());
         ResponseEntity<Object> response = null;
         final BasicResponse result = new BasicResponse();
-
         result.status = true;
         result.data = "회원 프로필 조회 완료";
         result.object = user;

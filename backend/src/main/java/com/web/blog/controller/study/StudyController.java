@@ -150,6 +150,7 @@ public class StudyController {
         ResponseEntity<Object> response = null;
         BasicResponse result = new BasicResponse();
 
+
         if (request.getTmp() == 1) {
             // 타이틀
             List<Study> studylist = studyDao.findStudyByTitleLikeAndCategoryLikeAndTmpOrderByPosttimeAsc(
