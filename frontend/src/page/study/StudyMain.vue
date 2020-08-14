@@ -623,7 +623,10 @@
             }
           })
           .then((res) => {
-            this.postData = res.data.object[0];
+            var tmp = res.data.object[0];
+            var t = require('@/assets/uploadfile/' + tmp.background_image)
+            tmp.background_image = t
+            this.postData = tmp
             this.tagData = res.data.object[2]
             this.userData = res.data.object[4];
             const tmpdays = []
