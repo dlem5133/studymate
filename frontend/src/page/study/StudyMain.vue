@@ -15,16 +15,16 @@
                   <div>
                   <div class="d-flex float-right">
                     <!-- 4. 집으로 -->
-                    <div>
-                      <b-button size="sm" class="border-0" variant="link" @click="goPostMain(postData.pid)">
+                    <div class="my-auto">
+                      <b-button size="sm" class="border-0 d-flex" variant="link" @click="goPostMain(postData.pid)">
                         <b-icon style="cursor:pointer;" variant="dark" icon="house-door"></b-icon><small
-                          style="color:black;"> HOME</small>
+                          style="color:black;" class="ml-1"> HOME</small>
                       </b-button>
                     </div>
                     <!-- 3. 게시판 -->
-                    <div>
-                      <b-button @click="goBoard(postData.pid)" size="sm" class="border-0" variant="link">
-                        <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;"> BOARD</small>
+                    <div class="my-auto">
+                      <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 d-flex" variant="link">
+                        <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;" class="ml-1"> BOARD</small>
                       </b-button>
                     </div>
                     <!-- 1. SETTINGS -->
@@ -223,7 +223,7 @@
             <div v-if="expectTodo.dodate!=null" class="py-2 px-4 text-left">
               <p class="pb-3"><b-icon icon="geo-alt"></b-icon> {{expectTodo.doplace}}</p>
               <p class="pb-3"><b-icon icon="calendar-date"></b-icon> {{expectTodo.dodate}}</p>
-              <p><b-icon font-scale="1.2" icon="journal-text"></b-icon> {{expectTodo.assignment}}</p>
+              <p>과제 : {{expectTodo.assignment}}</p>
             </div>
             <div class="py-2 px-4 text-left" v-else>
               <p>스터디 일정이 없습니다.</p><p>다가 올 스터디 일정을 생성해주세요.</p>
@@ -298,13 +298,12 @@
 </template>
 
 <script>
+  import "../../assets/css/studymain.scss";
   import axios from "axios";
   import constants from "../../lib/constants";
 
   const SERVER_URL = constants.ServerUrl;
-  import {
-    Calendar
-  } from '@fullcalendar/core';
+  import { Calendar } from '@fullcalendar/core';
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid';
   import interactionPlugin from '@fullcalendar/interaction';
@@ -536,7 +535,7 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
-              this.memberCheck()
+              
             })
             .catch((err) => {
               this.$router.push({
@@ -607,7 +606,9 @@
             pid: this.$route.params.post_id
           })
           .then(res => {
+            console.log(res.data.object)
             this.memberListData = res.data.object
+            this.memberCheck()
           })
           .catch((err) => { 
             console.log(err.response)
@@ -701,7 +702,7 @@
             this.allDailyLists = res.data.object[0]
             var i = 0;
             const post_id = this.$route.params.post_id
-            const ecolor = ['#FFB1B9','#FACBBA','#F0CC96','#FEB78D','#B5E8E2']
+            const ecolor = ['#ACBFEA','#F8DDA9','#FDAF9B','#DCCBED','#B6E3E9']
             while (i < this.allDailyLists.length) {
               var d = this.allDailyLists[i].title
               var s = this.allDailyLists[i].posttime
@@ -887,18 +888,18 @@
     font-family: 'Do Hyeon', sans-serif;
     position:absolute;
     top:62px;
-    right:47%;
+    right:45%;
   }
   @media ( max-width: 480px ) {
     .dailyselect{
       position:absolute;
-      top:20px;
+      top:25px;
       right:6%;
       font-size:0.8rem;
     }
     .diarybutton{
       position:absolute;
-      top:50px;
+      top:64px;
       right:21px;
       font-size:0.6rem;
     }
@@ -917,5 +918,46 @@
   .dailycss:hover {
     cursor: pointer;
     background-color: #eee;
+  }
+
+</style>
+
+<style>
+  @media ( max-width: 480px ) {
+    .fc .fc-button-group { 
+      position:absolute;
+      top:17%;
+      left:35%;
+    }
+    .fc .fc-button-group>.fc-button { 
+      color:gray;
+      border:1px solid gray;
+      padding:0 0.2rem;
+      background-color:white;
+    }
+    .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+      background-color:white !important;
+      border:1px solid gray !important;
+    }
+    .fc-daygrid-block-event .fc-event-time, .fc-daygrid-block-event .fc-event-title{
+      font-size:0.5rem;
+    }
+    .fc .fc-daygrid-day-number{
+      font-size:0.6rem;
+    }
+    .fc .fc-col-header-cell-cushion {
+      font-size:0.7rem !important;
+    }
+    .fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active,
+    .fc-dayGridWeek-button.fc-button.fc-button-primary.fc-button,
+    .fc-listMonth-button.fc-button.fc-button-primary.fc-button {
+      display:none;
+    }
+    .fc-daygrid-body.fc-daygrid-body-unbalanced{
+      width:100% !important;
+    }
+    .fc .fc-view-harness {
+      margin:1rem !important;
+    }
   }
 </style>
