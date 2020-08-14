@@ -536,7 +536,11 @@ export default {
             }
           }
         })
-        .catch((err) => console.log(err.data));
+        .catch((err) => { 
+            this.$router.push({
+              name: constants.URL_TYPE.POST.MAIN
+            });
+          })
     },
     requestPeopleList() {
       axios
