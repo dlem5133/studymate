@@ -2,13 +2,13 @@
   <div class="detail container">
     <div class="card border mx-5 px-0">
       <div class="cardimg">
-        <img
-          style="position:relative;"
-          :src="postData.background_image"
-          alt
-          height="270rem"
-          width="100%"
-        />
+        <div class="images">
+          <img
+            style="position:relative;"
+            :src="postData.background_image"
+            class="imagefile"
+         />          
+        </div>
         <div style="position:absolute;top:5px;left:10px;">
           <b-badge variant="warning" class="my-auto" v-if="postData.tmp == 1"
             >모집중</b-badge
@@ -216,7 +216,7 @@
           </div>
         </div>
       </div>
-      <hr v-if="isLoggedIn&&replyData.length>0" class="mb-4" />
+      <hr v-if="isLoggedIn && replyData.length > 0" class="mb-4" />
 
       <div
         class="card-body w-100 text-left px-3 pt-0"
@@ -390,7 +390,7 @@
                   </div>
                 </div>
 
-                <div class="px-2" >
+                <div class="px-2">
                   <small>{{ reReply.reply_content }}</small>
                 </div>
               </div>
@@ -539,7 +539,7 @@ export default {
         .catch((err) => {
           if (err.response.data.status == 400) {
             this.$router.push({
-              name: constants.URL_TYPE.POST.MAIN
+              name: constants.URL_TYPE.POST.MAIN,
             });
           } else {
             console.log(err.response);
@@ -607,7 +607,10 @@ export default {
     },
 
     replyCreate(replyparent) {
-      if (this.newReply.reply_content == null ||this.newReply.reply_content == "") {
+      if (
+        this.newReply.reply_content == null ||
+        this.newReply.reply_content == ""
+      ) {
         swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
       } else {
         console.log(this.newReply);
@@ -626,7 +629,10 @@ export default {
     },
 
     reReplyCreate(replyparent) {
-      if (this.newreReply.reply_content == null|| this.newreReply.reply_content == "" ) {
+      if (
+        this.newreReply.reply_content == null ||
+        this.newreReply.reply_content == ""
+      ) {
         swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
       } else {
         this.newreReply.pid = this.postData.pid;
@@ -646,7 +652,10 @@ export default {
     },
 
     replyUpdate(rid) {
-      if (this.updateReply.reply_content == null ||this.updateReply.reply_content =="") {
+      if (
+        this.updateReply.reply_content == null ||
+        this.updateReply.reply_content == ""
+      ) {
         swal("댓글 내용을 입력해주세요", { buttons: false, timer: 1200 });
       } else {
         this.updateReply.pid = this.postData.pid;
@@ -668,7 +677,7 @@ export default {
         dangerMode: true,
         buttons: true,
       }).then((willDelete) => {
-        if (willDelete){
+        if (willDelete) {
           axios
             .post(SERVER_URL + "/reply/delete", reply)
             .then(() => {
@@ -769,7 +778,8 @@ export default {
           imageUrl:
             "https://cdn.a1news.co.kr/news/photo/202003/5196_6089_1728.png",
           link: {
-            mobileWebUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
+            mobileWebUrl:
+              "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
             webUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
           },
         },
@@ -777,8 +787,10 @@ export default {
           {
             title: "바로가기",
             link: {
-              mobileWebUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
-              webUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
+              mobileWebUrl:
+                "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
+              webUrl:
+                "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
             },
           },
         ],
@@ -822,5 +834,13 @@ export default {
 #leader:hover {
   color: black;
   cursor: pointer;
+}
+
+.images {
+  overflow: hidden;
+}
+.imagefile {
+  max-width: 100%;
+  max-height: 30em;
 }
 </style>

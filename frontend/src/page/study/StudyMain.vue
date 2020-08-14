@@ -701,7 +701,7 @@
             this.allDailyLists = res.data.object[0]
             var i = 0;
             const post_id = this.$route.params.post_id
-            const ecolor = ['#FFB900','#FF7E9D','#D2FFD2','#00CDFF','#28A0FF']
+            const ecolor = ['#FFB1B9','#FACBBA','#F0CC96','#FEB78D','#B5E8E2']
             while (i < this.allDailyLists.length) {
               var d = this.allDailyLists[i].title
               var s = this.allDailyLists[i].posttime
