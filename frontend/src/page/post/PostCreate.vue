@@ -313,18 +313,19 @@ export default {
         );
       } else {
         this.postCreateDate.background_image = this.files[0].name
+        console.log(this.postCreateDate);
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
-            this.submitFiles()
+            this.submitFiles(res.data.object.pid)
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
             });
           })
           .catch((err) => {
-            console.log(res.response);
+            console.log(err.response);
             this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
           });
       }
@@ -338,19 +339,17 @@ export default {
     },
     addFiles() {
       this.$refs.files.click();
-      console.log(this.files);
     },
     removeFile(key) {
       this.files.splice(key, 1);
     },
-    submitFiles() {
-      const formData = new FormData();
-      var ff = new FormData();
-      ff.append("tst","teststst")  
+    submitFiles(pid) {
+      const formData = new FormData(); 
       for (var i = 0; i < this.files.length; i++) {
         let file = this.files[i]
         formData.append('file', file)
       }
+      formData.append('pid', pid)
       axios.post(SERVER_URL + "/study/detail/fileupload",
           formData, {
             headers: {

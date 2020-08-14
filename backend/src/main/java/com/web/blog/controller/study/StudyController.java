@@ -234,7 +234,6 @@ public class StudyController {
             study.setData(request.getData());
             study.setTitle(request.getTitle());
             study.setUid(request.getUid());
-
             study.setTmp(request.getTmp());
             study.setBindo(request.getBindo());
             study.setStart_date(request.getStart_date());
@@ -246,25 +245,13 @@ public class StudyController {
             study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
             study.setEvalcount(0);
+            study.setMemnum(1);
             Study savedStudy = this.studyDao.save(study);
 
             int pid = savedStudy.getPid();
-
-            FileOutputStream fos;
-
-            byte fileData[] = request.getBackground_image().getBytes();
-            File ff = new File(
-                    "frontend\\assets\\src\\uploadfile\\" + request.getBackground_image().getOriginalFilename());
-            if (!ff.getParentFile().exists())
-                ff.getParentFile().mkdirs();
-            String path = pid + request.getBackground_image().getOriginalFilename();
-            savedStudy.setBackground_image(path);
-            fos = new FileOutputStream(
-                    "frontend\\src\\assets\\uploadfile\\" + pid + request.getBackground_image().getOriginalFilename());
-            fos.write(fileData);
-
-            this.studyDao.save(savedStudy);
-
+            
+            savedStudy.setBackground_image(pid+request.getBackground_image());
+            studyDao.save(savedStudy);
             for (int i = 0; i < request.getTag().size(); i++) {
                 Studytag tag = new Studytag();
                 tag.setPid(pid);
@@ -313,18 +300,10 @@ public class StudyController {
         Gugun gugun = gugunCodeDao.findByGuguncode(request.getSigungucode());
         // 이미지 업로드 부분
         // study.setPid(request.getPid());
-
-        FileOutputStream fos;
-            
-        byte fileData[] = request.getBackground_image().getBytes();
-        File ff = new File("frontend\\assets\\src\\uploadfile\\" + request.getBackground_image().getOriginalFilename());
-        if (!ff.getParentFile().exists())
-            ff.getParentFile().mkdirs();
-        String path = study.getPid()+request.getBackground_image().getOriginalFilename();
-        study.setBackground_image(path);
-        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + study.getPid()+request.getBackground_image().getOriginalFilename());
-        fos.write(fileData);
-
+        if(request.getBackground_image()!=null)
+        {
+            study.setBackground_image(study.getPid()+request.getBackground_image());
+        }
         study.setCategory(request.getCategory());
         study.setData(request.getData());
         study.setTitle(request.getTitle());
@@ -339,6 +318,7 @@ public class StudyController {
         study.setSido(sido);
         study.setSidocode(sido.getSidocode());
         study.setSigungucode(request.getSigungucode());
+    
         // study.setMemnum(request.getMemnum());
         Study savedStudy = this.studyDao.save(study);
         int pid = savedStudy.getPid();
