@@ -32,6 +32,7 @@ export default {
       DAILYCREATE: "dailycreate",
       DAILYDETAIL: "dailydetail",
       DAILYUPDATE: "dailyupdate",
+      FILEUPLOAD: "fileupload"
     },
     BOARD: {
       BOARDMAIN: "boardmain",
