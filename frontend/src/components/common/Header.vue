@@ -55,7 +55,7 @@
 
           <div class="text-center text-nowrap" style="width: auto;">
             <div class="text-left">
-              <div class="my-2">
+              <div class="my-2" v-if="ingLists.length>0||plusUnleaderLists.length>0">
                 <small class="text-success font-weight-bold text-left pl-3 pb-2">진행중 스터디</small>
               </div>
               <div
@@ -86,7 +86,10 @@
 
               <hr class="mb-0" />
 
-              <div class="my-2">
+              <div
+                class="my-2"
+                v-if="readyLists.length>0||comLists.length>0||plusLeaderLists.length>0"
+              >
                 <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
               </div>
               <div
@@ -280,14 +283,14 @@ export default {
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: { post_id: post_id },
       });
-      this.$router.go()
+      this.$router.go();
     },
     goPostMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTDETAIL,
         params: { post_id: post_id },
       });
-      this.$router.go()
+      this.$router.go();
     },
   },
   data: function () {

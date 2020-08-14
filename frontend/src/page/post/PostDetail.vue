@@ -62,12 +62,21 @@
                   <b-icon icon="person-badge"></b-icon>
                   팀장 {{ userData.nickname }}
                 </small>
-                <b-button style="color:black;" v-if="postData.tmp==0 || postData.tmp==3" @click="goStudyMain(postData.pid)" size="sm" class="p-0 border-0" variant="link">
+                <b-button style="color:black;" v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)" @click="goStudyMain(postData.pid)" size="sm" class="p-0 border-0" variant="link">
                   <b-icon class="ml-2"  icon="house-door"></b-icon> <small> HOME</small>
                 </b-button>
               </div>
               <div class="d-flex" v-else>
-                <b-button
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
+                      toggle-class="text-decoration-none" no-caret>
+                      <template v-slot:button-content class="">
+                        <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
+                      </template>
+                      <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                      <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                      <b-dropdown-item v-if="requestListData.length > 0" v-b-modal.modal-1>스터디 멤버</b-dropdown-item>
+                    </b-dropdown>
+                <!-- <b-button
                   style="color:orange;"
                   v-if="profileInfo.uid == postData.uid && requestListData.length > 0"
                   v-b-modal.modal-1
@@ -77,7 +86,7 @@
                 >
                   <b-icon icon="people"></b-icon>
                   <small>MEMBER</small>
-                </b-button>
+                </b-button> -->
                 <!-- 팀원 모달 -->
                 <b-modal id="modal-1" title="팀원 승인대기" hide-footer>
                   <div v-for="per in requestListData" :key="per.uid" class="list-group">
@@ -107,21 +116,28 @@
           <div class="d-flex">
             <h5 class="mb-0 text-left">{{ postData.title }}</h5>
             <div class="ml-auto">
-              <b-icon
+              <!-- <b-icon
                 class="mr-1"
                 variant="danger"
                 v-if="!islike"
-                :icon="changeLike"
-                @click="likePost((islike = true))"
+                :icon="icon"
+                @click="likePost(islike = true)"
               ></b-icon>
               <b-icon
                 class="mr-1"
                 variant="danger"
-                v-else
-                :icon="changeLike"
-                @click="likePost((islike = false))"
+                v-if="islike"
+                :icon="icon"
+                @click="likePost(islike = false)"
+              ></b-icon> -->
+
+              <b-icon
+                class="mr-1"
+                variant="danger"
+                :icon="icon"
+                @click="likePost"
               ></b-icon>
-              <small class="mr-2 my-auto">{{ likeListData.length }}</small>
+              <small class="mr-2 my-auto">{{ likeData.length }}</small>
               <b-icon class="mr-1" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
             </div>
           </div>
@@ -398,8 +414,8 @@ export default {
       userData: {},
       replyData: {},
       reReplyData: {},
-      islike: false,
-
+      islike: true,
+      icon:'',
       requestListData: {},
       isRequest: false,
 
@@ -420,18 +436,16 @@ export default {
       cancelData: {},
       requestLists: {},
 
-      likeListData: {},
       likeClickData: {},
     };
   },
   created() {
     window.scrollTo(0, 0);
-    this.userCheck();
     this.getDetail();
-    this.likeList();
+    this.userCheck();
   },
   computed: {
-    changeLike() {
+     changeLike() {
       if (this.islike) {
         return "heart-fill";
       } else {
@@ -493,9 +507,11 @@ export default {
           for (var i = 0; i < this.likeData.length; i++) {
             if (this.likeData[i].uid == this.profileInfo.uid) {
               this.islike = true;
+              this.icon= "heart-fill"
               break;
             } else {
               this.islike = false;
+              this.icon= "heart"
             }
           }
         })
@@ -542,6 +558,24 @@ export default {
               this.isMember = false;
             }
           }
+        })
+        .catch((err) => console.log(err));
+    },
+    postUpdate(post_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.POST.POSTUPDATE,
+        params: {
+          post_id: post_id
+        },
+      });
+    },
+    postDelete() {
+      axios
+        .post(SERVER_URL + "/study/delete", this.postData)
+        .then((res) => {
+          this.$router.push({
+            name: constants.URL_TYPE.POST.MAIN
+          });
         })
         .catch((err) => console.log(err));
     },
@@ -692,24 +726,23 @@ export default {
       })
       .catch((err)=>console.log(err))
     },
-    likeList() {
-      axios
-        .get(SERVER_URL + "/likep/list", {
-          params: { pid: this.$route.params.post_id },
-        })
-        .then((res) => {
-          this.likeListData = res.data.object;
-        })
-        .catch((err) => console.log(err));
-    },
     likePost() {
       if (this.isLoggedIn) {
         this.likeClickData.pid = this.$route.params.post_id;
         this.likeClickData.uid = this.profileInfo.uid;
+        console.log(this.likeClickData)
         axios
           .post(SERVER_URL + "/likep/likep", this.likeClickData)
           .then((res) => {
-            this.likeList();
+            if (this.islike){
+              this.islike=false
+              this.icon="heart"
+            } else {
+              this.islike=true
+              this.icon="heart-fill"
+            }
+            this.getDetail();
+            console.log(this.islike)
           })
           .catch((err) => console.log(err));
       } else {
@@ -818,5 +851,13 @@ export default {
 #leader:hover {
   color: black;
   cursor: pointer;
+}
+
+.images {
+  overflow: hidden;
+}
+.imagefile {
+  max-width: 100%;
+  max-height: 30em;
 }
 </style>

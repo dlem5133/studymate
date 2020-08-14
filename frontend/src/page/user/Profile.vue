@@ -20,7 +20,7 @@
             height="70"
           />
         </div>
-        <div class="col-12 col-md-6 py-3 ml-5 text-left my-auto" style="position:relative;" >
+        <div class="col-12 col-md-6 py-3 ml-5 text-left my-auto" style="position:relative;">
           <div class="d-flex">
             <p
               style="font-family: 'Do Hyeon', sans-serif;"
@@ -44,14 +44,22 @@
         </div>
       </div>
       <div class="row mt-3 border-top border-bottom" style="margin:0;">
-        <div class="selecting col-12 col-md-4 py-4 border-bottom border-right" style="cursor:pointer;" @click="page=0">
+        <div
+          class="selecting col-12 col-md-4 py-4 border-bottom border-right"
+          style="cursor:pointer;"
+          @click="page=0"
+        >
           <p
             style="font-family: 'Do Hyeon', sans-serif;"
             class="m-0"
           >{{comLists.length + ingLists.length}}</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">STUDY</small>
         </div>
-        <div class="selecting col-12 col-md-4 py-4 border-bottom border-right" style="cursor:pointer;" @click="page=1">
+        <div
+          class="selecting col-12 col-md-4 py-4 border-bottom border-right"
+          style="cursor:pointer;"
+          @click="page=1"
+        >
           <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_mileage}}</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">MILEAGE</small>
         </div>
@@ -63,7 +71,10 @@
 
       <div class="border-bottom" v-if="page===0">
         <div class="text-left py-3 col-12">
-          <small class="text-success font-weight-bold text-left pl-3">진행중 스터디</small>
+          <small
+            v-if="ingLists.length>0||plusUnleaderLists.length>0"
+            class="text-success font-weight-bold text-left pl-3"
+          >진행중 스터디</small>
           <div
             v-for="list in ingLists"
             :key="list.id"
@@ -90,7 +101,10 @@
             </div>
           </div>
 
-          <div class="my-2 mt-4">
+          <div
+            class="my-2 mt-4"
+            v-if="readyLists.length>0||comLists.length>0||plusLeaderLists.length>0"
+          >
             <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
           </div>
           <div
@@ -162,7 +176,6 @@
             </div>
           </div>
           <div class="m-3 row rounded-lg border">
-            
             <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="calendar-3"></b-icon>
@@ -173,7 +186,7 @@
                 <small>점</small>
               </div>
             </div>
-            
+
             <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="award"></b-icon>
@@ -184,7 +197,7 @@
                 <small>점</small>
               </div>
             </div>
-            
+
             <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="book-half"></b-icon>
@@ -270,9 +283,7 @@
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
               <small class="text-left ml-2">{{ list1.sentence }}</small>
-              <small class="ml-auto text-secondary">
-                {{list1.user.nickname}}
-              </small>
+              <small class="ml-auto text-secondary">{{list1.user.nickname}}</small>
             </div>
           </div>
           <button
@@ -283,9 +294,7 @@
           >...더보기</button>
         </div>
       </div>
-
     </div>
-
 
     <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정" ok-only>
       <div class="mb-2">
@@ -345,7 +354,6 @@
         ></b-form-input>
       </div>
     </b-modal>
-
   </div>
 </template>
 
@@ -353,7 +361,8 @@
 import "../../assets/css/profile.scss";
 import axios from "axios";
 import constants from "../../lib/constants";
-
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
@@ -515,26 +524,35 @@ export default {
           this.$cookies.remove("Auth-Token");
           const token = res.data.object;
           this.$cookies.set("Auth-Token", token);
-          alert("수정되었습니다.");
+          swal("회원정보가 수정되었습니다.", { buttons: false, timer: 1200 });
           this.addprofileInfo();
         })
         .catch((err) => {
-          console.log(err.response.data.errors[0]);
-          alert(err.response.data.errors[0].field + "를 확인해 주세요");
+          this.$swal(
+            "",
+            err.response.data.errors[0].field + "를 확인해 주세요",
+            "error"
+          );
         });
     },
     userDelete() {
-      axios
-        .post(SERVER_URL + "/account/delete", this.deleteData)
-        .then((res) => {
-          this.$cookies.remove("Auth-Token");
-          alert("회원탈퇴되었습니다.");
-          this.$router.push("/");
-        })
-        .catch((err) => {
-          alert("입력정보를 확인해주세요.");
-          console.log(err);
-        });
+      swal({ text: "탈퇴하시겠습니까?", dangerMode: true, buttons: true }).then(
+        (willDelete) => {
+          if (wileeDelete) {
+            axios
+              .post(SERVER_URL + "/account/delete", this.deleteData)
+              .then((res) => {
+                this.$cookies.remove("Auth-Token");
+                this.$swal("탈퇴 완료", "", "success");
+                this.$router.push("/");
+              })
+              .catch((err) => {
+                this.$swal("", "입력정보를 확인해주세요.", "error");
+                console.log(err);
+              });
+          }
+        }
+      );
     },
     goRank() {
       this.$router.push({

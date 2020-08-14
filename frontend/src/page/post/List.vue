@@ -29,7 +29,7 @@
         <div id="maintable" class="main-table mt-5 col-12 col-md-12">
           <!-- ===================== 카테고리 ======================  -->
           <div class="row">
-            <div class="col-12 offset-md-2 col-md-4 p-0 d-flex">
+            <div class="col-12 offset-lg-2 col-lg-4 p-0 d-flex">
               <div class="mx-auto" v-for="category in categoryList1" :key="category">
                 <input
                   class
@@ -43,7 +43,7 @@
                 <label class="radiolabel" :for="`${category}`">{{ category }}</label>
               </div>
             </div>
-            <div class="col-12 col-md-5 p-0 d-flex">
+            <div class="col-12 col-lg-5 p-0 d-flex">
               <div class="mx-auto" v-for="category in categoryList2" :key="category">
                 <input
                   class

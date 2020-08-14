@@ -535,7 +535,7 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
-              this.memberCheck()
+              
             })
             .catch((err) => {
               this.$router.push({
@@ -606,7 +606,9 @@
             pid: this.$route.params.post_id
           })
           .then(res => {
+            console.log(res.data.object)
             this.memberListData = res.data.object
+            this.memberCheck()
           })
           .catch((err) => { 
             console.log(err.response)
