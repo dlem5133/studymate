@@ -115,7 +115,7 @@ public class StudyController {
     @ApiOperation(value = "모집 중인 스터디 전체 목록")
     // 전체 글 가져오기
     public Object list() {
-        List<Study> studylist = studyDao.findByTmpOrderByPosttimeAsc(1);
+        List<Study> studylist = studyDao.findByTmpOrTmpOrderByPosttimeDesc(1, 3);
         ArrayList<Object> ret = new ArrayList<>();
         for (int i = 0; i < studylist.size(); i++) {
             // 태그 매칭
@@ -141,66 +141,60 @@ public class StudyController {
         return response;
     }
 
-    @PostMapping("/study/search")
-    @ApiOperation(value = "스터디 카테고리별 검색, 태그 및 타이틀 검색")
-    // 포스트 검색기능
-    // 닉네임으로 검색시 title null값으로 받음
-    // title로 검색시 닉네임 null값
-    public Object search(@Valid @RequestBody StudyRequest request) {
-        ResponseEntity<Object> response = null;
-        BasicResponse result = new BasicResponse();
+    // @PostMapping("/study/search")
+    // @ApiOperation(value = "스터디 카테고리별 검색, 태그 및 타이틀 검색")
+    // public Object search(@Valid @RequestBody StudyRequest request) {
+    //     ResponseEntity<Object> response = null;
+    //     BasicResponse result = new BasicResponse();
 
-        if (request.getTmp() == 1) {
-            // 타이틀
-            List<Study> studylist = studyDao.findStudyByTitleLikeAndCategoryLikeAndTmpOrderByPosttimeAsc(
-                    "%" + request.getTitle() + "%", request.getCategory(), 1);
-            result.status = true;
-            result.data = "스터디명 검색";
-            result.object = studylist;
+    //     if (request.getTmp() == 1) {
+    //         List<Study> studylist = studyDao.findStudyByTitleLikeAndCategoryLikeAndTmpOrderByPosttimeAsc(
+    //                 "%" + request.getTitle() + "%", request.getCategory(), 1);
+    //         result.status = true;
+    //         result.data = "스터디명 검색";
+    //         result.object = studylist;
 
-        } else if (request.getTmp() == 2) {
-            // 지역
-            List<Sido> sido = sidoCodeDao.findBySidonameLike("%" + request.getTitle() + "%");
-            ArrayList<Study> studylist = new ArrayList<Study>();
+    //     } else if (request.getTmp() == 2) {
+    //         List<Sido> sido = sidoCodeDao.findBySidonameLike("%" + request.getTitle() + "%");
+    //         ArrayList<Study> studylist = new ArrayList<Study>();
 
-            for (int i = 0; i < sido.size(); i++) {
-                List<Study> tmp = studyDao.findStudyBySidocodeOrderByPosttimeAsc(sido.get(i).getSidocode());
-                studylist.addAll(tmp);
-            }
+    //         for (int i = 0; i < sido.size(); i++) {
+    //             List<Study> tmp = studyDao.findStudyBySidocodeOrderByPosttimeAsc(sido.get(i).getSidocode());
+    //             studylist.addAll(tmp);
+    //         }
 
-            List<Gugun> gugun = gugunCodeDao.findByGugunnameLike("%" + request.getTitle() + "%");
-            for (int i = 0; i < gugun.size(); i++) {
-                List<Study> tmp = studyDao.findStudyBySigungucodeOrderByPosttimeAsc(gugun.get(i).getGuguncode());
-                studylist.addAll(tmp);
-            }
+    //         List<Gugun> gugun = gugunCodeDao.findByGugunnameLike("%" + request.getTitle() + "%");
+    //         for (int i = 0; i < gugun.size(); i++) {
+    //             List<Study> tmp = studyDao.findStudyBySigungucodeOrderByPosttimeAsc(gugun.get(i).getGuguncode());
+    //             studylist.addAll(tmp);
+    //         }
 
-            result.status = true;
-            result.data = "지역 검색";
-            result.object = studylist;
-        } else if (request.getTmp() == 3) {
-            // 태그
+    //         result.status = true;
+    //         result.data = "지역 검색";
+    //         result.object = studylist;
+    //     } else if (request.getTmp() == 3) {
 
-            List<Studytag> taglist = studyTagDao.findStudytagByTagnameLike("%" + request.getTitle() + "%");
+    //         List<Studytag> taglist = studyTagDao.findStudytagByTagnameLike("%" + request.getTitle() + "%");
 
-            ArrayList<Study> responses = new ArrayList<>();
-            for (int i = 0; i < taglist.size(); i++) {
-                responses.add(studyDao.findStudyByPid(taglist.get(i).getPid()));
-            }
-            result.status = true;
-            result.data = "태그 검색 완료";
-            result.object = responses;
-        } else {
-            List<Study> studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
+    //         ArrayList<Study> responses = new ArrayList<>();
+    //         for (int i = 0; i < taglist.size(); i++) {
+    //             responses.add(studyDao.findStudyByPid(taglist.get(i).getPid()));
+    //         }
+    //         result.status = true;
+    //         result.data = "태그 검색 완료";
+    //         result.object = responses;
+    //     } else {
+    //         List<Study> studylist = studyDao.findStudyByCategoryLikeAndTmpOrderByPosttimeAsc(request.getCategory(), 1);
 
-            result.status = true;
-            result.data = "검색할 키워드가 없어 모두 검색 완료";
-            result.object = studylist;
-        }
+    //         result.status = true;
+    //         result.data = "검색할 키워드가 없어 모두 검색 완료";
+    //         result.object = studylist;
+    //     }
 
-        response = new ResponseEntity<>(result, HttpStatus.OK);
+    //     response = new ResponseEntity<>(result, HttpStatus.OK);
 
-        return response;
-    }
+    //     return response;
+    // }
 
     @PostMapping("/study/write")
     @ApiOperation(value = "스터디 생성")
@@ -240,7 +234,6 @@ public class StudyController {
             study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
             study.setEvalcount(0);
-            study.setMemnum(1);
             Study savedStudy = this.studyDao.save(study);
             int pid = savedStudy.getPid();
 
@@ -286,22 +279,28 @@ public class StudyController {
         // Study find_pid = studyDao.findStudyByPid(request.getPid());
         // 이메일로 id 확인
         ResponseEntity<Object> response = null;
-        Study study = new Study();
+        // Study study = new Study();
+        Study study = studyDao.findByPid(request.getPid());
+        Sido sido = sidoCodeDao.findBySidocode(request.getSidocode());
+        Gugun gugun = gugunCodeDao.findByGuguncode(request.getSigungucode());
         // 이미지 업로드 부분
-
-        study.setPid(request.getPid());
+        // study.setPid(request.getPid());
         study.setCategory(request.getCategory());
         study.setData(request.getData());
         study.setTitle(request.getTitle());
-        study.setUid(request.getUid());
+        // study.setUid(request.getUid());
         study.setBackground_image(request.getBackground_image());
         study.setTmp(request.getTmp());
         study.setBindo(request.getBindo());
+        // study.setLikep(request.getLikep());
         study.setStart_date(request.getStart_date());
         study.setEnd_date(request.getEnd_date());
         study.setLimitp(request.getLimitp());
-        study.setSidocode(request.getSido_code());
-        study.setSigungucode(request.getSigungu_code());
+        study.setGugun(gugun);
+        study.setSido(sido);
+        study.setSidocode(sido.getSidocode());
+        study.setSigungucode(request.getSigungucode());
+        // study.setMemnum(request.getMemnum());
         Study savedStudy = this.studyDao.save(study);
         int pid = savedStudy.getPid();
         List<Studytag> taglist = studyTagDao.findStudytagByPid(pid);
@@ -541,7 +540,7 @@ public class StudyController {
     // 전체 글 가져오기
     public Object recruitstart(@RequestParam(required = true) int pid) {
         Study study = studyDao.findStudyByPid(pid);
-        study.setTmp(1);
+        study.setTmp(3);
         Study savedstudy = studyDao.save(study);
         ResponseEntity<Object> response = null;
         if (study != null) {

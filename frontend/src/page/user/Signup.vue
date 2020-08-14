@@ -1,6 +1,5 @@
 <template>
   <div style="margin-top:6rem;" class="container">
-    <p>{{test}}</p>
     <div class="d-flex justify-content-center">
       <b-card style="font-family: 'Do Hyeon', sans-serif;width: 500px;" class="my-5">
         <h3 style="font-family: 'Do Hyeon', sans-serif;">JOIN</h3>
@@ -63,7 +62,6 @@ export default {
   name: "Signup",
   data: () => {
     return {
-      test: "",
       page: 0,
       signupData: {
         email: "",

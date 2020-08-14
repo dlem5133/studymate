@@ -2,156 +2,181 @@
   <div style="margin-top:6rem;" class="container">
     <div class="main-table">
       <div class="container p-2">
-        <div class="card px-3">
+        <div class="card mb-4">
           <div class="card-body">
-            <div>
-              <div class="d-flex">
-                <div>
-                  <h3 class="text-left font-weight-bold">{{ postData.title }} </h3>
-                  <small class="float-left">{{ userData.nickname }},</small><br>
+            <div class="pl-3">
+              <div class="row">
+                <div class="col-12 col-md-8">
+                  <h3 class="pt-3 text-left font-weight-bold">{{ postData.title }} </h3>
+                  <small class="float-left">{{ userData.nickname }}</small><br>
                   <small class="d-flex inline">{{postData.start_date}} ~ {{postData.end_date}}</small>
                 </div>
-                <div class="ml-auto my-auto float-right">
-                  <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
-                    toggle-class="text-decoration-none" no-caret>
-                    <template v-slot:button-content class=" float-right">
-                      <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
-                    </template>
-                    <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
-                    <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                    <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
-                  </b-dropdown>
-
-                  <!-- 상호평가 -->
-                  <div v-if="calculFri == '월요일' || finalCheck < 7">
-                    <b-button v-if="finalCheck > 7" @click="checkEvalue" size="sm" class="border-0 float-right"
-                      variant="link" v-b-modal.modal-multi-1>
-                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
-                    </b-button>
-                    <b-button v-if="finalCheck <= 7" @click="checkFinalEva" size="sm" class="border-0 float-right"
-                      variant="link" v-b-modal.modal-multi-1>
-                      <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
-                    </b-button>
-
-                    <b-modal id="modal-multi-1" size="lg" title="상호 평가" hide-footer>
-                      <b-list-group v-for="member in memberListData" :key="member.uid">
-                        <b-list-group-item v-if="profileInfo.uid != member.uid" class="m-1 px-3 p-0">
-                          <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
-                          <b-button v-if="alreadyEva.includes(member.uid)" class="float-right" @click="onceEva"
-                            variant="link">
-                            <i class="fas fa-star" style="color: orange; font-size: large;"></i>
-                          </b-button>
-                          <b-button v-else class="float-right" @click="evalueData.target_uid = member.uid"
-                            variant="link" v-b-modal.modal-multi-2>
-                            <i class="far fa-star" style="color: orange; font-size: large;"></i>
-                          </b-button>
-                        </b-list-group-item>
-                      </b-list-group>
-                    </b-modal>
-
-                    <b-modal v-if="finalCheck > 7" id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
-                      <b-list-group>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                      </b-list-group>
-                    </b-modal>
-
-                    <b-modal v-if="finalCheck <= 7" id="modal-multi-2" @ok="setFinEva" title="마지막 상호 평가" ok-only>
-                      <b-list-group>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                        <b-list-group-item class="p-1 pl-3 m-1">
-                          <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
-                          <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;">
-                          </b-form-rating>
-                        </b-list-group-item>
-                        <b-form-input class="p-1 pl-3 m-1" v-model="evalueData.sentence" placeholder="한줄평을 작성해주세요">
-                        </b-form-input>
-                      </b-list-group>
-                    </b-modal>
-                  </div>
-
-                  <b-button v-b-modal.modal-2 size="sm" class="border-0 float-right" variant="link">
-                    <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
-                  </b-button>
-                  <!-- 팀원 모달 -->
+                <div class="col-12 col-md-4 mt-3 float-right">
                   <div>
-                    <b-modal id="modal-2" title="팀원" hide-footer>
-                      <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
-                        <li v-if="per.empId.user.uid==profileInfo.uid" class="list-group-item d-flex">
-                          <div class="d-flex">
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              {{ per.empId.user.nickname }}
-                            </div>
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              <b-icon scale="0.8" icon="person"></b-icon>
-                            </div>
-                          </div>
-                          <div v-if="profileInfo.uid!=postData.uid" class="ml-auto">
-                            <b-button v-if="per.isjoin==2" class="btn-sm" variant="outline-danger"
-                              @click="deleteMemberCancel(per.uid)">취소</b-button>
-                            <b-button v-else class="btn-sm" variant="outline-danger" @click="deleteMember(per.uid)">탈퇴
-                            </b-button>
+                  <div class="d-flex float-right">
+                    <!-- 4. 집으로 -->
+                    <div class="my-auto">
+                      <b-button size="sm" class="border-0 d-flex" variant="link" @click="goPostMain(postData.pid)">
+                        <b-icon style="cursor:pointer;" variant="dark" icon="house-door"></b-icon><small
+                          style="color:black;" class="ml-1"> HOME</small>
+                      </b-button>
+                    </div>
+                    <!-- 3. 게시판 -->
+                    <div class="my-auto">
+                      <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 d-flex" variant="link">
+                        <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;" class="ml-1"> BOARD</small>
+                      </b-button>
+                    </div>
+                    <!-- 1. SETTINGS -->
+                    <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
+                      toggle-class="text-decoration-none" no-caret>
+                      <template v-slot:button-content class="">
+                        <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
+                      </template>
+                      <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                      <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                      <b-dropdown-item v-b-modal.modal-5>멤버 탈퇴</b-dropdown-item>
+                    </b-dropdown>
+                  </div>
+                  <div class="d-flex float-right">
+                    <!-- 상호평가 -->
+                    <div v-if="calculFri == '월요일' || finalCheck < 7">
+                      <b-button v-if="finalCheck > 7" @click="checkEvalue" variant="link" v-b-modal.modal-multi-1 size="sm" class="border-0">
+                        <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                      </b-button>
+                      <b-button v-if="finalCheck <= 7" @click="checkFinalEva" size="sm" class="border-0"
+                        variant="link" v-b-modal.modal-multi-1>
+                        <i class="fas fa-medal"></i><small style="color: black;"> EVALUATE</small>
+                      </b-button>
+                    </div>
 
-                          </div>
-                          <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
-
-                        </li>
-                        <li v-else class="list-group-item d-flex">
-                          <div class="d-flex">
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              {{ per.empId.user.nickname }}
-                            </div>
-                            <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
-                              <b-icon scale="0.8" icon="person"></b-icon>
-                            </div>
-                          </div>
-                          <div class="ml-auto">
-                            <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success"
-                              @click="delegation(per.uid)">위임</b-button>
-                            <div @click="reportCheck(per.uid)">
-                              <div v-b-modal.modal-9>
-                                <b-icon class="my-auto" icon="trash" variant="danger"></b-icon><small
-                                  class="text-danger my-auto"> 신고</small>
-                              </div>
-                              <div v-if="ismodal">
-                                <b-modal id="modal-9" title="신고 내용" hide-footer>
-                                  <div class="d-flex">
-                                    <textarea class="border w-100 mr-2" v-model="reportdata.reason"></textarea>
-                                    <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success"
-                                      @click="reportMember(per.uid)"> 신고 </b-button>
-                                  </div>
-                                </b-modal>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </b-modal>
+                    <!-- 2. member -->
+                    <div>
+                      <b-button v-b-modal.modal-2 size="sm" class="border-0" variant="link">
+                        <b-icon icon="people" variant="warning"></b-icon><small style="color:black;"> MEMBER</small>
+                      </b-button>
+                    </div>
                   </div>
 
-                  <b-modal id="modal-5" title="스터디원 탈퇴 대기 목록" hide-footer>
+                  </div>
+
+
+
+                  <!-- 상호평가 모달 -->
+                  <b-modal id="modal-multi-1" size="lg" title="상호 평가" hide-footer>
+                    <b-list-group v-for="member in memberListData" :key="member.uid">
+                      <b-list-group-item v-if="profileInfo.uid != member.uid" class="m-1 px-3 p-0">
+                        <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
+                        <b-button v-if="alreadyEva.includes(member.uid)" class="float-right" @click="onceEva"
+                          variant="link">
+                          <i class="fas fa-star" style="color: orange; font-size: large;"></i>
+                        </b-button>
+                        <b-button v-else class="float-right" @click="evalueData.target_uid = member.uid"
+                          variant="link" v-b-modal.modal-multi-2>
+                          <i class="far fa-star" style="color: orange; font-size: large;"></i>
+                        </b-button>
+                      </b-list-group-item>
+                    </b-list-group>
+                  </b-modal>
+
+                  <b-modal v-if="finalCheck > 7" id="modal-multi-2" @ok="setEvaluage" title="상호 평가" ok-only>
+                    <b-list-group>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                    </b-list-group>
+                  </b-modal>
+
+                  <b-modal v-if="finalCheck <= 7" id="modal-multi-2" @ok="setFinEva" title="마지막 상호 평가" ok-only>
+                    <b-list-group>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">1. 일지를 성실하게 작성 하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score1" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">2. 적극적으로 참여 했는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score2" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                      <b-list-group-item class="p-1 pl-3 m-1">
+                        <span style="line-height: 38px;">3. 팀원과의 화합을 노력하였는가</span>
+                        <b-form-rating class="float-right" inline v-model="evalueData.score3" style="color: orange;">
+                        </b-form-rating>
+                      </b-list-group-item>
+                      <b-form-input class="p-1 pl-3 m-1" v-model="evalueData.sentence" placeholder="한줄평을 작성해주세요">
+                      </b-form-input>
+                    </b-list-group>
+                  </b-modal>
+
+
+                  <!-- 팀원 모달 -->
+                  <b-modal id="modal-2" title="팀원" hide-footer>
+                    <ul v-for="per in memberListData" :key="per.uid" class="list-group mb-1">
+                      <li v-if="per.empId.user.uid==profileInfo.uid" class="list-group-item d-flex">
+                        <div class="d-flex">
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            {{ per.empId.user.nickname }}
+                          </div>
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            <b-icon scale="0.8" icon="person"></b-icon>
+                          </div>
+                        </div>
+                        <div v-if="profileInfo.uid!=postData.uid" class="ml-auto">
+                          <b-button v-if="per.isjoin==2" class="btn-sm" variant="outline-danger"
+                            @click="deleteMemberCancel(per.uid)">취소</b-button>
+                          <b-button v-else class="btn-sm" variant="outline-danger" @click="deleteMember(per.uid)">탈퇴
+                          </b-button>
+
+                        </div>
+                        <b-badge variant="warning" size="sm" class="ml-2 my-auto">me</b-badge>
+
+                      </li>
+                      <li v-else class="list-group-item d-flex">
+                        <div class="d-flex">
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            {{ per.empId.user.nickname }}
+                          </div>
+                          <div @click="goMemberProfile(per.uid)" style="cursor:pointer;">
+                            <b-icon scale="0.8" icon="person"></b-icon>
+                          </div>
+                        </div>
+                        <div class="ml-auto">
+                          <b-button v-if="profileInfo.uid==postData.uid" class="btn-sm mr-2" variant="outline-success"
+                            @click="delegation(per.uid)">위임</b-button>
+                          <div @click="reportCheck(per.uid)">
+                            <div v-b-modal.modal-9>
+                              <b-icon class="my-auto" icon="trash" variant="danger"></b-icon><small
+                                class="text-danger my-auto"> 신고</small>
+                            </div>
+                            <div v-if="ismodal">
+                              <b-modal id="modal-9" title="신고 내용" hide-footer>
+                                <div class="d-flex">
+                                  <textarea class="border w-100 mr-2" v-model="reportdata.reason"></textarea>
+                                  <b-button class="btn-sm mr-2 my-auto float-right " variant="outline-success"
+                                    @click="reportMember(per.uid)"> 신고 </b-button>
+                                </div>
+                              </b-modal>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </b-modal>
+
+                  <b-modal id="modal-5" title="스터디원 탈퇴" hide-footer>
                     <ul v-for="per in DeleteMemberListData" :key="per.uid" class="list-group mb-1">
                       <li class="list-group-item d-flex">
                         <div class="d-flex">
@@ -172,28 +197,19 @@
                     </ul>
                   </b-modal>
 
-                  <b-button @click="goBoard(postData.pid)" size="sm" class="border-0 float-right" variant="link">
-                    <b-icon icon="file-text" variant="dark"></b-icon><small style="color:black;"> BOARD</small>
-                  </b-button>
-                  <b-button size="sm" class="border-0" variant="link" @click="goPostMain(postData.pid)">
-                    <b-icon style="cursor:pointer;" variant="dark" icon="house-door"></b-icon><small
-                      style="color:black;"> HOME</small>
-                  </b-button>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+            <hr>
 
-
-        <div class="card my-1">
-          <div class="card-body text-left p-0 pt-3 px-4" v-if="expectTodo.dodate != null">
-            <div class="d-flex">
+            <!-- 다가올 스터디 일정 조회 -->
+            <div class="d-flex pl-3">
               <div>
-                <p class="badge badge-pill badge-danger">D-{{decimalDay}}</p>
+                <p v-if="expectTodo.dodate!=null" class="badge badge-pill badge-danger">D - {{decimalDay}}</p>
+                <p v-else class="badge badge-pill badge-danger">D-None</p>
               </div>
               <div class="ml-auto">
-                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
+                <b-dropdown  right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
                   toggle-class="text-decoration-none" no-caret>
                   <template v-slot:button-content>
                     <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
@@ -204,74 +220,67 @@
                 </b-dropdown>
               </div>
             </div>
-            <p>장소 : {{expectTodo.doplace}}</p>
-            <p>일시 : {{expectTodo.dodate}}</p>
-            <p>과제 : {{expectTodo.assignment}}</p>
-          </div>
-          <div class="card-body text-left p-0 pt-2 px-4" v-if="expectTodo.dodate == null">
-            <div class="d-flex">
-              <div>
-                <p class="badge badge-pill badge-danger">D-None</p>
-              </div>
-              <div class="ml-auto">
-                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
-                  toggle-class="text-decoration-none" no-caret>
-                  <template v-slot:button-content>
-                    <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
-                  </template>
-                  <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
-                  <b-dropdown-item v-b-modal.modal-4>수정</b-dropdown-item>
-                  <b-dropdown-item @click="expectDelete">삭제</b-dropdown-item>
-                </b-dropdown>
-              </div>
+            <div v-if="expectTodo.dodate!=null" class="py-2 px-4 text-left">
+              <p class="pb-3"><b-icon icon="geo-alt"></b-icon> {{expectTodo.doplace}}</p>
+              <p class="pb-3"><b-icon icon="calendar-date"></b-icon> {{expectTodo.dodate}}</p>
+              <p>과제 : {{expectTodo.assignment}}</p>
             </div>
-            <div>
-              예정된 스터디가 없습니다.
+            <div class="py-2 px-4 text-left" v-else>
+              <p>스터디 일정이 없습니다.</p><p>다가 올 스터디 일정을 생성해주세요.</p>
             </div>
-          </div>
-          <!-- 모달 -->
-          <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
-            <b-modal @ok="expectOk" id="modal-3" title="일정 추가">
-              <form ref="form">
-                <b-form-group id="expectdoWrite">
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
-                      type="text" />
-                  </div>
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
-                      placeholder="날짜 입력" />
-                  </div>
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
-                      placeholder="할일 입력" />
-                  </div>
-                </b-form-group>
-              </form>
-            </b-modal>
-            <b-modal @ok="expectUpdate" id="modal-4" title="일정 업데이트">
-              <form ref="form">
-                <b-form-group id="expectdoUpdate">
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
-                      type="text" />
-                  </div>
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
-                      placeholder="날짜 입력" />
-                  </div>
-                  <div class="input-wrap mx-3">
-                    <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
-                      placeholder="할일 입력" />
-                  </div>
-                </b-form-group>
-              </form>
-            </b-modal>
           </div>
         </div>
+
+        <!-- 다가올 스터디 일정 모달 -->
         <div class="ml-auto text-right p-1" v-if="profileInfo.uid==postData.uid">
-          <b-button class="btn-sm" variant="warning" v-b-modal.modal-1>요일 선택 </b-button>
-          <b-modal @ok="handleOk" id="modal-1" title="일지 작성가능한 요일을 정하세요.">
+          <b-modal @ok="expectOk" id="modal-3" title="일정 추가" ok-only>
+            <form ref="form">
+              <b-form-group id="expectdoWrite">
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
+                    type="text" />
+                </div>
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
+                    placeholder="날짜 입력" />
+                </div>
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
+                    placeholder="할일 입력" />
+                </div>
+              </b-form-group>
+            </form>
+          </b-modal>
+          <b-modal @ok="expectUpdate" id="modal-4" title="일정 업데이트" ok-only>
+            <form ref="form">
+              <b-form-group id="expectdoUpdate">
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.doplace" id="doplace" placeholder="장소 입력"
+                    type="text" />
+                </div>
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.dodate" type="datetime-local" id="dodate"
+                    placeholder="날짜 입력" />
+                </div>
+                <div class="input-wrap mx-3">
+                  <input class="p-3 border-bottom" v-model="expectData.assignment" type="text" id="assignment"
+                    placeholder="할일 입력" />
+                </div>
+              </b-form-group>
+            </form>
+          </b-modal>
+        </div>
+
+        <!-- 일지 card -->
+        <div class="card" style="position:relative;width: 100%;">
+          <b-button @click="goDailyCreate" class="diarybutton" variant="outline-dark" size="sm" >
+            <b-icon icon="pencil"></b-icon> 일지 작성
+          </b-button>
+          <div v-if="profileInfo.uid==postData.uid" v-b-modal.modal-1 class="dailyselect">
+            <b-icon icon="calendar-check" variant="dark" shift-v="-1"></b-icon><small style="color:black;font-family: 'Do Hyeon', sans-serif;"> 요일선택</small>
+          </div>
+
+          <b-modal @ok="handleOk" id="modal-1" title="일지 작성가능한 요일을 설정하세요." ok-only>
             <form ref="form">
               <b-form-group>
                 <b-form-checkbox-group v-model="selectedDay" v-for="day in week" :key="day">
@@ -280,16 +289,7 @@
               </b-form-group>
             </form>
           </b-modal>
-        </div>
 
-        <!-- <div id="calendar"></div> -->
-        
-        <hr />
-        <div class="card" style="width: 100%;">
-          <div class="card-header">
-            일지 목록
-            <i @click="goDailyCreate" class="fas fa-pen-square createpoint"> 새글 작성</i>
-          </div>
           <FullCalendar :options="calendarOptions" />
         </div>
       </div>
@@ -298,13 +298,12 @@
 </template>
 
 <script>
+  import "../../assets/css/studymain.scss";
   import axios from "axios";
   import constants from "../../lib/constants";
 
   const SERVER_URL = constants.ServerUrl;
-  import {
-    Calendar
-  } from '@fullcalendar/core';
+  import { Calendar } from '@fullcalendar/core';
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid';
   import interactionPlugin from '@fullcalendar/interaction';
@@ -317,17 +316,12 @@
     },
     data: () => {
       return {
-        //  calendar: null,
         profileInfo: [],
         memberListData: [],
         postData: [],
         tagData: [],
         userData: [],
-        studyLists: [],
-        value: "날짜를 선택해주세요.",
-        allDailyLists: [],
-        dailyLists: [],
-        checkPost: [],
+
         expectTodo: [],
         expectData: {
           dodate: null,
@@ -338,30 +332,15 @@
           eid: 0
         },
         decimalDay: "",
-        updateData: {
-          study: [],
-          tag: []
-        },
-        expectDataList: [],
+
         selectedDay: [],
         week: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
         days: [],
-        delegationData: {
-          leader: "",
-          member: "",
-          pid: 0
-        },
-        readyLists: [],
-        leaderLists: [],
-        unleaderLists: [],
-        indvData: {},
-        leaderListsTmp1: [],
+
         DeleteMemberListData: [],
-        leaderListsTmp0: [],
-        deleteData: {
-          pid: "",
-          uid: "",
-        },
+        // 일지
+        allDailyLists: [],
+        // 신고
         reportdata: {
           pid: "",
           target: "",
@@ -381,6 +360,7 @@
           count: 0
         },
         alreadyEva: [],
+        // 달력
         calendarOptions: {
           plugins: [dayGridPlugin, interactionPlugin, listPlugin],
 
@@ -412,17 +392,25 @@
       }
     },
     created() {
+      this.getDetail()
       this.addprofileInfo();
       this.memberList()
-      this.getDetail()
       this.DeleteMemberList()
-
-      // this.createCalendar();
     },
     mounted() {
       this.getPostTime()
     },
     methods: {
+      memberCheck () {
+        // var member = []
+        // for (let i = 0; i < this.memberListData.length; i++) {
+        //   member.push(this.memberListData[i].uid)
+        // }
+        // if (member.indexOf(this.profileInfo.uid) == -1) {
+        //   alert("스터디 맴버가 아닙니다.")
+        //   this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
+        // }
+      },
       reportCheck(target) {
         this.reportdata.target = target
         this.reportdata.pid = this.$route.params.post_id
@@ -449,40 +437,48 @@
           .catch(err => console.log(err))
       },
       deleteMember(user_id) {
-        this.deleteData.pid = this.$route.params.post_id
-        this.deleteData.uid = user_id
-        axios.post(SERVER_URL + "/study/detail/delete_request", this.deleteData)
+        const deleteData = {
+          pid: this.$route.params.post_id,
+          uid: user_id
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_request", deleteData)
           .then(res => {
             this.memberList()
           })
           .catch(err => console.log(err))
       },
       DeleteApply(memberid) {
-        this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        axios.post(SERVER_URL + "/study/detail/delete_apply", this.indvData)
+        indvData = {
+          uid: memberid,
+          pid: this.postData.pid,
+          isLeader: 0,
+          isJoin: 1
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_apply", indvData)
           .then((res) => {
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
       },
       DeleteCancel(memberid) {
-        this.indvData.uid = memberid;
-        this.indvData.pid = this.postData.pid;
-        this.indvData.isLeader = 0;
-        this.indvData.isJoin = 1;
-        axios.post(SERVER_URL + "/study/detail/delete_companion", this.indvData)
+        indvData = {
+          uid: memberid,
+          pid: this.postData.pid,
+          isLeader: 0,
+          isJoin: 1
+        }
+        axios.post(SERVER_URL + "/study/detail/delete_companion", indvData)
           .then((res) => {
             this.DeleteMemberList()
           })
           .catch((err) => console.log(err));
       },
       deleteMemberCancel(user_id) {
-        this.deleteData.pid = this.$route.params.post_id
-        this.deleteData.uid = user_id
-        axios.post(SERVER_URL + '/study/detail/delete_cancel', this.deleteData)
+        const deleteData = {
+          pid: this.$route.params.post_id,
+          uid: user_id
+        }
+        axios.post(SERVER_URL + '/study/detail/delete_cancel', deleteData)
           .then(res => {
             this.memberList()
           })
@@ -499,57 +495,35 @@
           }).catch(err => console.log(err))
       },
       delegation(memberid) {
-        this.delegationData.pid = this.postData.pid;
-        this.delegationData.leader = this.postData.uid;
-        this.delegationData.member = memberid;
-        axios.post(SERVER_URL + "/study/detail/delegation", this.delegationData)
+        const delegationData = {
+          leader: this.postData.uid,
+          member: memberid,
+          pid: this.postData.pid
+        }
+        axios.post(SERVER_URL + "/study/detail/delegation", delegationData)
           .then((res) => {
             this.getDetail()
           })
-
           .catch((err) => console.log(err));
       },
       handleOk() {
-
         let dayString = []
         for (var i = 0; i < this.selectedDay.length; i++) {
           dayString += this.selectedDay[i]
         }
         this.postData.days = dayString
-        this.updateData.study = this.postData
-        this.updateData.tag = this.tagData
-        console.log(this.updateData);
+        const updateData= {
+          study: this.postData,
+          tag: this.tagData
+        }
         axios
-          .post(SERVER_URL + "/study/daysupdate", this.updateData)
+          .post(SERVER_URL + "/study/daysupdate", updateData)
           .then(res => {
             this.getDetail()
           })
           .catch(err => {
             console.log(err)
           })
-      },
-      addStudyList() {
-        axios
-          .post(SERVER_URL + "/account/studylist", this.profileInfo)
-          .then((res) => {
-            this.leaderLists = res.data.object.filter(item => item.isleader != 0)
-            this.leaderListsTmp0 = this.leaderLists.filter(item => item.empId.study.tmp == 0)
-            this.leaderListsTmp1 = this.leaderLists.filter(item => item.empId.study.tmp == 1)
-            this.unleaderLists = res.data.object.filter(item => item.isleader == 0)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-      addReadyList() {
-        axios
-          .post(SERVER_URL + "/account/readylist", this.profileInfo)
-          .then((res) => {
-            this.readyLists = res.data.object;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
       },
       addprofileInfo() {
         if (this.$cookies.isKey("Auth-Token")) {
@@ -561,17 +535,18 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
-              this.addStudyList();
-              this.addReadyList()
+              this.memberCheck()
             })
             .catch((err) => {
               this.$router.push({
                 name: constants.URL_TYPE.ERROR.ERRORPAGE,
-                params: {
-                  code: err.response.data
-                },
+                params: { code: err.response.data },
               });
             });
+        } else {
+          this.$router.push({
+            name: constants.URL_TYPE.POST.MAIN,
+          });
         }
       },
       goPostMain(post_id) {
@@ -633,6 +608,9 @@
           .then(res => {
             this.memberListData = res.data.object
           })
+          .catch((err) => { 
+            console.log(err.response)
+          })
       },
       getDetail() {
         const post_id = this.$route.params.post_id;
@@ -653,22 +631,15 @@
             }
             this.days = tmpdays
           })
-          .catch((err) => console.log(err.response));
-      },
-      getDaily() {
-        axios.get(SERVER_URL + "/diary/list", {
-            params: {
-              pid: this.$route.params.post_id,
-              tmp: 1
+          .catch((err) => {
+            if (err.response.data.status == 400) {
+              this.$router.push({
+                name: constants.URL_TYPE.POST.MAIN
+              });
+            } else {
+              console.log(err.response);
             }
-          })
-          .then(res => {
-            const tmpData = res.data.object[0]
-            this.dailyLists = tmpData.filter(tmpData => tmpData.posttime === this.valxue)
-          })
-          .catch(err => {
-            console.log(err)
-          })
+          });
       },
       goDailyCreate() {
         var date = new Date();
@@ -707,15 +678,6 @@
           });
         }
       },
-      goDailyDetail(daily_id) {
-        this.$router.push({
-          name: constants.URL_TYPE.STUDY.DAILYDETAIL,
-          params: {
-            post_id: this.$route.params.post_id,
-            daily_id: daily_id
-          },
-        });
-      },
       getPostTime() {
         axios.get(SERVER_URL + "/diary/list", {
             params: {
@@ -736,12 +698,10 @@
               this.decimalDay = dday
             }
             this.allDailyLists = res.data.object[0]
-            console.log(this.allDailyLists)
             var i = 0;
             const post_id = this.$route.params.post_id
-            const ecolor = ['#FFB900','#FF7E9D','#D2FFD2','#00CDFF','#28A0FF']
+            const ecolor = ['#ACBFEA','#F8DDA9','#FDAF9B','#DCCBED','#B6E3E9']
             while (i < this.allDailyLists.length) {
-              this.checkPost.push(this.allDailyLists[i].posttime)
               var d = this.allDailyLists[i].title
               var s = this.allDailyLists[i].posttime
               var daily_id = this.allDailyLists[i].did
@@ -750,26 +710,15 @@
                 date: s,
                 color: ecolor[i%5], // an option!
                 textColor: 'black', // an option!
-                url: 'http://localhost:3000/#/study/' + post_id + '/' + daily_id + '/detail'
+                url: SERVER_URL + '/#/study/' + post_id + '/' + daily_id + '/detail'
               }
-
               this.calendarOptions.events.push(test)
-
               i++;
             }
           })
           .catch(err => {
             console.log(err)
           })
-      },
-      dateClass(ymd, date) {
-        var d = this.week[date.getDay()]
-        if (this.checkPost.indexOf(ymd) !== -1) {
-          return 'table-success'
-        }
-        if (this.days.indexOf(d) !== -1) {
-          return 'table-secondary'
-        }
       },
       goBoard(post_id) {
         this.$router.push({
@@ -928,6 +877,31 @@
 </script>
 
 <style scoped>
+  .dailyselect{
+    position:absolute;
+    top:70px;
+    right:2%;
+  }
+  .diarybutton{
+    font-family: 'Do Hyeon', sans-serif;
+    position:absolute;
+    top:62px;
+    right:45%;
+  }
+  @media ( max-width: 480px ) {
+    .dailyselect{
+      position:absolute;
+      top:25px;
+      right:6%;
+      font-size:0.8rem;
+    }
+    .diarybutton{
+      position:absolute;
+      top:64px;
+      right:21px;
+      font-size:0.6rem;
+    }
+  }
   .clickstudy {
     cursor: pointer;
   }
@@ -942,5 +916,46 @@
   .dailycss:hover {
     cursor: pointer;
     background-color: #eee;
+  }
+
+</style>
+
+<style>
+  @media ( max-width: 480px ) {
+    .fc .fc-button-group { 
+      position:absolute;
+      top:17%;
+      left:35%;
+    }
+    .fc .fc-button-group>.fc-button { 
+      color:gray;
+      border:1px solid gray;
+      padding:0 0.2rem;
+      background-color:white;
+    }
+    .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+      background-color:white !important;
+      border:1px solid gray !important;
+    }
+    .fc-daygrid-block-event .fc-event-time, .fc-daygrid-block-event .fc-event-title{
+      font-size:0.5rem;
+    }
+    .fc .fc-daygrid-day-number{
+      font-size:0.6rem;
+    }
+    .fc .fc-col-header-cell-cushion {
+      font-size:0.7rem !important;
+    }
+    .fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active,
+    .fc-dayGridWeek-button.fc-button.fc-button-primary.fc-button,
+    .fc-listMonth-button.fc-button.fc-button-primary.fc-button {
+      display:none;
+    }
+    .fc-daygrid-body.fc-daygrid-body-unbalanced{
+      width:100% !important;
+    }
+    .fc .fc-view-harness {
+      margin:1rem !important;
+    }
   }
 </style>

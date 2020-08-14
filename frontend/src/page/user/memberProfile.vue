@@ -196,7 +196,7 @@ export default {
   data: () => {
     return {
       profileInfo: {},
-      page: 0,
+      page: 1,
       showEvalist: 3,
 
       evalistdata:{},
@@ -232,11 +232,7 @@ export default {
       })
       .catch(err=>console.log(err))
     },
-    changeDatedata(time) {
-      return time.substring(5, 10) + " " + time.substring(11, 19);
-    },
     addprofileInfo() {
-      const token = this.$cookies.get("Auth-Token");
       axios
         .get(SERVER_URL + "/account/memprofile", { params: { uid: this.$route.params.user_id } })
         .then((res) => {

@@ -5,9 +5,13 @@
         <h4
           style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.6);"
         >안녕하세요 스터디메이트에 방문하신걸 환영합니다 :)</h4>
-        <h4
-          style="font-family: 'Do Hyeon', sans-serif;color:rgba(0,255,255,0.6);"
-        >지금 페이지마다 헤더높이 안되있어서 위에 붙어있을거야....고칠거야...</h4>
+        <h6 style="color:rgba(255,255,255,0.4);">
+          스터디는 한 달에 3번 생성 가능합니다.
+          <br />일지는 하루에 한 번 작성 가능합니다.
+          <br />일지는 정해진 날짜에만 작성 가능합니다.
+          <br />이런거 적어둬야하지 않을까?
+          <br />
+        </h6>
         <h4>
           <b-icon
             animation="fade"
@@ -23,22 +27,39 @@
     <div class="container">
       <div id="maintext" class="row row-cols-2">
         <div id="maintable" class="main-table mt-5 col-12 col-md-12">
-          <!-- ===========================================================================================  -->
-          <div class="d-flex justify-content-center mx-auto ml-5 pl-5 w-25">
-            <div v-for="category in categoryList" :key="category">
-              <input
-                type="radio"
-                v-model="selected.category"
-                :value="`${category}`"
-                :id="`${category}`"
-                name="rb"
-                @click="searchData"
-              />
-              <label :for="`${category}`">{{ category }}</label>
+          <!-- ===================== 카테고리 ======================  -->
+          <div class="row">
+            <div class="col-12 offset-md-2 col-md-4 p-0 d-flex">
+              <div class="mx-auto" v-for="category in categoryList1" :key="category">
+                <input
+                  class
+                  type="radio"
+                  v-model="selected.category"
+                  :value="`${category}`"
+                  :id="`${category}`"
+                  name="rb"
+                  @click="searchData"
+                />
+                <label class="radiolabel" :for="`${category}`">{{ category }}</label>
+              </div>
+            </div>
+            <div class="col-12 col-md-5 p-0 d-flex">
+              <div class="mx-auto" v-for="category in categoryList2" :key="category">
+                <input
+                  class
+                  type="radio"
+                  v-model="selected.category"
+                  :value="`${category}`"
+                  :id="`${category}`"
+                  name="rb"
+                  @click="searchData"
+                />
+                <label class="radiolabel" :for="`${category}`">{{ category }}</label>
+              </div>
             </div>
           </div>
 
-          <!-- ======================================= 검색 ====================================================  -->
+          <!-- ======================== 검색 ========================  -->
           <form class="input-groups flex-nowrap py-4 d-flex justify-content-center">
             <div class="searchinput d-flex w-100">
               <div class="serach-selectbox border-0">
@@ -70,10 +91,9 @@
               </div>
             </div>
           </form>
+          <!-- ======================== 카드=========================  -->
 
-          <!-- ======================================= 카드====================================================  -->
-
-          <div class="row">
+          <div class="row mb-5">
             <ul
               class="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center"
               v-for="(list, i) in searchList"
@@ -142,15 +162,8 @@ export default {
       studyLists: [],
       allStudyList: [],
       searchList: [],
-      categoryList: [
-        "알고리즘",
-        "공모전",
-        "자격증",
-        "취업",
-        "웹",
-        "기타",
-        "전체",
-      ],
+      categoryList1: ["전체", "공모전", "알고리즘"],
+      categoryList2: ["취업", "자격증", "웹", "기타"],
       whatSearch: ["제목", "지역", "태그"],
       selected: {
         category: "",
@@ -282,7 +295,6 @@ export default {
       var d = document.documentElement;
       var offset = d.scrollTop + window.innerHeight;
       var height = d.offsetHeight + 685;
-      // console.log(offset, height);
       if (offset >= height) {
         this.scrolled += 3;
       }
@@ -327,22 +339,21 @@ export default {
 }
 input[type="radio"] {
   position: absolute;
-  opacity: 0;
 }
-label {
+.radiolabel {
   position: relative;
-  margin-right: 1em;
-  padding-left: 2em;
+  /* margin-right: 1em; */
+  padding-left: 3em;
   padding-right: 1em;
   line-height: 2;
   cursor: pointer;
 }
-label::before {
+.radiolabel::before {
   box-sizing: border-box;
   content: " ";
   position: absolute;
   top: 0.3em;
-  left: 0;
+  left: 1em;
   display: block;
   width: 1.4em;
   height: 1.4em;
@@ -350,25 +361,25 @@ label::before {
   border-radius: 0.25em;
   z-index: -1;
 }
-input[type="radio"] + label::before {
+input[type="radio"] + .radiolabel::before {
   border-radius: 1em;
 }
 /* Checked */
-input[type="radio"]:checked + label {
-  padding-left: 1em;
-  transform: translateX(-23%);
+input[type="radio"]:checked + .radiolabel {
+  /* padding-left: 1em; */
+  transform: translateX(-13%);
   color: black;
 }
-input[type="radio"]:checked + label::before {
+input[type="radio"]:checked + .radiolabel::before {
   top: 0;
-  width: 100%;
+  left:1.7em;
+  width: 80%;
   height: 2em;
   background: orange;
 }
-
 /* Transition */
-label,
-label::before {
+.radiolabel,
+.radiolabel::before {
   -webkit-transition: 0.25s all ease;
   -o-transition: 0.25s all ease;
   transition: 0.25s all ease;
@@ -381,16 +392,13 @@ label::before {
 .input-group.md-form.form-sm.form-2 input.amber-border {
   border: 1px solid orange;
 }
-
 select.form-control {
   border-right: 1px solid orange;
 }
-
 .searchinput {
   border: 2px solid orange;
   border-radius: 100px;
 }
-
 input::placeholder {
   font-size: small;
 }

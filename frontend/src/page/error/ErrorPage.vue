@@ -20,12 +20,12 @@ export default {
     };
   },
   created() {
-    this.tokenDelete()
+    // this.tokenDelete()
   },
   methods: {
-    tokenDelete() {
-      this.$cookies.remove("Auth-Token");
-    }
+    // tokenDelete() {
+    //   this.$cookies.remove("Auth-Token");
+    // }
   },
 };
 </script>
