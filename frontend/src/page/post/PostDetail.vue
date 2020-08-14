@@ -453,9 +453,6 @@ export default {
       }
     },
   },
-  mounted() {
-    this.getDetail();
-  },
   methods: {
     changeDate(time) {
       if (time) {

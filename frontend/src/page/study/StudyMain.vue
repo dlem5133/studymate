@@ -402,14 +402,14 @@
     },
     methods: {
       memberCheck () {
-        var member = []
-        for (let i = 0; i < this.memberListData.length; i++) {
-          member.push(this.memberListData[i].uid)
-        }
-        if (member.indexOf(this.profileInfo.uid) == -1) {
-          alert("스터디 맴버가 아닙니다.")
-          this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
-        }
+        // var member = []
+        // for (let i = 0; i < this.memberListData.length; i++) {
+        //   member.push(this.memberListData[i].uid)
+        // }
+        // if (member.indexOf(this.profileInfo.uid) == -1) {
+        //   alert("스터디 맴버가 아닙니다.")
+        //   this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
+        // }
       },
       reportCheck(target) {
         this.reportdata.target = target
