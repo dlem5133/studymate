@@ -1,9 +1,9 @@
 <template>
   <div style="margin-top:6rem;" class="container pt-0">
-    <div class="card border-0 w-75 mx-auto mx-5">
-      <div class="card-text mx-5">
+    <div class="card border-0 w-75 mx-auto">
+      <div class="card-text">
         <img :src="images" class="logo w-25" alt />
-        <b-row class="m-3">
+        <b-row class="">
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
             <b-form-input
@@ -121,6 +121,7 @@
               v-model="postCreateDate.data"
               placeholder="내용"
               rows="3"
+              style="resize:none;"
             ></b-form-textarea>
           </b-col>
         </b-row>
@@ -129,7 +130,7 @@
           <div class="p-3">
             <b-button
               @click="postCreate((postCreateDate.tmp = 1))"
-              style="border:1.5px solid orange;"
+              style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
               variant="outline-warning"
               class="createbtn"
               >스터디 생성</b-button

@@ -1,9 +1,9 @@
 <template>
   <div style="margin-top:6rem;" class="container pt-0">
     <div class="card border-0 w-75 mx-auto mx-5">
-      <div class="card-text mx-5">
+      <div class="card-text">
         <img :src="images" class="logo w-25" alt />
-        <b-row class="m-3">
+        <b-row class="">
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
             <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
@@ -73,14 +73,15 @@
           </b-col>
           <b-col sm="12" class="px-1">
             <small class="formtitle ml-3 float-left">내용</small>
-            <b-form-textarea v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
+            <b-form-textarea
+              style="resize:none;" v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
           </b-col>
           <b-col>
             <div class="d-flex inline justify-content-center">
               <div class="p-3">
                 <b-button
                   @click="postUpdate"
-                  style="border:1.5px solid orange;"
+                  style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
                   variant="outline-warning"
                   class="createbtn"
                 >스터디 생성</b-button>
@@ -307,4 +308,44 @@ export default {
 </script>
 
 <style scoped>
+.createbtn {
+  color: orange;
+}
+.createbtn:hover {
+  color: white;
+  background-color: orange;
+}
+label {
+  position: relative;
+  right: 40%;
+  top: 5px;
+  font-size: small;
+}
+.submit-btn {
+  padding: 7px 35px;
+  border-radius: 60px;
+  display: inline-block;
+  background-color: #4b8cfb;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+.formtitle {
+  padding: 0 4px;
+  transform: translateY(5px);
+  background-color: white;
+  font-weight: bolder;
+}
+.formtitle1 {
+  padding: 0 4px;
+  transform: translateX(30px) translateY(5px);
+  background-color: white;
+  font-weight: bolder;
+}
+.logo {
+  width: 7vw;
+}
+.taggroup {
+  margin-top: 20px;
+}
 </style>

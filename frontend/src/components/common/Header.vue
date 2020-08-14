@@ -6,8 +6,26 @@
           <h4 id="brandname" class="mb-0">스터디메이트</h4>
         </b-navbar-brand>
         <b-navbar-nav class="d-flex ml-auto"></b-navbar-nav>
+        <div class="d-flex" v-if="!isLoggedIn">
+          <div
+            style="color:orange;font-family: 'Do Hyeon', sans-serif;margin-right:1.7rem;cursor:pointer;"
+            @click="openModal"
+          >로그인</div>
+          <LoginModal v-if="loginmodal" @close="closeModal" />
+          <div
+            style="color:orange;font-family: 'Do Hyeon', sans-serif;cursor:pointer;"
+            @click="kakao"
+          >회원가입</div>
+        </div>
 
-        <b-dropdown size="lg" right variant="link" toggle-class="text-decoration-none" no-caret>
+        <b-dropdown
+          v-if="isLoggedIn"
+          size="lg"
+          right
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+        >
           <template v-slot:button-content>
             <b-icon icon="person-circle" style="color:orange"></b-icon>
           </template>
@@ -27,25 +45,15 @@
                   class="mt-2 mb-0"
                   style="font-family: 'Do Hyeon', sans-serif;"
                 >{{ profileInfo.nickname }}</h6>
-                <small class="email">{{ profileInfo.email }}</small>
-                <br />
+                <small
+                  style="font-family: 'Do Hyeon', sans-serif;"
+                  class="email"
+                >{{ profileInfo.email }}</small>
+                <hr class="m-0" />
                 <small class="email">마일리지: {{ total_mileage }} | 평점: {{ total_score }}</small>
               </div>
               <b-list-group-item class="listitem" tag="router-link" to="/user/profile">프로필</b-list-group-item>
               <b-list-group-item class="listitem" @click="logout">로그아웃</b-list-group-item>
-            </div>
-            <div v-if="!isLoggedIn">
-              <b-list-group-item
-                class="listitem"
-                style="font-family: 'Do Hyeon', sans-serif;"
-                @click="openModal"
-              >로그인</b-list-group-item>
-              <LoginModal v-if="loginmodal" @close="closeModal" />
-              <b-list-group-item
-                class="listitem"
-                style="font-family: 'Do Hyeon', sans-serif;"
-                @click="kakao"
-              >회원가입</b-list-group-item>
             </div>
           </div>
         </b-dropdown>
@@ -64,10 +72,11 @@
 
           <div class="text-center text-nowrap" style="width: auto;">
             <div class="text-left">
-              <div class="my-2">
+              <div class="my-2" v-if="ingLists.length>0||plusUnleaderLists.length>0">
                 <small class="text-success font-weight-bold text-left pl-3 pb-2">진행중 스터디</small>
               </div>
               <div
+                style="cursor:pointer;"
                 v-for="list in ingLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
@@ -80,6 +89,7 @@
               </div>
 
               <div
+                style="cursor:pointer;"
                 v-for="list in plusUnleaderLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
@@ -93,10 +103,14 @@
 
               <hr class="mb-0" />
 
-              <div class="my-2">
+              <div
+                class="my-2"
+                v-if="readyLists.length>0||comLists.length>0||plusLeaderLists.length>0"
+              >
                 <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
               </div>
               <div
+                style="cursor:pointer;"
                 v-for="list in readyLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
@@ -109,6 +123,7 @@
               </div>
 
               <div
+                style="cursor:pointer;"
                 v-for="list in comLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
@@ -121,6 +136,7 @@
               </div>
 
               <div
+                style="cursor:pointer;"
                 v-for="list in plusLeaderLists"
                 :key="list.id"
                 class="card m-2 px-2 p-2"
@@ -128,7 +144,7 @@
               >
                 <div class="d-flex inline">
                   <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-                  <b-badge class="ml-auto my-auto" variant="warning">추가모집중</b-badge>
+                  <b-badge class="ml-auto my-auto" variant="info">추가모집중</b-badge>
                 </div>
               </div>
             </div>
@@ -187,11 +203,16 @@ export default {
         document.documentElement.scrollTop > 80
       ) {
         document.getElementById("container").style.backgroundColor = "white";
-        // document.getElementById("container").style.borderBottom = "1px solid orange";
+        document.getElementById("container").style.borderBottom =
+          "0.7px solid rgba(0,0,0,0.1)";
+        document.getElementById("container").style.boxShadow =
+          "0 3px 3px rgba(0,0,0,0.1)";
       } else {
         document.getElementById("container").style.backgroundColor =
           "rgba(255,255,255,0)";
-        // document.getElementById("navbar").style.margin = "1.5rem 1.5rem"
+        document.getElementById("container").style.borderBottom =
+          "0.7px solid rgba(0,0,0,0)";
+        document.getElementById("container").style.boxShadow = "0 0 0";
       }
     },
     openModal() {
@@ -283,14 +304,14 @@ export default {
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: { post_id: post_id },
       });
-      this.$router.go()
+      this.$router.go();
     },
     goPostMain(post_id) {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTDETAIL,
         params: { post_id: post_id },
       });
-      this.$router.go()
+      this.$router.go();
     },
   },
   data: function () {
@@ -319,7 +340,6 @@ export default {
 * {
   font-family: "Noto Sans KR", sans-serif;
 }
-
 #brandname {
   font-family: "Do Hyeon", sans-serif;
   font-size: x-large;
