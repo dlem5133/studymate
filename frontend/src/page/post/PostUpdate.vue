@@ -98,7 +98,7 @@
                   style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
                   variant="outline-warning"
                   class="createbtn"
-                >스터디 생성</b-button>
+                >스터디 수정</b-button>
               </div>
             </div>
           </b-col>
@@ -264,12 +264,17 @@ export default {
           "error"
         );
       } else {
-        this.postCreateDate.background_image = this.files[0].name
+        if (this.files[0]) {
+          this.postCreateDate.background_image = this.files[0].name
+        } else {
+          this.postCreateDate.background_image = null
+        }
+        console.log(this.postCreateDate);
         axios
           .post(SERVER_URL + "/study/update", this.postCreateDate)
           .then((res) => {
             this.$swal("수정 완료","" , "success");
-            if (file != []) {
+            if (this.files[0]) {
               this.submitFiles()
             }
             this.$router.push({
@@ -299,12 +304,12 @@ export default {
     },
     submitFiles() {
       const formData = new FormData();
-      var ff = new FormData();
-      ff.append("tst","teststst")  
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i]
+      
+        let file = this.files[0]
         formData.append('file', file)
-      }
+      
+      formData.append('pid', this.postCreateDate.pid)
+      console.log(this.postCreateDate.pid);
       axios.post(SERVER_URL + "/study/detail/fileupload",
           formData, {
             headers: {

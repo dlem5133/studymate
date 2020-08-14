@@ -32,7 +32,7 @@ public class StudyRequest {
     String data;
 
     @ApiModelProperty(required = true)
-    MultipartFile background_image;
+    String background_image;
 
     @ApiModelProperty(required = true)
     int tmp;

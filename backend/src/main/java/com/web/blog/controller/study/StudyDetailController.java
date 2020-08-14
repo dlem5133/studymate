@@ -219,29 +219,28 @@ public class StudyDetailController {
         }
         return response;
     }
-    // @PostMapping("/study/detail/fileupload")
-    // @ResponseBody
-    // @RequestMapping(value = "/study/detail/fileupload", headers = "Content-Type= multipart/form-data", method = RequestMethod.POST) @ApiOperation(value = "파일업로드")
-    // public Object fileupload(
-    //     HttpServletRequest request, @RequestParam(value = "file", required = true) MultipartFile file)
-    // throws IllegalStateException, IOException {
-    //     FileOutputStream fos;
-    //     byte fileData[] = file.getBytes();
-    //     File ff = new File("frontend\\src\\uploadfile\\" + file.getOriginalFilename());
-    //     if (!ff.getParentFile().exists())
-    //         ff.getParentFile().mkdirs();
-    //     System.out.println(ff.getParentFile().getAbsolutePath());
-    //     String mainpath = ff.getPath();
-    //     System.out.println(mainpath);
-    //     String path = file.getOriginalFilename();
-    //     fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + file.getOriginalFilename());
-    //     fos.write(fileData);
-    //     //        file.transferTo(ff);
-    //     imageDao.save(new Image(path));
-    //     System.out.println("file is ");
-    //     System.out.println("name is " + file.getName());
+    @PostMapping("/study/detail/fileupload")
+    @ResponseBody
+    @RequestMapping(value = "/study/detail/fileupload", headers = "Content-Type= multipart/form-data", method = RequestMethod.POST) @ApiOperation(value = "파일업로드")
+    public Object fileupload(
+        HttpServletRequest request, @RequestParam(value = "pid", required = true) Integer pid, @RequestParam(value = "file", required = true) MultipartFile file)
+    throws IllegalStateException, IOException {
+        FileOutputStream fos;
+        byte fileData[] = file.getBytes();
+        File ff = new File("frontend\\src\\uploadfile\\" + pid+file.getOriginalFilename());
+        if (!ff.getParentFile().exists())
+            ff.getParentFile().mkdirs();
+        System.out.println(ff.getParentFile().getAbsolutePath());
+        String mainpath = ff.getPath();
+        System.out.println(mainpath);
+        String path = file.getOriginalFilename();
+        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
+        fos.write(fileData);
+        //        file.transferTo(ff);
+        System.out.println("file is ");
+        System.out.println("name is " + file.getName());
 
-    //     return file.getName();
+        return file.getName();}
 
 
 
