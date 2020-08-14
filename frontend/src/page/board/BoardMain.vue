@@ -1,19 +1,21 @@
 <template>
-  <div class="container">
-    <div class="my-5 d-flex">
+  <div style="margin-top:6rem;" class="mb-5 container">
+    <div class="mt-5 my-3 d-flex">
        <!-- style="color:#FFB74D;" -->
-      <h2 class="font-weight-bold ml-3">{{ postData.title }}</h2>
-      <b-button class="my-auto" variant="border-0" @click="goStudyMain(postData.pid)"><b-icon icon="house"></b-icon></b-button>
-      <b-button class="my-auto ml-auto" variant="border-0" @click="newBoard(postData.pid)"><b-icon icon="pen"></b-icon> WRITE</b-button>
+       <div class="d-flex">
+        <h5 class="font-weight-bold ml-3">{{ postData.title }}</h5>
+        <b-icon style="cursor:pointer;" class="mt-2 ml-2" icon="house" @click="goStudyMain(postData.pid)"></b-icon>
+       </div>
+      <b-button class="my-auto ml-auto" variant="border-0" @click="newBoard(postData.pid)"><small style="font-family:'Do Hyeon', sans-serif;"><b-icon icon="pen"></b-icon> WRITE</small></b-button>
     </div>
-    <div class="card border-0">
-      <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-          <thead style="">
+    <div class="container p-0">
+      <div class="table">
+        <table class="table border align-items-center table-flush">
+          <thead>
             <tr>
               <th scope="col">번호</th>
               <th scope="col">제목</th>
-              <th scope="col">날짜</th>
+              <th class="did" scope="col">날짜</th>
               <th scope="col">작성자</th>
             </tr>
           </thead>
@@ -22,17 +24,17 @@
               <th scope="row" v-if="boardItem.isnotice==1"><b-badge variant="warning" class=" blinking">공지</b-badge></th>
               <th scope="row" v-else>{{i+1}}</th>
               <td>{{boardItem.title}}</td>
-              <td>{{boardItem.date.substring(0, 10)}}</td>
+              <td class="did">{{boardItem.date.substring(0, 10)}}</td>
               <td>{{boardItem.user.nickname}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <jw-pagination class="mx-auto " :items="boardItems" @changePage="onChangePage"></jw-pagination>
+      <jw-pagination class="mx-auto" :styles="customStyles" :labels="customLabels" :items="boardItems" @changePage="onChangePage"></jw-pagination>
         
       <div class="input-group flex-nowrap mx-auto my-3">
-        <div class="d-flex mx-auto border rounded w-75">
-          <input v-model="searchText" type="text" class="border-0 form-control" placeholder="Search">
+        <div class="d-flex mx-auto w-75 border"  style="border-radius:30px;">
+          <input  v-model="searchText" type="text" class="border-0 form-control" style="background-color: transparent;" placeholder="Search">
           <div class="input-group-prepend" @click="boardSearch">
             <b-button style="cursor: pointer;" variant="border-0"><b-icon icon="search"></b-icon></b-button>
           </div>
@@ -47,7 +49,25 @@ import axios from "axios";
 import constants from "../../lib/constants";
 
 const SERVER_URL =  constants.ServerUrl;
-
+const customStyles = {
+    ul: {
+        // border: '2px solid black'
+    },
+    li: {
+        
+        display: 'inline-block',
+        // border-radius: '50%'
+    },
+    a:{
+      // 'background-color':'orange',
+    }
+};
+const customLabels = {
+    first: '<<',
+    last: '>>',
+    previous: '<',
+    next: '>'
+};
 export default {
   name: "BoardMain",
   data: () => {
@@ -58,6 +78,9 @@ export default {
       boardItems: [],
       pageOfItems: [],
       searchText: "",
+
+      customStyles,
+      customLabels
     };
   },
   mounted() {
@@ -167,6 +190,18 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 480px){
+  .did{
+    display:none;
+  }
+}
+input::placeholder {
+  font-size:0.8rem;
+  font-family:'Do Hyeon', sans-serif;
+}
+input {
+  font-size:0.9rem;
+}
 .boardtable:hover {
   background-color: #ddd;
 }

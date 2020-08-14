@@ -2,10 +2,7 @@
   <div style="margin-top:6rem;" class="container">
     <div class="mx-5 card border-bottom-0">
       <div class="row" style="margin: 0;">
-        <div
-          class="col-12 col-md-2 px-0 py-3"
-          v-if="!profileInfo.profile_image"
-        >
+        <div class="col-12 col-md-2 px-0 py-3" v-if="!profileInfo.profile_image">
           <img
             class="rounded-circle"
             style="width:5rem;height:5rem;"
@@ -23,22 +20,19 @@
             height="70"
           />
         </div>
-        <div
-          class="col-12 col-md-6 py-3 ml-5 text-left my-auto"
-          style="position:relative;"
-        >
+        <div class="col-12 col-md-6 py-3 ml-5 text-left my-auto" style="position:relative;">
           <div class="d-flex">
-            <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0 p-0">
-              {{ profileInfo.nickname }}님
-            </p>
+            <p
+              style="font-family: 'Do Hyeon', sans-serif;"
+              class="m-0 p-0"
+            >{{profileInfo.nickname}}님</p>
           </div>
           <small
             style="position:absolute;top:37px;font-family: 'Do Hyeon', sans-serif;"
             class="m-0 p-0"
-            >{{ profileInfo.email }}</small
-          >
+          >{{profileInfo.email}}</small>
           <br />
-          <small class="mb-4">{{ profileInfo.intro }}</small>
+          <small class="mb-4">{{profileInfo.intro}}</small>
         </div>
         <div class="col-12 col-md-3 py-3 my-auto ml-auto">
           <div class="actions2">
@@ -53,46 +47,34 @@
         <div
           class="selecting col-12 col-md-4 py-4 border-bottom border-right"
           style="cursor:pointer;"
-          @click="page = 0"
+          @click="page=0"
         >
-          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">
-            {{ comLists.length + ingLists.length }}
-          </p>
-          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;"
-            >STUDY</small
-          >
+          <p
+            style="font-family: 'Do Hyeon', sans-serif;"
+            class="m-0"
+          >{{comLists.length + ingLists.length}}</p>
+          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">STUDY</small>
         </div>
         <div
           class="selecting col-12 col-md-4 py-4 border-bottom border-right"
           style="cursor:pointer;"
-          @click="page = 1"
+          @click="page=1"
         >
-          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">
-            {{ total_mileage }}
-          </p>
-          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;"
-            >MILEAGE</small
-          >
+          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_mileage}}</p>
+          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">MILEAGE</small>
         </div>
-        <div
-          class="selecting col-12 col-md-4 py-4"
-          style="cursor:pointer;"
-          @click="page = 2"
-        >
-          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">
-            {{ total_score }} / 5
-          </p>
-          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;"
-            >SCORE</small
-          >
+        <div class="selecting col-12 col-md-4 py-4" style="cursor:pointer;" @click="page=2">
+          <p style="font-family: 'Do Hyeon', sans-serif;" class="m-0">{{total_score}} / 5</p>
+          <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">SCORE</small>
         </div>
       </div>
 
-      <div class="border-bottom" v-if="page === 0">
+      <div class="border-bottom" v-if="page===0">
         <div class="text-left py-3 col-12">
-          <small class="text-success font-weight-bold text-left pl-3"
-            >진행중 스터디</small
-          >
+          <small
+            v-if="ingLists.length>0||plusUnleaderLists.length>0"
+            class="text-success font-weight-bold text-left pl-3"
+          >진행중 스터디</small>
           <div
             v-for="list in ingLists"
             :key="list.id"
@@ -102,9 +84,7 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="success"
-                >진행중</b-badge
-              >
+              <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
             </div>
           </div>
 
@@ -117,16 +97,15 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="success"
-                >진행중</b-badge
-              >
+              <b-badge class="ml-auto my-auto" variant="success">진행중</b-badge>
             </div>
           </div>
 
-          <div class="my-2 mt-4">
-            <small class="text-warning font-weight-bold text-left pl-3 pb-2"
-              >모집중 스터디</small
-            >
+          <div
+            class="my-2 mt-4"
+            v-if="readyLists.length>0||comLists.length>0||plusLeaderLists.length>0"
+          >
+            <small class="text-warning font-weight-bold text-left pl-3 pb-2">모집중 스터디</small>
           </div>
           <div
             v-for="list in readyLists"
@@ -137,9 +116,7 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="info"
-                >승인대기중</b-badge
-              >
+              <b-badge class="ml-auto my-auto" variant="secondary">승인대기중</b-badge>
             </div>
           </div>
 
@@ -152,9 +129,7 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="warning"
-                >모집중</b-badge
-              >
+              <b-badge class="ml-auto my-auto" variant="warning">모집중</b-badge>
             </div>
           </div>
 
@@ -167,16 +142,12 @@
           >
             <div class="d-flex inline">
               <small class="text-left mr-2">{{ list.empId.study.title }}</small>
-              <b-badge class="ml-auto my-auto" variant="warning"
-                >추가모집중</b-badge
-              >
+              <b-badge class="ml-auto my-auto" variant="info">추가모집중</b-badge>
             </div>
           </div>
 
-          <div class="my-2 mt-4" v-if="endLists.length > 0">
-            <small class="text-secondary font-weight-bold text-left pl-3 pb-2"
-              >완료된 스터디</small
-            >
+          <div class="my-2 mt-4" v-if="endLists.length>0">
+            <small class="text-secondary font-weight-bold text-left pl-3 pb-2">완료된 스터디</small>
           </div>
           <div
             v-for="list in endLists"
@@ -192,13 +163,11 @@
         </div>
       </div>
 
-      <div class="border-bottom" v-if="page === 1">
+      <div class="border-bottom" v-if="page===1">
         <div class="text-left py-3 col-12">
           <div class="d-flex">
             <div>
-              <small class="text-dark font-weight-bold text-left pl-3"
-                >마일리지 로그</small
-              >
+              <small class="text-dark font-weight-bold text-left pl-3">마일리지 로그</small>
             </div>
             <div class="ml-auto mr-4" style="color:orange;cursor:pointer;">
               <small @click="goRank" class="ranking">
@@ -207,18 +176,10 @@
             </div>
           </div>
           <div class="m-3 row rounded-lg border">
-            <div
-              class="col-12 col-md-4 py-3 border-bottom border-right"
-              style="cursor:pointer;"
-            >
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="calendar-3"></b-icon>
-                <p
-                  class="mb-0 ml-2"
-                  style="font-family: 'Do Hyeon', sans-serif;"
-                >
-                  일지
-                </p>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">일지</p>
               </div>
               <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.diarypoint }}</span>
@@ -226,18 +187,10 @@
               </div>
             </div>
 
-            <div
-              class="col-12 col-md-4 py-3 border-bottom border-right"
-              style="cursor:pointer;"
-            >
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="award"></b-icon>
-                <p
-                  class="mb-0 ml-2"
-                  style="font-family: 'Do Hyeon', sans-serif;"
-                >
-                  평가
-                </p>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">평가</p>
               </div>
               <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.evalpoint }}</span>
@@ -248,12 +201,7 @@
             <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="book-half"></b-icon>
-                <p
-                  class="mb-0 ml-2"
-                  style="font-family: 'Do Hyeon', sans-serif;"
-                >
-                  스터디 완료
-                </p>
+                <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">스터디 완료</p>
               </div>
               <div class="text-right pt-2 pr-2">
                 <span class="milepoint">{{ mileageData.endpoint * 200 }}</span>
@@ -264,19 +212,14 @@
         </div>
       </div>
 
-      <div class="border-bottom" v-if="page === 2">
+      <div class="border-bottom" v-if="page===2">
         <div class="text-left py-3 col-12">
           <small class="font-weight-bold text-left pl-3">평점</small>
 
           <div class="d-flex m-3 mb-5 row rounded-lg border">
-            <div
-              class="col-12 col-md-4 py-3 border-bottom border-right"
-              style="cursor:pointer;"
-            >
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="text-center">
-                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">
-                  성실도
-                </p>
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">성실도</p>
               </div>
               <div class="w-100 pb-3 text-center">
                 <b-form-rating
@@ -288,18 +231,13 @@
                   size="sm"
                 ></b-form-rating>
                 <br />
-                <small>{{ profileInfo.score1 }} / 5</small>
+                <small>{{profileInfo.score1}} / 5</small>
               </div>
             </div>
 
-            <div
-              class="col-12 col-md-4 py-3 border-bottom border-right"
-              style="cursor:pointer;"
-            >
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="text-center">
-                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">
-                  참여도
-                </p>
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">참여도</p>
               </div>
               <div class="w-100 pb-3 text-center">
                 <b-form-rating
@@ -311,15 +249,13 @@
                   size="sm"
                 ></b-form-rating>
                 <br />
-                <small>{{ profileInfo.score2 }} / 5</small>
+                <small>{{profileInfo.score2}} / 5</small>
               </div>
             </div>
 
             <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="text-center">
-                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">
-                  인싸력
-                </p>
+                <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">인싸력</p>
               </div>
               <div class="w-100 pb-3 text-center">
                 <b-form-rating
@@ -331,15 +267,11 @@
                   size="sm"
                 ></b-form-rating>
                 <br />
-                <small>{{ profileInfo.score3 }} / 5</small>
+                <small>{{profileInfo.score3}} / 5</small>
               </div>
             </div>
           </div>
-          <small
-            v-if="evalistdata.length > 0"
-            class="font-weight-bold text-left text-info pl-3"
-            >한줄평</small
-          >
+          <small v-if="evalistdata.length>0" class="font-weight-bold text-left text-info pl-3">한줄평</small>
 
           <div
             v-for="(list1, n) in evalistdata"
@@ -349,23 +281,17 @@
             style="cursor:pointer;"
           >
             <div v-if="n < showEvalist" class="d-flex inline">
-              <b-badge class="my-auto" variant="secondary">{{
-                list1.study.category
-              }}</b-badge>
+              <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
               <small class="text-left ml-2">{{ list1.sentence }}</small>
-              <small class="ml-auto text-secondary">
-                {{ list1.user.nickname }}
-              </small>
+              <small class="ml-auto text-secondary">{{list1.user.nickname}}</small>
             </div>
           </div>
           <button
-            v-if="evalistdata.length > 3"
+            v-if="evalistdata.length>3"
             @click="showEvalist += 3"
             variant="link"
             class="small"
-          >
-            ...더보기
-          </button>
+          >...더보기</button>
         </div>
       </div>
     </div>
@@ -373,35 +299,22 @@
     <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정" ok-only>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">닉네임</small>
-        <b-card class="baseInput" no-body id="input-email">{{
-          updateData.nickname
-        }}</b-card>
+        <b-card class="baseInput" no-body id="input-email">{{updateData.nickname}}</b-card>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">이메일</small>
-        <b-card class="baseInput" no-body id="input-email">{{
-          updateData.email
-        }}</b-card>
+        <b-card class="baseInput" no-body id="input-email">{{updateData.email}}</b-card>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">비밀번호</small>
-        <b-form-input
-          type="password"
-          v-model="updateData.password"
-        ></b-form-input>
+        <b-form-input type="password" v-model="updateData.password"></b-form-input>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">자기소개</small>
-        <b-form-textarea
-          v-model="updateData.intro"
-          rows="3"
-          max-rows="6"
-        ></b-form-textarea>
+        <b-form-textarea v-model="updateData.intro" rows="3" max-rows="6"></b-form-textarea>
       </div>
       <div class="mb-2">
-        <small style="font-family: 'Do Hyeon', sans-serif;"
-          >프로필 사진을 선택해주세요</small
-        >
+        <small style="font-family: 'Do Hyeon', sans-serif;">프로필 사진을 선택해주세요</small>
         <div v-if="!updateData.profile_image">
           <b-form-file id="file-large" @change="onChangeImages"></b-form-file>
         </div>
@@ -430,10 +343,7 @@
     <b-modal @ok="userDelete" id="modal-2" title="회원 탈퇴" ok-only>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">이메일</small>
-        <b-form-input
-          v-model="deleteData.email"
-          placeholder="가입 시 작성한 이메일을 입력해주세요"
-        ></b-form-input>
+        <b-form-input v-model="deleteData.email" placeholder="가입 시 작성한 이메일을 입력해주세요"></b-form-input>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">비밀번호</small>
@@ -453,7 +363,6 @@ import axios from "axios";
 import constants from "../../lib/constants";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert";
-
 const SERVER_URL = constants.ServerUrl;
 
 export default {
@@ -605,7 +514,7 @@ export default {
       };
       reader.readAsDataURL(fileObject);
     },
-    removeImage: function(e) {
+    removeImage: function (e) {
       this.updateData.profile_image = "";
     },
     userUpdate() {

@@ -100,7 +100,7 @@
         <div class="text-left py-3 col-12">
           <small class="font-weight-bold text-left pl-3">평점</small>
 
-          <div class="d-flex m-3 mb-5 row rounded-lg border">
+          <div class="d-flex m-3 mb-3 row rounded-lg border">
             <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="text-center">
                 <p class="pt-3" style="font-family: 'Do Hyeon', sans-serif;">성실도</p>
@@ -196,7 +196,7 @@ export default {
   data: () => {
     return {
       profileInfo: {},
-      page: 0,
+      page: 1,
       showEvalist: 3,
 
       evalistdata:{},
