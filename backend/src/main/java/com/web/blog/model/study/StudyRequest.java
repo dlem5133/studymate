@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import javax.validation.Valid;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Valid
 @Data
 public class StudyRequest {
@@ -30,7 +32,7 @@ public class StudyRequest {
     String data;
 
     @ApiModelProperty(required = true)
-    String background_image;
+    MultipartFile background_image;
 
     @ApiModelProperty(required = true)
     int tmp;
