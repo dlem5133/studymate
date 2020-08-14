@@ -29,7 +29,7 @@
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
-            <select @click="getgungu" v-model="postCreateDate.sido_code" class="custom-select">
+            <select @click="getgungu" v-model="postCreateDate.sidocode" class="custom-select">
               <option
                 v-for="sido in allSidoCode"
                 :key="sido.sidocode"
@@ -39,7 +39,7 @@
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/군/구</small>
-            <select v-model="postCreateDate.sigungu_code" class="custom-select">
+            <select v-model="postCreateDate.sigungucode" class="custom-select">
               <option
                 v-for="sido in allGugunCode"
                 :key="sido.guguncode"
@@ -79,7 +79,7 @@
             <div class="d-flex inline justify-content-center">
               <div class="p-3">
                 <b-button
-                  @click="postCreate(postCreateDate.tmp=1)"
+                  @click="postUpdate"
                   style="border:1.5px solid orange;"
                   variant="outline-warning"
                   class="createbtn"
@@ -103,28 +103,14 @@ const SERVER_URL = constants.ServerUrl;
 export default {
   name: "PostUpdate",
   created() {
-    this.getDetail();
     this.user_check();
     this.getSidoCode();
+    this.getDetail();
   },
   data: () => {
     return {
       images: require("../../assets/img/logo.png"),
-      postCreateDate: {
-        title: "",
-        data: "",
-        background_image: "",
-        category: null,
-        uid: "",
-        tag: [],
-        sido_code: "",
-        sigungu_code: "",
-        start_date: "",
-        end_date: "",
-        limitp: 3,
-        bindo: "",
-        tmp: 0,
-      },
+      postCreateDate: {},
       allSidoCode: [],
       allGugunCode: [],
       options: [
@@ -136,7 +122,6 @@ export default {
         { value: "웹", text: "웹" },
         { value: "기타", text: "기타" },
       ],
-      totalData: {},
       profileInfo: {},
     };
   },
@@ -177,20 +162,9 @@ export default {
           } else {
             this.postCreateDate = res.data.object;
           }
+          this.getgungu()
         })
         .catch((err) => console.log(err.data));
-    },
-    postTmp() {
-      this.postCreateDate.uid = this.profileInfo.uid;
-      axios
-        .post(SERVER_URL + "/study/write", this.postCreateDate)
-        .then((res) => {
-          this.$router.push({ name: constants.URL_TYPE.POST.MAIN });
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("입력정보를 확인해주세요!");
-        });
     },
     postUpdate() {
       const post_id = this.$route.params.post_id;
@@ -212,13 +186,13 @@ export default {
           "스터디는 주 7회를 넘을 수 없습니다. ",
           "error"
         );
-      } else if (this.postCreateDate.sido_code == "") {
+      } else if (this.postCreateDate.sidocode == "") {
         this.$swal(
           "가입 실패",
           "시/도가 입력되지 않았습니다.확인해주세요!",
           "error"
         );
-      } else if (this.postCreateDate.sigungu_code == "") {
+      } else if (this.postCreateDate.sigungucode == "") {
         this.$swal(
           "가입 실패",
           "시/군/구가 입력되지 않았습니다. 확인해주세요!",
@@ -228,25 +202,6 @@ export default {
         this.$swal(
           "가입 실패",
           "시작일이 입력되지 않았습니다. 확인해주세요!",
-          "error"
-        );
-      } else if (
-        !(
-          parseInt(this.postCreateDate.start_date.substring(0, 4)) >=
-            date.getFullYear() &&
-          parseInt(this.postCreateDate.start_date.substring(5, 7)) >=
-            date.getMonth() + 1 &&
-          parseInt(this.postCreateDate.start_date.substring(8, 10)) >
-            date.getDate()
-        )
-      ) {
-        this.$swal(
-          "가입 실패",
-          "시작일은 오늘 이후로 설정해주세요. <br> 오늘은 " +
-            (date.getMonth() + 1) +
-            "월 " +
-            date.getDate() +
-            "일 입니다.",
           "error"
         );
       } else if (this.postCreateDate.end_date == "") {
@@ -299,14 +254,13 @@ export default {
             this.$swal("수정 완료","" , "success");
 
             this.$router.push({
-              name: constants.URL_TYPE.POST.POSTDETAIL,
+              name: constants.URL_TYPE.STUDY.STUDYMAIN,
               params: { post_id: post_id },
             });
           })
           .catch((err) => {
-            console.log(err);
+            console.log(err.response);
             this.$swal("수정 실패", "입력정보를 확인해주세요", "error");
-
           });
       }
     },
@@ -338,7 +292,7 @@ export default {
         });
     },
     getgungu() {
-      const code = this.postCreateDate.sido_code;
+      const code = this.postCreateDate.sidocode;
       axios
         .get(SERVER_URL + "/study/getguguncode", { params: { sidocode: code } })
         .then((res) => {

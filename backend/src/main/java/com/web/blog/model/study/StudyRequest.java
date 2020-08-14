@@ -51,6 +51,12 @@ public class StudyRequest {
     private Integer sigungu_code;
 
     @ApiModelProperty(required = true)
+    private Integer sidocode;
+
+    @ApiModelProperty(required = true)
+    private Integer sigungucode;
+
+    @ApiModelProperty(required = true)
     private Date start_date;
 
     @ApiModelProperty(required = true)
@@ -58,4 +64,8 @@ public class StudyRequest {
 
     @ApiModelProperty(required = true)
     private Integer likep;
+
+    @ApiModelProperty(required = true)
+    private Integer memnum;
+
 }
