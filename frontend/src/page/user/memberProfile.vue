@@ -196,7 +196,7 @@ export default {
   data: () => {
     return {
       profileInfo: {},
-      page: 0,
+      page: 1,
       showEvalist: 3,
 
       evalistdata:{},
