@@ -187,7 +187,14 @@ export default {
         .get(SERVER_URL + "/study/list")
         .then((res) => {
           this.allStudyList = res.data.object;
-          this.searchList = this.allStudyList;
+          var tmp = this.allStudyList;
+          for (let i = 0; i < tmp.length; i++) {
+            if (tmp[i][0].background_image != "") {
+              var t = require('@/assets/uploadfile/' + tmp[i][0].background_image)
+              tmp[i][0].background_image = t
+            }
+          }
+          this.searchList = tmp
         })
         .catch((err) => {
           console.log(err);

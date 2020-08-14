@@ -496,7 +496,10 @@ export default {
       axios
         .get(SERVER_URL + "/study/details", { params: { pid: post_id } })
         .then((res) => {
-          this.postData = res.data.object[0];
+          var tmp = res.data.object[0];
+          var t = require('@/assets/uploadfile/' + tmp.background_image)
+          tmp.background_image = t
+          this.postData = tmp
           this.tagData = res.data.object[2];
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];

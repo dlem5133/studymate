@@ -12,26 +12,16 @@
               type="text"
             ></b-form-input>
           </b-col>
-          <b-col sm="12" md="4" class="px-1 mb-4">
-            <div
-              style="transform: translateY(21px);"
-              v-if="!postCreateDate.background_image"
-            >
-              <b-form-file
-                placeholder=" "
-                browse-text="Image"
-                @change="onChangeImages"
-              ></b-form-file>
+          <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
+            <div>
+              <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
+              <div v-for="(file, key) in files" :key="file.id">
+                {{ file.name }}
+                <span class="remove-file" @click="removeFile( key )">Remove</span>
+              </div>
             </div>
-            <div class="d-flex" style="transform: translateY(20px);" v-else>
-              <img
-                :src="postCreateDate.background_image"
-                class="w-25"
-                style="height:30px;"
-              />
-              <b-button class="ml-3" @click="removeImage" variant="border-0">
-                <b-icon icon="trash"></b-icon>
-              </b-button>
+            <div v-if="!files[0]">
+              <button @click="addFiles()">Add Files</button>
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -154,6 +144,7 @@ export default {
     return {
       images: require("../../assets/img/logo.png"),
       profileInfo: [],
+      files: [],
       options: [
         { value: null, text: "카테고리" },
         { value: "알고리즘", text: "알고리즘" },
@@ -321,34 +312,55 @@ export default {
           "error"
         );
       } else {
+        this.postCreateDate.background_image = this.files[0].name
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
-          swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
+            swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
+            this.submitFiles()
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
             });
           })
           .catch((err) => {
+            console.log(res.response);
             this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
           });
       }
     },
-    onChangeImages(e) {
-      const selectedImage = e.target.files[0];
-      this.createBase64Image(selectedImage);
+    // 이미지 업로드
+    handleFilesUpload() {
+      let uploadedFiles = this.$refs.files.files;
+      for (var i = 0; i < uploadedFiles.length; i++) {
+        this.files.push(uploadedFiles[i]);
+      }
     },
-    createBase64Image(fileObject) {
-      this.postCreateDate.background_image = new Image();
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.postCreateDate.background_image = e.target.result;
-      };
-      reader.readAsDataURL(fileObject);
+    addFiles() {
+      this.$refs.files.click();
+      console.log(this.files);
     },
-    removeImage: function(e) {
-      this.postCreateDate.background_image = "";
+    removeFile(key) {
+      this.files.splice(key, 1);
+    },
+    submitFiles() {
+      const formData = new FormData();
+      var ff = new FormData();
+      ff.append("tst","teststst")  
+      for (var i = 0; i < this.files.length; i++) {
+        let file = this.files[i]
+        formData.append('file', file)
+      }
+      axios.post(SERVER_URL + "/study/detail/fileupload",
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(() => {})
+        .catch(function () {
+          console.log('FAILURE!!');
+        });
     },
     getSidoCode() {
       axios

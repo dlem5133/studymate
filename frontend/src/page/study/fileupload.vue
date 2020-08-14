@@ -106,9 +106,7 @@
       */  
       urlLoad() {
         axios.get(SERVER_URL + "/study/detail/urlload",
-       
           ).then((res) => {
-
             this.searchList = res.data.object
             console.log('SUCCESS!!');
           })
@@ -117,28 +115,13 @@
           });
       },
       submitFiles() {
-        /*
-          Initialize the form data
-        */
         const formData = new FormData();
         var ff = new FormData();
-        /*
-          Iteate over any file sent over appending the files
-          to the form data.
-        */
-        ff.append("tst","teststst")
-       console.log("ff")
-       console.log(ff)
-       
+        ff.append("tst","teststst")  
         for (var i = 0; i < this.files.length; i++) {
           let file = this.files[i]
           formData.append('file', file)
         }
-        /*
-          Make the request to the POST /select-files URL
-        */
-        
-        console.log(formData)
         for(var key of formData.values())
        {
          console.log(key)
@@ -152,7 +135,6 @@
           ).then((res) => {
             console.log(res)
             this.urlLoad()
-            console.log('SUCCESS!!');
           })
           .catch(function () {
             console.log('FAILURE!!');

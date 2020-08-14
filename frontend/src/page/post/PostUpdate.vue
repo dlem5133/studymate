@@ -8,8 +8,22 @@
             <small class="formtitle ml-3 float-left">제목</small>
             <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
           </b-col>
-          <b-col sm="12" md="4" class="px-1 mb-4">
-            <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
+          
+          <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
+            <div>
+              <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
+              <div v-for="(file, key) in files" :key="file.id">
+                {{ file.name }}
+                <span class="remove-file" @click="removeFile( key )">Remove</span>
+              </div>
+            </div>
+            <div v-if="!files[0]">
+              <button @click="addFiles()">Add Files</button>
+            </div>
+          </b-col>
+
+          <!-- <b-col sm="12" md="4" class="px-1 mb-4"> -->
+            <!-- <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
               <b-form-file placeholder=" " browse-text="Image" @change="onFileChange"></b-form-file>
             </div>
             <div class="d-flex" style="transform: translateY(20px);" v-else>
@@ -17,8 +31,8 @@
               <b-button class="ml-3" @click="removeImage" variant="border-0">
                 <b-icon icon="trash"></b-icon>
               </b-button>
-            </div>
-          </b-col>
+            </div> -->
+          <!-- </b-col> -->
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정</small>
             <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
@@ -113,6 +127,7 @@ export default {
       images: require("../../assets/img/logo.png"),
       postCreateDate: {},
       allSidoCode: [],
+      files: [],
       allGugunCode: [],
       options: [
         { value: null, text: "카테고리" },
@@ -249,11 +264,14 @@ export default {
           "error"
         );
       } else {
+        this.postCreateDate.background_image = this.files[0].name
         axios
           .post(SERVER_URL + "/study/update", this.postCreateDate)
           .then((res) => {
             this.$swal("수정 완료","" , "success");
-
+            if (file != []) {
+              this.submitFiles()
+            }
             this.$router.push({
               name: constants.URL_TYPE.STUDY.STUDYMAIN,
               params: { post_id: post_id },
@@ -265,22 +283,38 @@ export default {
           });
       }
     },
-    onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      this.createImage(files[0]);
+    // 이미지 업로드
+    handleFilesUpload() {
+      let uploadedFiles = this.$refs.files.files;
+      for (var i = 0; i < uploadedFiles.length; i++) {
+        this.files.push(uploadedFiles[i]);
+      }
     },
-    createImage(file) {
-      this.postData.background_image = new Image();
-      var reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.postData.background_image = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    addFiles() {
+      this.$refs.files.click();
+      console.log(this.files);
     },
-    removeImage: function (e) {
-      this.postData.background_image = "";
+    removeFile(key) {
+      this.files.splice(key, 1);
+    },
+    submitFiles() {
+      const formData = new FormData();
+      var ff = new FormData();
+      ff.append("tst","teststst")  
+      for (var i = 0; i < this.files.length; i++) {
+        let file = this.files[i]
+        formData.append('file', file)
+      }
+      axios.post(SERVER_URL + "/study/detail/fileupload",
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(() => {})
+        .catch(function () {
+          console.log('FAILURE!!');
+        });
     },
     getSidoCode() {
       axios
