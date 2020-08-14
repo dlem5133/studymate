@@ -1,6 +1,7 @@
 package com.web.blog.controller.study;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -233,7 +234,7 @@ public class StudyController {
             study.setData(request.getData());
             study.setTitle(request.getTitle());
             study.setUid(request.getUid());
-            
+
             study.setTmp(request.getTmp());
             study.setBindo(request.getBindo());
             study.setStart_date(request.getStart_date());
@@ -246,23 +247,23 @@ public class StudyController {
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
             study.setEvalcount(0);
             Study savedStudy = this.studyDao.save(study);
-            
+
             int pid = savedStudy.getPid();
 
             FileOutputStream fos;
-            
+
             byte fileData[] = request.getBackground_image().getBytes();
-            File ff = new File("frontend\\assets\\src\\uploadfile\\" + request.getBackground_image().getOriginalFilename());
+            File ff = new File(
+                    "frontend\\assets\\src\\uploadfile\\" + request.getBackground_image().getOriginalFilename());
             if (!ff.getParentFile().exists())
                 ff.getParentFile().mkdirs();
-            String path = pid+request.getBackground_image().getOriginalFilename();
+            String path = pid + request.getBackground_image().getOriginalFilename();
             savedStudy.setBackground_image(path);
-            fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+request.getBackground_image().getOriginalFilename());
+            fos = new FileOutputStream(
+                    "frontend\\src\\assets\\uploadfile\\" + pid + request.getBackground_image().getOriginalFilename());
             fos.write(fileData);
-            
-            this.studyDao.save(savedStudy);
 
-            
+            this.studyDao.save(savedStudy);
 
             for (int i = 0; i < request.getTag().size(); i++) {
                 Studytag tag = new Studytag();
@@ -302,7 +303,7 @@ public class StudyController {
 
     @PostMapping("/study/update")
     @ApiOperation(value = "스터디 수정")
-    public Object update(@Valid @RequestBody StudyRequest request) {
+    public Object update(@Valid @RequestBody StudyRequest request) throws IOException {
         // Study find_pid = studyDao.findStudyByPid(request.getPid());
         // 이메일로 id 확인
         ResponseEntity<Object> response = null;
@@ -312,11 +313,22 @@ public class StudyController {
         Gugun gugun = gugunCodeDao.findByGuguncode(request.getSigungucode());
         // 이미지 업로드 부분
         // study.setPid(request.getPid());
+
+        FileOutputStream fos;
+            
+        byte fileData[] = request.getBackground_image().getBytes();
+        File ff = new File("frontend\\assets\\src\\uploadfile\\" + request.getBackground_image().getOriginalFilename());
+        if (!ff.getParentFile().exists())
+            ff.getParentFile().mkdirs();
+        String path = study.getPid()+request.getBackground_image().getOriginalFilename();
+        study.setBackground_image(path);
+        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + study.getPid()+request.getBackground_image().getOriginalFilename());
+        fos.write(fileData);
+
         study.setCategory(request.getCategory());
         study.setData(request.getData());
         study.setTitle(request.getTitle());
         // study.setUid(request.getUid());
-        study.setBackground_image(request.getBackground_image());
         study.setTmp(request.getTmp());
         study.setBindo(request.getBindo());
         // study.setLikep(request.getLikep());

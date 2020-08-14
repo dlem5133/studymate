@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import com.web.blog.dao.likep.StudylikepDao;
 import com.web.blog.dao.post.ReplyDao;
 import com.web.blog.dao.study.GugunDao;
-import com.web.blog.dao.study.ImageDao;
 import com.web.blog.dao.study.IndvstudylstDao;
 import com.web.blog.dao.study.SidoDao;
 import com.web.blog.dao.study.StudyDao;
@@ -21,7 +20,6 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 
 import com.web.blog.model.study.Study;
-import com.web.blog.model.study.Image;
 import com.web.blog.model.study.Indvstudylst;
 import com.web.blog.model.study.IndvstudylstRequest;
 import com.web.blog.model.user.DelegationRequest;
@@ -66,8 +64,6 @@ public class StudyDetailController {
     @Autowired
     ReplyDao replyDao;
 
-    @Autowired
-    ImageDao imageDao;
 
     @Autowired
     UserDao userDao;
@@ -224,70 +220,70 @@ public class StudyDetailController {
         return response;
     }
     // @PostMapping("/study/detail/fileupload")
-    @ResponseBody
-    @RequestMapping(value = "/study/detail/fileupload", headers = "Content-Type= multipart/form-data", method = RequestMethod.POST) @ApiOperation(value = "파일업로드")
-    public Object fileupload(
-        HttpServletRequest request, @RequestParam(value = "file", required = true) MultipartFile file)
-    throws IllegalStateException, IOException {
-        FileOutputStream fos;
-        byte fileData[] = file.getBytes();
-        File ff = new File("frontend\\src\\uploadfile\\" + file.getOriginalFilename());
-        if (!ff.getParentFile().exists())
-            ff.getParentFile().mkdirs();
-        System.out.println(ff.getParentFile().getAbsolutePath());
-        String mainpath = ff.getPath();
-        System.out.println(mainpath);
-        String path = file.getOriginalFilename();
-        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + file.getOriginalFilename());
-        fos.write(fileData);
-        //        file.transferTo(ff);
-        imageDao.save(new Image(path));
-        System.out.println("file is ");
-        System.out.println("name is " + file.getName());
+    // @ResponseBody
+    // @RequestMapping(value = "/study/detail/fileupload", headers = "Content-Type= multipart/form-data", method = RequestMethod.POST) @ApiOperation(value = "파일업로드")
+    // public Object fileupload(
+    //     HttpServletRequest request, @RequestParam(value = "file", required = true) MultipartFile file)
+    // throws IllegalStateException, IOException {
+    //     FileOutputStream fos;
+    //     byte fileData[] = file.getBytes();
+    //     File ff = new File("frontend\\src\\uploadfile\\" + file.getOriginalFilename());
+    //     if (!ff.getParentFile().exists())
+    //         ff.getParentFile().mkdirs();
+    //     System.out.println(ff.getParentFile().getAbsolutePath());
+    //     String mainpath = ff.getPath();
+    //     System.out.println(mainpath);
+    //     String path = file.getOriginalFilename();
+    //     fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + file.getOriginalFilename());
+    //     fos.write(fileData);
+    //     //        file.transferTo(ff);
+    //     imageDao.save(new Image(path));
+    //     System.out.println("file is ");
+    //     System.out.println("name is " + file.getName());
 
-        return file.getName();
-
-
-
-        // FileOutputStream fos;
-        // byte fileData[] = file.getBytes();
-        // String path = "../src/main/resources/img/";
-        // String root_path = request.getContextPath();
-        // System.out.println(root_path);
-        // System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        // String uploadPath =root_path + "resources\\img\\";
-        // fos = new FileOutputStream(uploadPath + file.getOriginalFilename());
-        // fos.write(fileData);
-
-
-        // ResponseEntity < Object > response = null;
-        // BasicResponse result = new BasicResponse();
-
-
-        // //file.transferTo(new File("c:/test/" + file.getOriginalFilename()));
-        // result.status = true;
-        // result.data = "파일업로드";
-        // result.object = file;
+    //     return file.getName();
 
 
 
+    //     // FileOutputStream fos;
+    //     // byte fileData[] = file.getBytes();
+    //     // String path = "../src/main/resources/img/";
+    //     // String root_path = request.getContextPath();
+    //     // System.out.println(root_path);
+    //     // System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    //     // String uploadPath =root_path + "resources\\img\\";
+    //     // fos = new FileOutputStream(uploadPath + file.getOriginalFilename());
+    //     // fos.write(fileData);
 
-        // response = new ResponseEntity < > (result, HttpStatus.OK);
 
-        // return response;
-    }
+    //     // ResponseEntity < Object > response = null;
+    //     // BasicResponse result = new BasicResponse();
 
-    @GetMapping("/study/detail/urlload")
-    @ApiOperation(value = "url")
-    public Object urlLoad() {
-        List < Image > image_list = imageDao.findAll();
-        ResponseEntity < Object > response = null;
-        BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.data = "url 목록";
-        result.object = image_list;
-        response = new ResponseEntity < > (result, HttpStatus.OK);
 
-        return response;
-    }
+    //     // //file.transferTo(new File("c:/test/" + file.getOriginalFilename()));
+    //     // result.status = true;
+    //     // result.data = "파일업로드";
+    //     // result.object = file;
+
+
+
+
+    //     // response = new ResponseEntity < > (result, HttpStatus.OK);
+
+    //     // return response;
+    // }
+
+    // @GetMapping("/study/detail/urlload")
+    // @ApiOperation(value = "url")
+    // public Object urlLoad() {
+    //     List < Image > image_list = imageDao.findAll();
+    //     ResponseEntity < Object > response = null;
+    //     BasicResponse result = new BasicResponse();
+    //     result.status = true;
+    //     result.data = "url 목록";
+    //     result.object = image_list;
+    //     response = new ResponseEntity < > (result, HttpStatus.OK);
+
+    //     return response;
+    // }
 }

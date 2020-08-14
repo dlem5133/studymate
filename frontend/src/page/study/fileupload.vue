@@ -117,11 +117,32 @@
           });
       },
       submitFiles() {
+        /*
+          Initialize the form data
+        */
         const formData = new FormData();
+        var ff = new FormData();
+        /*
+          Iteate over any file sent over appending the files
+          to the form data.
+        */
+        ff.append("tst","teststst")
+       console.log("ff")
+       console.log(ff)
+       
         for (var i = 0; i < this.files.length; i++) {
           let file = this.files[i]
           formData.append('file', file)
         }
+        /*
+          Make the request to the POST /select-files URL
+        */
+        
+        console.log(formData)
+        for(var key of formData.values())
+       {
+         console.log(key)
+       }
         axios.post(SERVER_URL + "/study/detail/fileupload",
             formData, {
               headers: {
