@@ -58,7 +58,15 @@ const SERVER_URL = constants.ServerUrl;
 const baekjoon = "/백준";
 const swea = "/swea";
 const git = "/깃";
-const initcontent="/백준3000 \n  /백준 \n /swea \n /깃 \n의 명령어는 해당 문제/메인으로 갈 수 있어요!"
+const initcontent="# STUDY MATE \n 안녕하세요? **스터디메이트**입니다.\n저희는 ~~IT관련 공부~~를 하고 계신 분들을 위해 MarkDown에디터를 제공하고 있습니다."
++ "\n\n## 코드블럭 \n 사용하고 계신 언어의 코드블록은 다음과 같이 이용하실 수 있습니다. \n"+
+"\n```java" +"\n"+"System.out.println('스터디메이트');"+ "\n"+
+"```"+"\n"+ "```javascript"+"\nconsole.log('hi');"+ "\n```"+"\n\n## 추가 명령어\n또한, 다음 기능을 추가적으로 제공하고 있으니,"
++"\n많은 이용 부탁드립니다.\n"+ "/백준3000\n"+"/백준\n"+"/swea\n"+"/깃\n"+"\n의 명령어는 해당 문제/메인으로 갈 수 있어요!"+"\n\n## 표\n"
++"|                | 날짜                          |이름|"
++"\n|----------------|-------------------------------|-----------------------------|"
++"\n|1회|2019.01| 홍길동           |"
+
 export default {
   name: "DailyCreate",
   components: {
