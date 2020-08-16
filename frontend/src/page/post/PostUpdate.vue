@@ -1,15 +1,29 @@
 <template>
   <div style="margin-top:6rem;" class="container pt-0">
     <div class="card border-0 w-75 mx-auto mx-5">
-      <div class="card-text mx-5">
+      <div class="card-text">
         <img :src="images" class="logo w-25" alt />
-        <b-row class="m-3">
+        <b-row class="">
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
             <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
           </b-col>
-          <b-col sm="12" md="4" class="px-1 mb-4">
-            <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
+          
+          <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
+            <div>
+              <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
+              <div v-for="(file, key) in files" :key="file.id">
+                {{ file.name }}
+                <span class="remove-file" @click="removeFile( key )">Remove</span>
+              </div>
+            </div>
+            <div v-if="!files[0]">
+              <button @click="addFiles()">Add Files</button>
+            </div>
+          </b-col>
+
+          <!-- <b-col sm="12" md="4" class="px-1 mb-4"> -->
+            <!-- <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
               <b-form-file placeholder=" " browse-text="Image" @change="onFileChange"></b-form-file>
             </div>
             <div class="d-flex" style="transform: translateY(20px);" v-else>
@@ -17,8 +31,8 @@
               <b-button class="ml-3" @click="removeImage" variant="border-0">
                 <b-icon icon="trash"></b-icon>
               </b-button>
-            </div>
-          </b-col>
+            </div> -->
+          <!-- </b-col> -->
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정</small>
             <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
@@ -73,17 +87,18 @@
           </b-col>
           <b-col sm="12" class="px-1">
             <small class="formtitle ml-3 float-left">내용</small>
-            <b-form-textarea v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
+            <b-form-textarea
+              style="resize:none;" v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
           </b-col>
           <b-col>
             <div class="d-flex inline justify-content-center">
               <div class="p-3">
                 <b-button
                   @click="postUpdate"
-                  style="border:1.5px solid orange;"
+                  style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
                   variant="outline-warning"
                   class="createbtn"
-                >스터디 생성</b-button>
+                >스터디 수정</b-button>
               </div>
             </div>
           </b-col>
@@ -112,6 +127,7 @@ export default {
       images: require("../../assets/img/logo.png"),
       postCreateDate: {},
       allSidoCode: [],
+      files: [],
       allGugunCode: [],
       options: [
         { value: null, text: "카테고리" },
@@ -248,11 +264,19 @@ export default {
           "error"
         );
       } else {
+        if (this.files[0]) {
+          this.postCreateDate.background_image = this.files[0].name
+        } else {
+          this.postCreateDate.background_image = null
+        }
+        console.log(this.postCreateDate);
         axios
           .post(SERVER_URL + "/study/update", this.postCreateDate)
           .then((res) => {
             this.$swal("수정 완료","" , "success");
-
+            if (this.files[0]) {
+              this.submitFiles()
+            }
             this.$router.push({
               name: constants.URL_TYPE.STUDY.STUDYMAIN,
               params: { post_id: post_id },
@@ -264,22 +288,38 @@ export default {
           });
       }
     },
-    onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      this.createImage(files[0]);
+    // 이미지 업로드
+    handleFilesUpload() {
+      let uploadedFiles = this.$refs.files.files;
+      for (var i = 0; i < uploadedFiles.length; i++) {
+        this.files.push(uploadedFiles[i]);
+      }
     },
-    createImage(file) {
-      this.postData.background_image = new Image();
-      var reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.postData.background_image = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    addFiles() {
+      this.$refs.files.click();
+      console.log(this.files);
     },
-    removeImage: function (e) {
-      this.postData.background_image = "";
+    removeFile(key) {
+      this.files.splice(key, 1);
+    },
+    submitFiles() {
+      const formData = new FormData();
+      
+        let file = this.files[0]
+        formData.append('file', file)
+      
+      formData.append('pid', this.postCreateDate.pid)
+      console.log(this.postCreateDate.pid);
+      axios.post(SERVER_URL + "/study/detail/fileupload",
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(() => {})
+        .catch(function () {
+          console.log('FAILURE!!');
+        });
     },
     getSidoCode() {
       axios
@@ -307,4 +347,44 @@ export default {
 </script>
 
 <style scoped>
+.createbtn {
+  color: orange;
+}
+.createbtn:hover {
+  color: white;
+  background-color: orange;
+}
+label {
+  position: relative;
+  right: 40%;
+  top: 5px;
+  font-size: small;
+}
+.submit-btn {
+  padding: 7px 35px;
+  border-radius: 60px;
+  display: inline-block;
+  background-color: #4b8cfb;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+.formtitle {
+  padding: 0 4px;
+  transform: translateY(5px);
+  background-color: white;
+  font-weight: bolder;
+}
+.formtitle1 {
+  padding: 0 4px;
+  transform: translateX(30px) translateY(5px);
+  background-color: white;
+  font-weight: bolder;
+}
+.logo {
+  width: 7vw;
+}
+.taggroup {
+  margin-top: 20px;
+}
 </style>

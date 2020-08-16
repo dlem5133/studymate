@@ -1,5 +1,5 @@
 export default {
-  TITLE: "SSAFY 개발블로그",
+  TITLE: "스터디메이트",
   baseUrl:
     "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
 // ServerUrl: "http://i3b205.p.ssafy.io:8080",
@@ -32,6 +32,7 @@ export default {
       DAILYCREATE: "dailycreate",
       DAILYDETAIL: "dailydetail",
       DAILYUPDATE: "dailyupdate",
+      FILEUPLOAD: "fileupload"
     },
     BOARD: {
       BOARDMAIN: "boardmain",

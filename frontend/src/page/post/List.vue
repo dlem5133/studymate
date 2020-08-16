@@ -29,7 +29,7 @@
         <div id="maintable" class="main-table mt-5 col-12 col-md-12">
           <!-- ===================== 카테고리 ======================  -->
           <div class="row">
-            <div class="col-12 offset-md-2 col-md-4 p-0 d-flex">
+            <div class="col-12 offset-lg-2 col-lg-4 p-0 d-flex">
               <div class="mx-auto" v-for="category in categoryList1" :key="category">
                 <input
                   class
@@ -43,7 +43,7 @@
                 <label class="radiolabel" :for="`${category}`">{{ category }}</label>
               </div>
             </div>
-            <div class="col-12 col-md-5 p-0 d-flex">
+            <div class="col-12 col-lg-5 p-0 d-flex">
               <div class="mx-auto" v-for="category in categoryList2" :key="category">
                 <input
                   class
@@ -187,7 +187,14 @@ export default {
         .get(SERVER_URL + "/study/list")
         .then((res) => {
           this.allStudyList = res.data.object;
-          this.searchList = this.allStudyList;
+          var tmp = this.allStudyList;
+          for (let i = 0; i < tmp.length; i++) {
+            if (tmp[i][0].background_image != "") {
+              var t = require('@/assets/uploadfile/' + tmp[i][0].background_image)
+              tmp[i][0].background_image = t
+            }
+          }
+          this.searchList = tmp
         })
         .catch((err) => {
           console.log(err);

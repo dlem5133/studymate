@@ -1,21 +1,25 @@
 <template>
-    <div class="container">
-      <div class="card shadow p-3">
-        <div class="d-flex my-2">
-          <div>
-            <h2 class="font-weight-bol                            d text-left pl-3 p-0 m-0">{{ boardDetailData.title }}</h2>
-            <p class="pt-1 pl-3 p-0 m-0"> {{boardDetailData.user.nickname}}, 
-                {{boardDetailData.date.substring(0,10)}}</p>
+    <div style="margin-top:6rem;" class="container">
+      <div class="container">
+        <div class="card">
+          <div class="p-4">
+            <div class="d-flex">
+              <h5 class="font-weight-bold text-left p-0 m-0">{{ boardDetailData.title }}</h5>
+              <div class="d-flex ml-auto">
+                <div class="d-flex my-auto" v-if="profileInfo.uid==boardDetailData.uid">
+                  <button type="button" @click="boardUpdate(boardDetailData.bid)" class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect">수정</button>
+                  <button type="button" @click="boardDelete(boardDetailData.bid)" class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect">삭제</button>
+                </div>
+                <b-icon class="my-auto" @click="goBoardMain(boardDetailData.pid, boardDetailData.bid)" icon="house-door"></b-icon>
+              </div>
+            </div>
+              <small class="float-left mt-1"> {{boardDetailData.user.nickname}}, 
+                {{boardDetailData.date.substring(0,10)}}
+              </small>
           </div>
-          <b-button class="my-auto ml-auto" variant="border-0" @click="goBoardMain(boardDetailData.pid, boardDetailData.bid)"><b-icon icon="backspace"></b-icon></b-button>
-        </div>
-        <hr>
-        <p style="height:80vh;" class=" border rounded card-text text-left m-2 p-4">{{boardDetailData.body}}</p>
-
-        <div v-if="profileInfo.uid==boardDetailData.uid">
-          <button type="button" @click="boardUpdate(boardDetailData.bid)" class="m-2 btn btn-outline-primary btn-rounded waves-effect">수정</button>
-          <button type="button" @click="boardDelete(boardDetailData.bid)" class="m-2 btn btn-outline-danger btn-rounded waves-effect">삭제</button>
-        </div>
+          <hr class="m-0">
+          <p style="min-height:58vh;" class="card-text text-left m-2 p-4">{{boardDetailData.body}}</p>
+        </div>      
       </div>
     </div>
 </template>
@@ -35,8 +39,8 @@ export default {
     };
   },
   created() {
-    this.getboardDetailData()
     this.addprofileInfo();
+    this.getboardDetailData()
   },
   methods: {
     addprofileInfo() {

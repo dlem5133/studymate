@@ -535,7 +535,7 @@
             })
             .then((res) => {
               this.profileInfo = res.data.object;
-              this.memberCheck()
+              
             })
             .catch((err) => {
               this.$router.push({
@@ -606,7 +606,9 @@
             pid: this.$route.params.post_id
           })
           .then(res => {
+            console.log(res.data.object)
             this.memberListData = res.data.object
+            this.memberCheck()
           })
           .catch((err) => { 
             console.log(err.response)
@@ -621,7 +623,10 @@
             }
           })
           .then((res) => {
-            this.postData = res.data.object[0];
+            var tmp = res.data.object[0];
+            var t = require('@/assets/uploadfile/' + tmp.background_image)
+            tmp.background_image = t
+            this.postData = tmp
             this.tagData = res.data.object[2]
             this.userData = res.data.object[4];
             const tmpdays = []
