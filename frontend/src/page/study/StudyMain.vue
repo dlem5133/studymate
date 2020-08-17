@@ -984,6 +984,7 @@ export default {
             alreadyList.push(tmpData[i].targetuid);
           }
           this.alreadyEva = alreadyList;
+          console.log(alreadyList);
         })
         .catch((err) => {
           console.log(err);
