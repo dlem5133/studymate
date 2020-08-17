@@ -538,13 +538,15 @@ export default {
     userDelete() {
       swal({ text: "탈퇴하시겠습니까?", dangerMode: true, buttons: true }).then(
         (willDelete) => {
-          if (wileeDelete) {
+          if (willDelete) {
             axios
               .post(SERVER_URL + "/account/delete", this.deleteData)
               .then((res) => {
                 this.$cookies.remove("Auth-Token");
                 this.$swal("탈퇴 완료", "", "success");
-                this.$router.push("/");
+                this.$router.push("/")
+                this.$router.go();
+
               })
               .catch((err) => {
                 this.$swal("", "입력정보를 확인해주세요.", "error");
