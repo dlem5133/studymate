@@ -5,13 +5,13 @@
         <h4
           style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.6);"
         >안녕하세요 스터디메이트에 방문하신걸 환영합니다 :)</h4>
-        <h6 style="color:rgba(255,255,255,0.4);">
+        <!-- <h6 style="color:rgba(255,255,255,0.4);">
           스터디는 한 달에 3번 생성 가능합니다.
           <br />일지는 하루에 한 번 작성 가능합니다.
           <br />일지는 정해진 날짜에만 작성 가능합니다.
           <br />이런거 적어둬야하지 않을까?
           <br />
-        </h6>
+        </h6> -->
         <h4>
           <b-icon
             animation="fade"
