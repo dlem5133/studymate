@@ -282,8 +282,20 @@ export default {
     // 이미지 업로드
     handleFilesUpload() {
       let uploadedFiles = this.$refs.files.files;
-      for (var i = 0; i < uploadedFiles.length; i++) {
-        this.files.push(uploadedFiles[i]);
+      if (uploadedFiles[0].type != "image/png" && uploadedFiles[0].type != "image/jpeg") {
+        this.$swal(
+        "사진 업로드 실패",
+        "PNG, JPG 이미지 확장자만 업로드 가능합니다.",
+        "error"
+        );
+      } else if (uploadedFiles[0].size > 5000000) {
+        this.$swal(
+        "사진 업로드 실패",
+        "5MB 이하 이미지만 업로드 가능합니다.",
+        "error"
+        );
+      } else {
+        this.files.push(uploadedFiles[0]);
       }
     },
     addFiles() {
