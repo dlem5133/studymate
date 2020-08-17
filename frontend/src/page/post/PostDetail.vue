@@ -515,13 +515,10 @@ export default {
           }
         })
         .catch((err) => {
-          if (err.response.data.status == 400) {
-            this.$router.push({
-              name: constants.URL_TYPE.POST.MAIN,
-            });
-          } else {
-            console.log(err.response);
-          }
+          this.$router.go()
+          this.$router.push({
+            name: constants.URL_TYPE.POST.MAIN,
+          });
         });
     },
     requestPeopleList() {
