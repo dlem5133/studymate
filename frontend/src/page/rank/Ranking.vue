@@ -197,8 +197,6 @@ export default {
   name: "Ranking",
   data: () => {
     return {
-      events: [],
-      profileInfo: [],
       RankData1: [],
       RankData2: [],
     };
@@ -208,37 +206,9 @@ export default {
   },
 
   created() {
-    this.addprofileInfo();
     this.addRankData();
   },
   methods: {
-    addprofileInfo() {
-      if (this.$cookies.isKey("Auth-Token")) {
-        const token = this.$cookies.get("Auth-Token");
-        axios
-          .get(SERVER_URL + "/account/profile", {
-            params: {
-              Token: token,
-            },
-          })
-          .then((res) => {
-            this.profileInfo = res.data.object;
-          })
-          .catch((err) => {
-            this.$router.push({
-              name: constants.URL_TYPE.ERROR.ERRORPAGE,
-              params: {
-                code: err.response.data,
-              },
-            });
-          });
-      }
-    },
-    goMain(post_id) {
-      this.$router.push({
-        name: constants.URL_TYPE.POST.MAIN,
-      });
-    },
     addRankData() {
       axios
         .get(SERVER_URL + "/mileage/list")

@@ -142,7 +142,7 @@
                   <b-icon font-scale="2" icon="person"></b-icon>
                 </div>
                 <div class="my-auto text-center">
-                  <p class="m-0 p-0">{{ postData.limitp }} 명</p>
+                  <p class="m-0 p-0">{{postData.memnum}} / {{ postData.limitp }} 명</p>
                 </div>
               </div>
             </div>
@@ -462,7 +462,7 @@ export default {
       }
     },
     changeDatedata(time) {
-      return time.substring(5, 10) + " " + time.substring(11, 16);
+      return time.substring(5, 10) 
     },
     userCheck() {
       if (this.$cookies.isKey("Auth-Token")) {

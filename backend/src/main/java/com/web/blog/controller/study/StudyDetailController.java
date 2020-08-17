@@ -230,16 +230,16 @@ public class StudyDetailController {
         File ff = new File("frontend\\src\\uploadfile\\" + pid+file.getOriginalFilename());
         if (!ff.getParentFile().exists())
             ff.getParentFile().mkdirs();
-        System.out.println(ff.getParentFile().getAbsolutePath());
+        // System.out.println(ff.getParentFile().getAbsolutePath());
         String mainpath = ff.getPath();
-        System.out.println(mainpath);
+        // System.out.println(mainpath);
         String path = file.getOriginalFilename();
         fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
         fos.write(fileData);
         //        file.transferTo(ff);
-        System.out.println("file is ");
-        System.out.println("name is " + file.getName());
-
+        // System.out.println("file is ");
+        // System.out.println("name is " + file.getName());
+        fos.close();
         return file.getName();}
 
 

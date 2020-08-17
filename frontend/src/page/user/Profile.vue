@@ -35,8 +35,11 @@
           <small class="mb-4">{{profileInfo.intro}}</small>
         </div>
         <div class="col-12 col-md-3 py-3 my-auto ml-auto">
+          <div class="actions2" v-if="isAdmin">
+            <b-button class="btn2 mb-0" @click="goAdmin">관리자</b-button>
+          </div>
           <div class="actions2">
-            <b-button class="btn2 mb-0" v-b-modal.modal-1>수정</b-button>
+            <b-button class="btn2 mt-2 mb-0" v-b-modal.modal-1>수정</b-button>
           </div>
           <div class="actions2">
             <b-button class="btn2 mt-2 mb-0" v-b-modal.modal-2>탈퇴</b-button>
@@ -52,7 +55,7 @@
           <p
             style="font-family: 'Do Hyeon', sans-serif;"
             class="m-0"
-          >{{comLists.length + ingLists.length}}</p>
+          >{{plusUnleaderLists.length + readyLists.length + plusLeaderLists.length + comLists.length + ingLists.length}}</p>
           <small style="font-family: 'IBMPlexSansKR-Text';color:orange;">STUDY</small>
         </div>
         <div
@@ -299,11 +302,11 @@
     <b-modal @ok="userUpdate" id="modal-1" title="회원정보 수정" ok-only>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">닉네임</small>
-        <b-card class="baseInput" no-body id="input-email">{{updateData.nickname}}</b-card>
+        <b-card class="baseInput p-2" no-body id="input-email">{{updateData.nickname}}</b-card>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">이메일</small>
-        <b-card class="baseInput" no-body id="input-email">{{updateData.email}}</b-card>
+        <b-card class="baseInput p-2" no-body id="input-email">{{updateData.email}}</b-card>
       </div>
       <div class="mb-2">
         <small style="font-family: 'Do Hyeon', sans-serif;">비밀번호</small>
@@ -370,6 +373,14 @@ export default {
   data: () => {
     return {
       profileInfo: {},
+      adminList:[
+        "ektha3869@naver.com",
+        "sksk9877@nate.com",
+        "3864617@naver.com",
+        "kimsoo5133@gmail.com",
+        "jaerim@kakao.com"
+      ],
+      isAdmin:false,
       updateData: {
         email: "",
         nickname: "",
@@ -419,6 +430,14 @@ export default {
     this.addprofileInfo();
   },
   methods: {
+    getAdmin(){
+      if (this.adminList.indexOf(this.profileInfo.email) != -1){
+        this.isAdmin = true
+      }
+    },
+    goAdmin(){
+      this.$router.push({name:constants.URL_TYPE.ADMIN})
+    },
     evaList() {
       const targetid = this.profileInfo.uid;
       axios
@@ -457,6 +476,7 @@ export default {
           this.addStudyList();
           this.mileageList();
           this.evaList();
+          this.getAdmin()
         })
         .catch((err) => {
           this.$router.push({
@@ -538,13 +558,15 @@ export default {
     userDelete() {
       swal({ text: "탈퇴하시겠습니까?", dangerMode: true, buttons: true }).then(
         (willDelete) => {
-          if (wileeDelete) {
+          if (willDelete) {
             axios
               .post(SERVER_URL + "/account/delete", this.deleteData)
               .then((res) => {
                 this.$cookies.remove("Auth-Token");
                 this.$swal("탈퇴 완료", "", "success");
-                this.$router.push("/");
+                this.$router.push("/")
+                this.$router.go();
+                
               })
               .catch((err) => {
                 this.$swal("", "입력정보를 확인해주세요.", "error");
