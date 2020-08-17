@@ -230,7 +230,7 @@ public class StudyController {
         if (!flag) {
 
             Study study = new Study();
-
+            User user = userDao.findUserByUid(request.getUid());
             study.setCategory(request.getCategory());
             study.setData(request.getData());
             study.setTitle(request.getTitle());
@@ -245,6 +245,7 @@ public class StudyController {
             study.setSigungucode(request.getSigungu_code());
             study.setSido(sidoCodeDao.findBySidocode(request.getSido_code()));
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
+            study.setUser(user);
             study.setEvalcount(0);
             study.setMemnum(1);
 
@@ -270,7 +271,7 @@ public class StudyController {
             result.object = savedStudy;
 
             Indvstudylst Indv = new Indvstudylst();
-            User user = userDao.findUserByUid(request.getUid());
+            
             Indv.setIsjoin(1);
             Indv.setIsleader(1);
             Indv.setUid(user.getUid());
