@@ -3,14 +3,10 @@
     <div class="card border-0 w-75 mx-auto">
       <div class="card-text">
         <img :src="images" class="logo w-25" alt />
-        <b-row class="">
+        <b-row class>
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
-            <b-form-input
-              v-model="postCreateDate.title"
-              placeholder="제목"
-              type="text"
-            ></b-form-input>
+            <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
           </b-col>
           <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
             <div>
@@ -26,34 +22,20 @@
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정</small>
-            <b-form-input
-              v-model="postCreateDate.bindo"
-              placeholder="주 _회"
-              type="text"
-            ></b-form-input>
+            <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton
-              id="demo-sb"
-              v-model="postCreateDate.limitp"
-              min="3"
-              max="100"
-            ></b-form-spinbutton>
+            <b-form-spinbutton id="demo-sb" v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
-            <select
-              @click="getgungu"
-              v-model="postCreateDate.sido_code"
-              class="custom-select"
-            >
+            <select @click="getgungu" v-model="postCreateDate.sido_code" class="custom-select">
               <option
                 v-for="sido in allSidoCode"
                 :key="sido.sidocode"
                 :value="sido.sidocode"
-                >{{ sido.sidoname }}</option
-              >
+              >{{ sido.sidoname }}</option>
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -63,39 +45,24 @@
                 v-for="sido in allGugunCode"
                 :key="sido.guguncode"
                 :value="sido.guguncode"
-                >{{ sido.gugunname }}</option
-              >
+              >{{ sido.gugunname }}</option>
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시작일</small>
-            <b-form-input
-              v-model="postCreateDate.start_date"
-              type="date"
-            ></b-form-input>
+            <b-form-input v-model="postCreateDate.start_date" type="date"></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">종료일</small>
-            <b-form-input
-              v-model="postCreateDate.end_date"
-              type="date"
-            ></b-form-input>
+            <b-form-input v-model="postCreateDate.end_date" type="date"></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">카테고리</small>
-            <b-form-select
-              value="f02c"
-              v-model="postCreateDate.category"
-              :options="options"
-            ></b-form-select>
+            <b-form-select value="f02c" v-model="postCreateDate.category" :options="options"></b-form-select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <b-input-group size="sm" class="taggroup mb-2">
-              <b-icon
-                icon="tags-fill"
-                variant="warning"
-                class="mx-2 mt-2"
-              ></b-icon>
+              <b-icon icon="tags-fill" variant="warning" class="mx-2 mt-2"></b-icon>
               <b-form-tags
                 input-id="tags-basic"
                 tag-variant="warning"
@@ -123,8 +90,7 @@
               style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
               variant="outline-warning"
               class="createbtn"
-              >스터디 생성</b-button
-            >
+            >스터디 생성</b-button>
           </div>
         </div>
       </div>
@@ -312,13 +278,13 @@ export default {
           "error"
         );
       } else {
-        this.postCreateDate.background_image = this.files[0].name
+        this.postCreateDate.background_image = this.files[0].name;
         console.log(this.postCreateDate);
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
-            this.submitFiles(res.data.object.pid)
+            this.submitFiles(res.data.object.pid);
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
@@ -327,7 +293,6 @@ export default {
           .catch((err) => {
             console.log(err.response);
             this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
-            console.log(err)
           });
       }
     },
@@ -345,21 +310,21 @@ export default {
       this.files.splice(key, 1);
     },
     submitFiles(pid) {
-      const formData = new FormData(); 
+      const formData = new FormData();
       for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i]
-        formData.append('file', file)
+        let file = this.files[i];
+        formData.append("file", file);
       }
-      formData.append('pid', pid)
-      axios.post(SERVER_URL + "/study/detail/fileupload",
-          formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        ).then(() => {})
+      formData.append("pid", pid);
+      axios
+        .post(SERVER_URL + "/study/detail/fileupload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {})
         .catch(function () {
-          console.log('FAILURE!!');
+          console.log("FAILURE!!");
         });
     },
     getSidoCode() {

@@ -1,37 +1,69 @@
 <template>
-  <div class="container p-5">
-    <b-form-input
-      class="my-2"
-      v-model="preData.title"
-      placeholder="제목"
-    ></b-form-input>
-    <editor v-if="preData.body != null" :initialValue="preData.body" ref="toastuiEditor" />
-    <div class="d-flex inline justify-content-center">
+  <div style="margin-top:6rem;" class="mb-5 container">
+    <div class="container">
+      <img :src="images" class="logo w-25" alt />
+      <b-row class="px-5">
+        <b-col class="text-right">
+          <b-button variant="info" size="sm m-0 py-0 px-1" v-b-modal.modal-1>
+            <small class="mr-1">임시저장목록</small>
+            <b-badge variant="light">{{tmpDailyData.length}}</b-badge>
+          </b-button>
+        </b-col>
+        <b-col sm="12" class="px-1 mb-4">
+          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">제목</small>
+          <b-form-input v-model="preData.title" placeholder="제목" type="text"></b-form-input>
+        </b-col>
+        <b-col sm="12" class="px-1">
+          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">내용</small>
+          <br />
+          <editor
+            class="p-0"
+            :initialEditType="initialEditType()"
+            ref="toastuiEditor"
+            :options="editorOptions"
+            v-if="preData.body != null"
+            :initialValue="preData.body"
+            style="padding:0.5rem;min-height:470px;"
+          />
+        </b-col>
+      </b-row>
       <div class="p-3">
-        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">
-          작성하기
-        </div>
+        <b-button
+          class="bubut"
+          variant="warning"
+          @click="submitDaily(1)"
+          style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;"
+        >작성</b-button>
+        <b-button
+          class="bubut ml-2"
+          variant="info"
+          @click="submitDaily(0)"
+          style="font-family:'Do Hyeon',sans-serif;"
+        >임시저장</b-button>
+        <b-button
+          class="ml-2"
+          variant="outline-secondary"
+          style="font-family:'Do Hyeon',sans-serif;"
+          @click="goBack"
+        >취소</b-button>
       </div>
-      <div class="p-3">
-        <div class="btn btn-primary btn-sm">
-          <span @click="submitDaily(0)">임시저장 </span>
-          <b-badge variant="light" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}</b-badge>
-        </div>
-      </div>
-      <b-modal id="bv-modal-example" hide-footer>
-        <template v-slot:modal-title>
-          임시저장중인 리스트
-        </template>
-        <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-          <div v-if="tmpdaily.did != $route.params.daily_id" class="card-body d-flex justify-content-between">
-            <p>{{ tmpdaily.title }}</p>
-            <p @click="$bvModal.hide('bv-modal-example')">
-              {{ tmpdaily.posttime }}
-              <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
-            </p>
+
+      <b-modal id="modal-1" hide-footer title="임시저장 리스트">
+        <div class="card mb-2" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+          <div class="px-3 py-2 card-body d-flex justify-content-between">
+            <small class="my-auto">{{tmpdaily.title}}</small>
+            <small class="my-auto">
+              {{tmpdaily.posttime}}
+              <b-button
+                size="sm"
+                class="ml-1"
+                style="font-family:'Do Hyeon', sans-serif;"
+                @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
+                variant="outline-success"
+              >작성</b-button>
+            </small>
           </div>
         </div>
-        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">닫기</b-button>
       </b-modal>
     </div>
   </div>
@@ -43,13 +75,37 @@ import constants from "../../lib/constants";
 import "codemirror/lib/codemirror.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
-import 'highlight.js/styles/github.css';
-import hljs from 'highlight.js';
+import "highlight.js/styles/github.css";
+import hljs from "highlight.js";
 import { Editor } from "@toast-ui/vue-editor";
+
 const SERVER_URL = constants.ServerUrl;
 const baekjoon = "/백준";
 const swea = "/swea";
 const git = "/깃";
+const initcontent =
+  "# STUDY MATE \n 안녕하세요? **스터디메이트**입니다.\n저희는 **IT관련 공부**를 하고 계신 분들을 위해 MarkDown에디터를 제공하고 있습니다." +
+  "\n \n *** \n \n### Code Block \n 사용하고 계신 언어의 코드블록은 다음과 같이 이용하실 수 있습니다. \n" +
+  "\n```java" +
+  "\n" +
+  "System.out.println('스터디메이트');" +
+  "\n" +
+  "```" +
+  "\n" +
+  "```javascript" +
+  "\nconsole.log('hi');" +
+  "\n```" +
+  "\n\n *** \n\n### 표\n" +
+  "|                | 날짜                          |이름|" +
+  "\n|----------------|-------------------------------|-----------------------------|" +
+  "\n|1회|2019.01| 홍길동           |" +
+  "\n \n *** \n \n### 추가 명령어\n 명령어를 통해 해당 문제/메인으로 이동할 수 있습니다. \n" +
+  "/백준3000\n" +
+  "/백준\n" +
+  "/swea\n" +
+  "/깃\n" +
+  "\n *** \n\n";
+
 export default {
   name: "DailyUpdate",
   components: {
@@ -57,13 +113,21 @@ export default {
   },
   data: () => {
     return {
-        editorOptions: {
-          hideModeSwitch: true,
-          placeholder: '내용을 입력해주세요.',
-          initialEditType:"markdown",
-          previewStyle:"vertical",
-          plugins: [[codeSyntaxHighlight, { hljs }]],
-                  extendedAutolinks: (content) => {
+      images: require("../../assets/img/logo.png"),
+      initialEditType() {
+        if (matchMedia("(max-width:480px)").matches) {
+          return "wysiwyg";
+        } else {
+          return "markdown";
+        }
+      },
+      editorOptions: {
+        hideModeSwitch: true,
+        placeholder: "내용을 입력해주세요.",
+        initialEditType: "markdown",
+        previewStyle: "vertical",
+        plugins: [[codeSyntaxHighlight, { hljs }]],
+        extendedAutolinks: (content) => {
           //현재 문제 약 20000번 까지 있음
           //백준1800 입력하면 1800번으로 감
           for (let index = 0; index < 20000; index++) {
@@ -72,7 +136,7 @@ export default {
             const matched = content.match(newone);
             if (content === newone) {
               return matched.map((m) => ({
-                text: newone.substring(1,3)+ " " + newone.substring(3)+"번",
+                text: newone.substring(1, 3) + " " + newone.substring(3) + "번",
                 url: "https://www.acmicpc.net/problem/" + index,
                 range: [0, 8],
               }));
@@ -98,8 +162,7 @@ export default {
                   range: [0, 4],
                 }));
               }
-            }
-            else if (content === git) {
+            } else if (content === git) {
               const matched = content.match(git);
               if (matched) {
                 return matched.map((m) => ({
@@ -112,19 +175,18 @@ export default {
           }
           return null;
         },
-        },
+      },
       profileInfo: [],
       studyLists: [],
       tmpDailyData: [],
       preData: [],
-      body: '',
+      body: "",
     };
   },
   created() {
-    this.getPreData();
-    this.addprofileInfo();
     this.checkUser();
-    this.getTmpDaily();
+    this.addprofileInfo();
+    this.getPreData();
   },
   methods: {
     checkUser() {
@@ -154,7 +216,7 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
-            this.addStudyList();
+            this.getTmpDaily();
           })
           .catch((err) => {
             this.$router.push({
@@ -164,24 +226,10 @@ export default {
           });
       }
     },
-    addStudyList() {
-      axios
-        .post(SERVER_URL + "/account/studylist", {
-          email: this.profileInfo.email,
-          nickname: this.profileInfo.nickname,
-          password: "1234qwer",
-        })
-        .then((res) => {
-          this.studyLists = res.data.object;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    goStudyMain(post_id) {
+    goBack() {
       this.$router.push({
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
-        params: { post_id: post_id },
+        params: { post_id: this.$route.params.post_id },
       });
     },
     getPreData() {
@@ -191,14 +239,16 @@ export default {
         })
         .then((res) => {
           this.preData = res.data.object;
-          console.log(this.preData)
         })
         .catch((err) => console.log(err.data));
     },
     submitDaily(tmpN) {
       if (this.text == "") {
         alert("제목을 입력해주세요.");
-      } else if (this.$refs.toastuiEditor.invoke("getMarkdown") == ""  ||this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent) {
+      } else if (
+        this.$refs.toastuiEditor.invoke("getMarkdown") == "" ||
+        this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent
+      ) {
         alert("새로운 내용을 입력해주세요.");
       } else {
         const dailydData = {
@@ -212,12 +262,19 @@ export default {
         axios
           .post(SERVER_URL + "/diary/update", dailydData)
           .then((res) => {
-            this.$router.push({
-              name: constants.URL_TYPE.STUDY.DAILYDETAIL,
-              params: {
-                post_id: this.$route.params.post_id,
-              },
-            });
+            if (tmpN == 1) {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.DAILYDETAIL,
+                params: {
+                  post_id: this.$route.params.post_id,
+                },
+              });
+            } else {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.STUDYMAIN,
+                params: { post_id: this.$route.params.post_id },
+              });
+            }
           })
           .catch((err) => {
             console.log(err);

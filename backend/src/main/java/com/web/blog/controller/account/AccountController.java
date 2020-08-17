@@ -465,5 +465,25 @@ public class AccountController {
 
         return response;
     }
+    
+    
+    @PostMapping("/account/reportlist")
+    @ApiOperation(value = "신고 목록 조회")
+    public Object reportlist(@RequestParam(required = true) int pid) {
+
+        ResponseEntity<Object> response = null;
+
+        final List<Report> reportList = reportDao.findByPid(pid);
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "평가목록 조회";
+        result.object = reportList;
+
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
 
 }

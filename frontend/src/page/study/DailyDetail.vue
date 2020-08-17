@@ -1,54 +1,60 @@
 <template>
-  <div class="main-table border">
-    <div class="container p-5">
-      <div class="card text-left">
-        <div class="card-header">
-          <h5>{{dailyDetailData.title}}</h5><br />
-           {{dailyDetailData.writer}} <small>{{dailyDetailData.posttime}}</small>
-        </div>
-        <div class="card-body">
-          <Viewer v-if="dailyDetailData.body != null" :initialValue="dailyDetailData.body" :options="viewerOptions"/>
-        </div>
-      </div>
-      <div v-if="profileInfo.uid === dailyDetailData.uid">
-        <button type="button" @click="dailyUpdate(dailyDetailData.did)"
-          class="m-2 btn btn-outline-primary btn-rounded waves-effect">수정</button>
-        <button type="button" @click="dailyDelete(dailyDetailData.did)"
-          class="m-2 btn btn-outline-danger btn-rounded waves-effect">삭제</button>
+  <div style="margin-top:6rem;" class="container">
+    <div class="container">
+      <div class="card">
+          <div class="p-4">
+            <div class="d-flex">
+              <h5 class="font-weight-bold text-left p-0 m-0">{{ dailyDetailData.title }}</h5>
+              <div class="d-flex ml-auto">
+                <div class="d-flex my-auto" v-if="profileInfo.uid === dailyDetailData.uid">
+                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="dailyUpdate(dailyDetailData.did)" class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect">수정</button>
+                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="dailyDelete(dailyDetailData.did)" class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect">삭제</button>
+                </div>
+                <b-icon class="my-auto" @click="goStudyMain" icon="house-door"></b-icon>
+              </div>
+            </div>
+              <small class="float-left mt-1"> {{dailyDetailData.writer}}, 
+                {{dailyDetailData.posttime}}
+              </small>
+          </div>
+          <hr class="m-0">
+          <Viewer class="p-2" style="min-height:58vh;" 
+            v-if="dailyDetailData.body != null"
+            :initialValue="dailyDetailData.body"
+            :options="viewerOptions"
+          />
+        </div>      
       </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import axios from "axios";
-  import constants from "../../lib/constants";
-  import "codemirror/lib/codemirror.css";
-  import "@toast-ui/editor/dist/toastui-editor.css";
-  import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
- 
-  import {
-    Viewer
-  } from "@toast-ui/vue-editor";
+import axios from "axios";
+import constants from "../../lib/constants";
+import "codemirror/lib/codemirror.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 
-  const SERVER_URL = constants.ServerUrl;
-  const baekjoon = "/백준";
-  const swea = "/swea";
-  const git = "/깃";
+import { Viewer } from "@toast-ui/vue-editor";
 
-  export default {
-    name: 'dailydetail',
-    components: {
-    Viewer
+const SERVER_URL = constants.ServerUrl;
+const baekjoon = "/백준";
+const swea = "/swea";
+const git = "/깃";
+
+export default {
+  name: "dailydetail",
+  components: {
+    Viewer,
   },
-    data: () => {
-      return {
-        profileInfo: [],
-        studyLists: [],
-        dailyDetailData: [],
-        viewerOptions: {
-           plugins: [codeSyntaxHighlight],
-                   extendedAutolinks: (content) => {
+  data: () => {
+    return {
+      profileInfo: [],
+      studyLists: [],
+      dailyDetailData: [],
+      viewerOptions: {
+        plugins: [codeSyntaxHighlight],
+        extendedAutolinks: (content) => {
           //현재 문제 약 20000번 까지 있음
           //백준1800 입력하면 1800번으로 감
           for (let index = 0; index < 20000; index++) {
@@ -57,7 +63,7 @@
             const matched = content.match(newone);
             if (content === newone) {
               return matched.map((m) => ({
-                text: newone.substring(1,3)+ " " + newone.substring(3)+"번",
+                text: newone.substring(1, 3) + " " + newone.substring(3) + "번",
                 url: "https://www.acmicpc.net/problem/" + index,
                 range: [0, 8],
               }));
@@ -83,8 +89,7 @@
                   range: [0, 4],
                 }));
               }
-            }
-            else if (content === git) {
+            } else if (content === git) {
               const matched = content.match(git);
               if (matched) {
                 return matched.map((m) => ({
@@ -97,110 +102,94 @@
           }
           return null;
         },
-        },
-        
-      };
-    },
-    mounted() {
-      this.detailData()
-    },
-    created() {
-      this.addprofileInfo();
-    },
-    methods: {
-      addprofileInfo() {
-        if (this.$cookies.isKey("Auth-Token")) {
-          const token = this.$cookies.get("Auth-Token");
-          axios
-            .get(SERVER_URL + "/account/profile", {
-              params: {
-                Token: token,
-              },
-            })
-            .then((res) => {
-              this.profileInfo = res.data.object;
-              this.addStudyList();
-            })
-            .catch((err) => {
-              this.$router.push({
-                name: constants.URL_TYPE.ERROR.ERRORPAGE,
-                params: {
-                  code: err.response.data
-                },
-              });
-            });
-        }
       },
-      addStudyList() {
+    };
+  },
+  mounted() {
+    this.detailData();
+  },
+  created() {
+    this.addprofileInfo();
+  },
+  methods: {
+    addprofileInfo() {
+      if (this.$cookies.isKey("Auth-Token")) {
+        const token = this.$cookies.get("Auth-Token");
         axios
-          .post(SERVER_URL + "/account/studylist", {
-            email: this.profileInfo.email,
-            nickname: this.profileInfo.nickname,
-            password: "1234qwer",
-          })
-          .then((res) => {
-            this.studyLists = res.data.object;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-      goStudyMain(post_id) {
-        this.$router.push({
-          name: constants.URL_TYPE.STUDY.STUDYMAIN,
-          params: {
-            post_id: post_id
-          },
-        });
-      },
-      detailData() {
-        axios
-          .get(SERVER_URL + "/diary/details", {
+          .get(SERVER_URL + "/account/profile", {
             params: {
-              did: this.$route.params.daily_id
-            }
+              Token: token,
+            },
           })
           .then((res) => {
-            this.dailyDetailData = res.data.object
-          })
-          .catch((err) => console.log(err.data));
-      },
-      dailyUpdate(daily_id) {
-        this.$router.push({
-          name: constants.URL_TYPE.STUDY.DAILYUPDATE,
-          params: {
-            post_id: this.$route.params.post_id,
-            daily_id: daily_id
-          }
-        })
-      },
-      dailyDelete(daily_id) {
-        const deleteData = {
-          did: this.$route.params.daily_id,
-          uid: this.profileInfo.uid
-        }
-        axios
-          .post(SERVER_URL + "/diary/delete", deleteData)
-          .then((res) => {
-            console.log(res)
-            alert("삭제되었습니다.")
-            this.$router.push({
-              name: constants.URL_TYPE.STUDY.STUDYMAIN,
-              params: {
-                post_id: this.$route.params.post_id
-              },
-            });
+            this.profileInfo = res.data.object;
+            this.addStudyList();
           })
           .catch((err) => {
-            console.log(err.data)
+            this.$router.push({
+              name: constants.URL_TYPE.ERROR.ERRORPAGE,
+              params: {
+                code: err.response.data,
+              },
+            });
           });
-      },
+      }
     },
-  }
+    goStudyMain() {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: {
+          post_id: this.$route.params.post_id
+        },
+      });
+    },
+    detailData() {
+      axios
+        .get(SERVER_URL + "/diary/details", {
+          params: {
+            did: this.$route.params.daily_id,
+          },
+        })
+        .then((res) => {
+          this.dailyDetailData = res.data.object;
+        })
+        .catch((err) => console.log(err.data));
+    },
+    dailyUpdate(daily_id) {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.DAILYUPDATE,
+        params: {
+          post_id: this.$route.params.post_id,
+          daily_id: daily_id,
+        },
+      });
+    },
+    dailyDelete(daily_id) {
+      const deleteData = {
+        did: this.$route.params.daily_id,
+        uid: this.profileInfo.uid,
+      };
+      axios
+        .post(SERVER_URL + "/diary/delete", deleteData)
+        .then((res) => {
+          alert("삭제되었습니다.");
+          this.$router.push({
+            name: constants.URL_TYPE.STUDY.STUDYMAIN,
+            params: {
+              post_id: this.$route.params.post_id,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err.data);
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .clickstudy {
-    cursor: pointer;
-  }
+.clickstudy {
+  cursor: pointer;
+}
 </style>

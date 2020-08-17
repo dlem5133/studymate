@@ -1,41 +1,68 @@
 <template>
-  <div class="container p-5">
-    <b-form-input class="my-2" v-model="text" placeholder="제목"></b-form-input>
-    <!-- <b-form-textarea class="my-2" v-model="content" rows="8"></b-form-textarea> -->
-
-    <!-- -->
-    <!-- <editor ref="toastuiEditor" /> -->
-    <editor
-      ref="toastuiEditor"
-      :options="editorOptions"
-      :initialValue="editorText"
-    />
-    <!-- -->
-
-    <div class="d-flex inline justify-content-center">
+  <div style="margin-top:6rem;" class="mb-5 container">
+    <div class="container">
+      <img :src="images" class="logo w-25" alt />
+      <b-row class="px-5">
+        <b-col class="text-right">
+          <b-button variant="info" size="sm m-0 py-0 px-1" v-b-modal.modal-1>
+            <small class="mr-1">임시저장목록</small>
+            <b-badge variant="light">{{tmpDailyData.length}}</b-badge>
+          </b-button>
+        </b-col>
+        <b-col sm="12" class="px-1 mb-4">
+          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">제목</small>
+          <b-form-input v-model="text" placeholder="제목" type="text"></b-form-input>
+        </b-col>
+        <b-col sm="12" class="px-1">
+          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">내용</small>
+          <br />
+          <editor
+            class="p-0"
+            :initialEditType="initialEditType()"
+            ref="toastuiEditor"
+            :options="editorOptions"
+            :initialValue="editorText"
+            style="padding:0.5rem;min-height:470px;"
+          />
+        </b-col>
+      </b-row>
       <div class="p-3">
-        <div @click="submitDaily(1)" class="btn btn-warning btn-sm">작성</div>
+        <b-button
+          class="bubut"
+          variant="warning"
+          @click="submitDaily(1)"
+          style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;"
+        >작성</b-button>
+        <b-button
+          class="bubut ml-2"
+          variant="info"
+          @click="submitDaily(0)"
+          style="font-family:'Do Hyeon',sans-serif;"
+        >임시저장</b-button>
+        <b-button
+          class="ml-2"
+          variant="outline-secondary"
+          style="font-family:'Do Hyeon',sans-serif;"
+          @click="goBack"
+        >취소</b-button>
       </div>
-      <div class="p-3">
-        <div class="btn btn-primary btn-sm">
-          <span @click="submitDaily(0)">임시저장 </span>
-          <b-badge variant="light" id="show-btn" @click="$bvModal.show('bv-modal-example')">{{tmpDailyData.length}}</b-badge>
-        </div>
-      </div>
-      <b-modal id="bv-modal-example" hide-footer>
-        <template v-slot:modal-title>
-          임시저장중인 리스트
-        </template>
-        <div class="card" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-          <div class="card-body d-flex justify-content-between">
-            <p>{{tmpdaily.title}}</p>
-            <p>
+
+      <b-modal id="modal-1" hide-footer title="임시저장 리스트">
+        <div class="card mb-2" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+          <div class="px-3 py-2 card-body d-flex justify-content-between">
+            <small class="my-auto">{{tmpdaily.title}}</small>
+            <small class="my-auto">
               {{tmpdaily.posttime}}
-              <b-button @click="continueWrite(tmpdaily.pid, tmpdaily.did)" variant="outline-success">작성</b-button>
-            </p>
+              <b-button
+                size="sm"
+                class="ml-1"
+                style="font-family:'Do Hyeon', sans-serif;"
+                @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
+                variant="outline-success"
+              >작성</b-button>
+            </small>
           </div>
         </div>
-        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">닫기</b-button>
       </b-modal>
     </div>
   </div>
@@ -58,14 +85,28 @@ const SERVER_URL = constants.ServerUrl;
 const baekjoon = "/백준";
 const swea = "/swea";
 const git = "/깃";
-const initcontent="# STUDY MATE \n 안녕하세요? **스터디메이트**입니다.\n저희는 ~~IT관련 공부~~를 하고 계신 분들을 위해 MarkDown에디터를 제공하고 있습니다."
-+ "\n\n## 코드블럭 \n 사용하고 계신 언어의 코드블록은 다음과 같이 이용하실 수 있습니다. \n"+
-"\n```java" +"\n"+"System.out.println('스터디메이트');"+ "\n"+
-"```"+"\n"+ "```javascript"+"\nconsole.log('hi');"+ "\n```"+"\n\n## 추가 명령어\n또한, 다음 기능을 추가적으로 제공하고 있으니,"
-+"\n많은 이용 부탁드립니다.\n"+ "/백준3000\n"+"/백준\n"+"/swea\n"+"/깃\n"+"\n의 명령어는 해당 문제/메인으로 갈 수 있어요!"+"\n\n## 표\n"
-+"|                | 날짜                          |이름|"
-+"\n|----------------|-------------------------------|-----------------------------|"
-+"\n|1회|2019.01| 홍길동           |"
+const initcontent =
+  "# STUDY MATE \n 안녕하세요? **스터디메이트**입니다.\n저희는 **IT관련 공부**를 하고 계신 분들을 위해 MarkDown에디터를 제공하고 있습니다." +
+  "\n \n *** \n \n### Code Block \n 사용하고 계신 언어의 코드블록은 다음과 같이 이용하실 수 있습니다. \n" +
+  "\n```java" +
+  "\n" +
+  "System.out.println('스터디메이트');" +
+  "\n" +
+  "```" +
+  "\n" +
+  "```javascript" +
+  "\nconsole.log('hi');" +
+  "\n```" +
+  "\n\n *** \n\n### 표\n" +
+  "|                | 날짜                          |이름|" +
+  "\n|----------------|-------------------------------|-----------------------------|" +
+  "\n|1회|2019.01| 홍길동           |" +
+  "\n \n *** \n \n### 추가 명령어\n 명령어를 통해 해당 문제/메인으로 이동할 수 있습니다. \n" +
+  "/백준3000\n" +
+  "/백준\n" +
+  "/swea\n" +
+  "/깃\n" +
+  "\n *** \n\n";
 
 export default {
   name: "DailyCreate",
@@ -74,13 +115,21 @@ export default {
   },
   data: () => {
     return {
+      images: require("../../assets/img/logo.png"),
       editorHtml: "123",
-      editorText:initcontent,
+      editorText: initcontent,
+      initialEditType() {
+        if (matchMedia("(max-width:480px)").matches) {
+          return "wysiwyg";
+        } else {
+          return "markdown";
+        }
+      },
       editorOptions: {
         hideModeSwitch: false,
-        // placeholder: "내용을 입력해주세요.",
-        initialValue: "hi",
-        initialEditType: "markdown",
+        placeholder: initcontent,
+        initialValue: initcontent,
+        initialEditType: "wysiwyg",
         previewStyle: "vertical",
         plugins: [[codeSyntaxHighlight, { hljs }]],
 
@@ -93,7 +142,7 @@ export default {
             const matched = content.match(newone);
             if (content === newone) {
               return matched.map((m) => ({
-                text: newone.substring(1,3)+ " " + newone.substring(3)+"번",
+                text: newone.substring(1, 3) + " " + newone.substring(3) + "번",
                 url: "https://www.acmicpc.net/problem/" + index,
                 range: [0, 8],
               }));
@@ -119,8 +168,7 @@ export default {
                   range: [0, 4],
                 }));
               }
-            }
-            else if (content === git) {
+            } else if (content === git) {
               const matched = content.match(git);
               if (matched) {
                 return matched.map((m) => ({
@@ -136,7 +184,6 @@ export default {
       },
       // editorText: "# This is Viewer.\n Hello World",
       profileInfo: [],
-      studyLists: [],
       tmpDailyData: [],
       text: "",
       content: "",
@@ -144,7 +191,6 @@ export default {
   },
   created() {
     this.addprofileInfo();
-    this.getTmpDaily();
   },
   methods: {
     addprofileInfo() {
@@ -158,7 +204,7 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
-            this.addStudyList();
+            this.getTmpDaily();
           })
           .catch((err) => {
             this.$router.push({
@@ -170,26 +216,15 @@ export default {
           });
       }
     },
-    addStudyList() {
-      axios
-        .post(SERVER_URL + "/account/studylist", {
-          email: this.profileInfo.email,
-          nickname: this.profileInfo.nickname,
-          password: "1234qwer",
-        })
-        .then((res) => {
-          this.studyLists = res.data.object;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      },
-      submitDaily(tmpN) {
-        if(this.text==""){
+    submitDaily(tmpN) {
+      if (this.text == "") {
         swal("제목을 입력해주세요", { buttons: false, timer: 1200 });
-        }else if(this.$refs.toastuiEditor.invoke("getMarkdown")==""  ||this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent){
+      } else if (
+        this.$refs.toastuiEditor.invoke("getMarkdown") == "" ||
+        this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent
+      ) {
         swal("내용을 입력해주세요", { buttons: false, timer: 1200 });
-        }else{
+      } else {
         const dailydData = {
           title: this.text,
           body: this.$refs.toastuiEditor.invoke("getMarkdown"),
@@ -199,16 +234,22 @@ export default {
           uid: this.profileInfo.uid,
           tmp: tmpN,
         };
-        console.log(dailydData);
         axios
           .post(SERVER_URL + "/diary/write", dailydData)
           .then((res) => {
-            this.$router.push({
-              name: constants.URL_TYPE.STUDY.STUDYMAIN,
-              params: {
-                post_id: this.$route.params.post_id,
-              },
-            });
+            if (tmpN == 1) {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.DAILYDETAIL,
+                params: {
+                  post_id: this.$route.params.post_id,
+                },
+              });
+            } else {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.STUDYMAIN,
+                params: { post_id: this.$route.params.post_id },
+              });
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -226,7 +267,7 @@ export default {
         .then((res) => {
           const data = res.data.object[0];
           this.tmpDailyData = data.filter(
-            (data) => data.uid === this.profileInfo.uid
+            (item) => item.uid == this.profileInfo.uid
           );
         })
         .catch((err) => {
@@ -242,6 +283,12 @@ export default {
         },
       });
     },
+    goBack() {
+      this.$router.push({
+        name: constants.URL_TYPE.STUDY.STUDYMAIN,
+        params: { post_id: this.$route.params.post_id },
+      });
+    },
   },
 };
 </script>
@@ -249,9 +296,5 @@ export default {
 <style scoped>
 .clickstudy {
   cursor: pointer;
-}
-
-label {
-  font-size: 20px;
 }
 </style>

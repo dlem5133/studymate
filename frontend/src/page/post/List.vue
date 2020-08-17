@@ -190,11 +190,12 @@ export default {
           var tmp = this.allStudyList;
           for (let i = 0; i < tmp.length; i++) {
             if (tmp[i][0].background_image != "") {
-              var t = require('@/assets/uploadfile/' + tmp[i][0].background_image)
-              tmp[i][0].background_image = t
+              var t = require("@/assets/uploadfile/" +
+                tmp[i][0].background_image);
+              tmp[i][0].background_image = t;
             }
           }
-          this.searchList = tmp
+          this.searchList = tmp;
         })
         .catch((err) => {
           console.log(err);
@@ -379,7 +380,7 @@ input[type="radio"]:checked + .radiolabel {
 }
 input[type="radio"]:checked + .radiolabel::before {
   top: 0;
-  left:1.7em;
+  left: 1.7em;
   width: 80%;
   height: 2em;
   background: orange;
