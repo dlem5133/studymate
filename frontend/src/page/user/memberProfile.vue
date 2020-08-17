@@ -60,7 +60,6 @@
             </div>
           </div>
           <div class="m-3 row rounded-lg border">
-            
             <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="calendar-3"></b-icon>
@@ -71,7 +70,7 @@
                 <small>점</small>
               </div>
             </div>
-            
+
             <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="award"></b-icon>
@@ -82,7 +81,7 @@
                 <small>점</small>
               </div>
             </div>
-            
+
             <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
               <div class="d-flex">
                 <b-icon icon="book-half"></b-icon>
@@ -167,9 +166,7 @@
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
               <small class="text-left ml-2">{{ list1.sentence }}</small>
-              <small class="ml-auto text-secondary">
-                {{list1.user.nickname}}
-              </small>
+              <small class="ml-auto text-secondary">{{list1.user.nickname}}</small>
             </div>
           </div>
           <button
@@ -199,14 +196,19 @@ export default {
       page: 1,
       showEvalist: 3,
 
-      evalistdata:{},
-      mileageData:{},
+      evalistdata: {},
+      mileageData: {},
     };
   },
-  computed:{
-    total_score(){
-      return ((this.profileInfo.score1 + this.profileInfo.score2 + this.profileInfo.score3) / 3).toFixed(1)
-    },    
+  computed: {
+    total_score() {
+      return (
+        (this.profileInfo.score1 +
+          this.profileInfo.score2 +
+          this.profileInfo.score3) /
+        3
+      ).toFixed(1);
+    },
     total_mileage() {
       if ("+this.mileageData.total".length > 3) {
         return this.mileageData.total / 1000 + "K";
@@ -216,29 +218,33 @@ export default {
     },
   },
   methods: {
-    evaList(){
-      const targetid = this.profileInfo.uid
-      axios.post(SERVER_URL+'/eva/userlist', {target_uid:targetid})
-      .then(res=>{
-        this.evalistdata = res.data.object
-      })
-      .catch(err=>console.log(err))
+    evaList() {
+      const targetid = this.profileInfo.uid;
+      axios
+        .post(SERVER_URL + "/eva/userlist", { target_uid: targetid })
+        .then((res) => {
+          this.evalistdata = res.data.object;
+        })
+        .catch((err) => console.log(err));
     },
-    mileageList(){
-      const targetid = this.profileInfo.uid
-      axios.get(SERVER_URL+"/mileage/user", {params:{uid:targetid}})
-      .then(res=>{
-        this.mileageData = res.data.object;
-      })
-      .catch(err=>console.log(err))
+    mileageList() {
+      const targetid = this.profileInfo.uid;
+      axios
+        .get(SERVER_URL + "/mileage/user", { params: { uid: targetid } })
+        .then((res) => {
+          this.mileageData = res.data.object;
+        })
+        .catch((err) => console.log(err));
     },
     addprofileInfo() {
       axios
-        .get(SERVER_URL + "/account/memprofile", { params: { uid: this.$route.params.user_id } })
+        .get(SERVER_URL + "/account/memprofile", {
+          params: { uid: this.$route.params.user_id },
+        })
         .then((res) => {
           this.profileInfo = res.data.object;
-          this.evaList()
-          this.mileageList()
+          this.evaList();
+          this.mileageList();
         })
         .catch((err) => {
           this.$router.push({
@@ -247,11 +253,11 @@ export default {
           });
         });
     },
-    goRank () {
+    goRank() {
       this.$router.push({
-        name: constants.URL_TYPE.RANK.RANKING
+        name: constants.URL_TYPE.RANK.RANKING,
       });
-    }
+    },
   },
   created() {
     this.addprofileInfo();

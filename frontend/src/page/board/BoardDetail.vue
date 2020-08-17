@@ -7,8 +7,8 @@
               <h5 class="font-weight-bold text-left p-0 m-0">{{ boardDetailData.title }}</h5>
               <div class="d-flex ml-auto">
                 <div class="d-flex my-auto" v-if="profileInfo.uid==boardDetailData.uid">
-                  <button type="button" @click="boardUpdate(boardDetailData.bid)" class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect">수정</button>
-                  <button type="button" @click="boardDelete(boardDetailData.bid)" class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect">삭제</button>
+                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="boardUpdate(boardDetailData.bid)" class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect">수정</button>
+                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="boardDelete(boardDetailData.bid)" class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect">삭제</button>
                 </div>
                 <b-icon class="my-auto" @click="goBoardMain(boardDetailData.pid, boardDetailData.bid)" icon="house-door"></b-icon>
               </div>
@@ -39,8 +39,8 @@ export default {
     };
   },
   created() {
-    this.addprofileInfo();
     this.getboardDetailData()
+    this.addprofileInfo();
   },
   methods: {
     addprofileInfo() {

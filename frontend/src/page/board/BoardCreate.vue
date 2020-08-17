@@ -21,8 +21,8 @@
         </b-col>
       </b-row>
       <div class="p-3">
-        <b-button class="bubut" variant="warning" @click="submitBoard" style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;">SUBMIT</b-button>
-        <b-button class="ml-2" variant="outline-secondary" style="font-family:'Do Hyeon',sans-serif;" @click="goBack">CANCEL</b-button>
+        <b-button class="bubut" variant="warning" @click="submitBoard" style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;">작성</b-button>
+        <b-button class="ml-2" variant="outline-secondary" style="font-family:'Do Hyeon',sans-serif;" @click="goBack">취소</b-button>
       </div>
     </div>
   </div>
@@ -73,7 +73,6 @@ export default {
     },
     getpostDetailData() {
       const post_id = this.$route.params.post_id
-      console.log(post_id)
       axios.get(SERVER_URL + "/study/details", { params: { pid: post_id }})
       .then(res => {
         this.postDetailData = res.data.object[0]
