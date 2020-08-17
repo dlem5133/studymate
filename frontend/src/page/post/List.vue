@@ -2,16 +2,19 @@
   <div>
     <div id="mainimg">
       <div class="main-text">
-        <h4
-          style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.6);"
-        >안녕하세요 스터디메이트에 방문하신걸 환영합니다 :)</h4>
-        <!-- <h6 style="color:rgba(255,255,255,0.4);">
-          스터디는 한 달에 3번 생성 가능합니다.
-          <br />일지는 하루에 한 번 작성 가능합니다.
-          <br />일지는 정해진 날짜에만 작성 가능합니다.
-          <br />이런거 적어둬야하지 않을까?
-          <br />
-        </h6> -->
+        <div class="d-flex justify-content-center">
+
+        <h3 class="mb-3"
+          style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.7);"
+        >안녕하세요 스터디메이트에 방문하신걸 환영합니다.</h3>
+        </div>
+        <h4 style="font-size:1em;font-family: 'IBMPlexSansKR-Text';color:rgba(255,255,255,0.5);">원하는 스터디를 쉽게 모집하고, 신뢰도 있는 팀원을 모집해보세요.</h4>
+        <h4 style="font-size:1em;font-family: 'IBMPlexSansKR-Text';color:rgba(255,255,255,0.5);">IT에 특화된 에디터를 사용하여 쉽고 빠르게 스터디를 기록해보세요</h4>
+        
+        <h6 class="mt-4" style="color:rgba(255,255,255,0.8);">
+          <b-button v-b-modal.modal-1 size="sm" class="about rounded-lg" variant="outline-light" >About US</b-button> 
+          
+        </h6>
         <h4>
           <b-icon
             animation="fade"
@@ -24,6 +27,83 @@
         </h4>
       </div>
     </div>
+
+    <b-modal id="modal-1" hide-header ok-only>
+      <!-- 2.회원가입 3.스터디생성 4.일지 5.평가 6.신고 -->
+        <div class="d-flex">
+          <h4 class="pt-2 pl-2 pr-0 text-warning" style="font-family: 'Do Hyeon', sans-serif;">스터디메이트</h4><h5 class="pt-2  px-1 mt-1" style="font-family: 'Do Hyeon', sans-serif;">의 규칙</h5>
+          <div class="ml-auto my-auto" @click="$bvModal.hide('modal-1')">
+            <b-icon icon="x"></b-icon>
+          </div>
+        </div>
+        <hr />
+      <!-- <b-card no-body> -->
+        <b-tabs active-nav-item-class="bg-warning" class="p-2" pills vertical>
+          <b-tab title="회원가입" active>
+            <b-card-text>
+              <small class="font-weight-bold">1. 회원가입을 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/signup_1.png" alt="">
+              <small class="font-weight-bold">2. 카카오 회원가입을 진행해주세요.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/signup_2.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+          <b-tab title="스터디">
+            <b-card-text>
+              <small class="font-weight-bold">1. 로그인 후 책 모양 아이콘을 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/study_1.jpg" alt="">
+              <small class="font-weight-bold">2. 스터디를 생성해주세요.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/study_2.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+          <b-tab title="일지">
+            <b-card-text>
+              <small class="font-weight-bold">1. 로그인 후 진행중인 스터디를 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_1.jpg" alt="">
+              <small class="font-weight-bold">2. 스터디 일지를 작성해 보세요.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/일지_2.jpg" alt="">
+              <small class="font-weight-bold">3. 스터디 팀원들이 작성한 일지를 확인할 수 있습니다.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/일지_3.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+          <b-tab title="평가">
+            <b-card-text>
+              <small class="font-weight-bold">1. 로그인 후 진행중인 스터디를 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_1.jpg" alt="">
+              <small class="font-weight-bold">2. EVALUATE(평가)를 눌러주세요.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_2.jpg" alt="">
+              <small class="font-weight-bold">3. 스터디 팀원들에 대한 평가를 진행할 수 있습니다.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_3.jpg" alt="">
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_4.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+          <b-tab title="마일리지">
+            <b-card-text>
+              <small class="font-weight-bold">1. 로그인 후 프로필을 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/마일리지_1.jpg" alt="">
+              <small class="font-weight-bold">2. 스터디 목록을 확인할 수 있습니다.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/마일리지_2.jpg" alt="">
+              <small class="font-weight-bold">3. 마일리지 현황을 확인할 수 있습니다.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/마일리지_3.jpg" alt="">
+              <small class="font-weight-bold">4. 마일리지 랭킹을 확인할 수 있습니다.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/마일리지_4.jpg" alt="">
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/마일리지_5.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+          <b-tab title="신고">
+            <b-card-text>
+              <small class="font-weight-bold">1. 로그인 후 진행중인 스터디를 눌러주세요.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/eval_1.jpg" alt="">
+              <small class="font-weight-bold">2. MEMBER(팀원)를 눌러주세요.</small>
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/신고_2.jpg" alt="">
+              <small class="font-weight-bold">3. 팀장 위임 기능과 팀원 신고 기능을 사용할 수 있습니다.</small>
+              <img class="w-100 mt-3 mb-4" src="@/assets/img/main_rule/신고_3.jpg" alt="">
+              <img class="border rounded-lg w-100 mt-3 mb-4" src="@/assets/img/main_rule/신고_4.jpg" alt="">
+            </b-card-text>
+          </b-tab>
+        </b-tabs>
+      <!-- </b-card> -->
+    </b-modal>
+
     <div class="container">
       <div id="maintext" class="row row-cols-2">
         <div id="maintable" class="main-table mt-5 col-12 col-md-12">
@@ -182,6 +262,13 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    linkClass(idx){
+      if (this.tabindex === idx){
+        return ['bg-warning', 'text-light']
+      } else{
+        return ['bg-warning','text-light']
+      }
+    },
     allStudy() {
       axios
         .get(SERVER_URL + "/study/list")
@@ -322,6 +409,17 @@ export default {
 <style scoped>
 * {
   font-family: "IBMPlexSansKR-Text";
+}
+.about{
+  border:1px solid rgba(255,255,255,0.4);
+  background-color:rgba(255,255,255,0.2);
+  color:rgba(255,165,0,0.7);
+  font-family: 'Do Hyeon',sans-serif;
+}
+.about:hover{
+  background-color:rgba(255,255,255,0.8);
+  font-family: 'Do Hyeon',sans-serif;
+  color:rgba(0,0,0,0.5)
 }
 #mainimg {
   position: absolute;
