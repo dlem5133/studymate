@@ -204,6 +204,7 @@ export default {
   },
   created() {
     this.allUser();
+    this.allStudy()
   },
   methods: {
     allUser() {
