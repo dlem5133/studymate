@@ -4,14 +4,19 @@
       <div class="main-text">
         <h4
           style="font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.6);"
-        >안녕하세요 스터디메이트에 방문하신걸 환영합니다 :)</h4>
-        <!-- <h6 style="color:rgba(255,255,255,0.4);">
-          스터디는 한 달에 3번 생성 가능합니다.
+        >안녕하세요 스터디메이트에 방문하신걸 환영합니다.</h4>
+        <h4 style="font-size:1em;font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.4);">원하는 스터디를 쉽게 모집하고, 신뢰도 있는 팀원을 모집해보세요.</h4>
+        <h4 style="font-size:1em;font-family: 'Do Hyeon', sans-serif;color:rgba(255,255,255,0.4);">IT에 특화된 에디터를 사용하여 쉽고 빠르게 스터디를 기록해보세요</h4>
+        
+        <h6 class="mt-4" style="color:rgba(255,255,255,0.4);">
+          <b-button v-b-modal.modal-1 size="sm" class="about rounded-lg" variant="outline-light" >About US</b-button> 
+          
+          <!-- 스터디는 한 달에 3번 생성 가능합니다.
           <br />일지는 하루에 한 번 작성 가능합니다.
           <br />일지는 정해진 날짜에만 작성 가능합니다.
           <br />이런거 적어둬야하지 않을까?
-          <br />
-        </h6> -->
+          <br /> -->
+        </h6>
         <h4>
           <b-icon
             animation="fade"
@@ -24,6 +29,28 @@
         </h4>
       </div>
     </div>
+
+    <b-modal id="modal-1" hide-header ok-only>
+      <!-- 2.회원가입 3.스터디생성 4.일지 5.평가 6.신고 -->
+      <!-- <b-card no-body> -->
+        <div class="d-flex">
+          <h4 class="pt-2 pl-2 pr-0 text-warning" style="font-family: 'Do Hyeon', sans-serif;">스터디메이트</h4><h5 class="pt-2  px-1 mt-1" style="font-family: 'Do Hyeon', sans-serif;">의 규칙</h5>
+          <div class="ml-auto my-auto">
+            <b-icon icon="x"></b-icon>
+          </div>
+        </div>
+        <hr />
+        <b-tabs active-nav-item-class="bg-warning" class="p-2" pills vertical>
+          <b-tab title="회원가입" active><b-card-text>회원가입은 이렇게 하세용</b-card-text></b-tab>
+          <b-tab title="스터디"><b-card-text>스터디는 이렇게 하세용</b-card-text></b-tab>
+          <b-tab title="일지"><b-card-text>일지는 이렇게 하세용</b-card-text></b-tab>
+          <b-tab title="평가"><b-card-text>평가는 이렇게 하세용</b-card-text></b-tab>
+          <b-tab title="마일리지"><b-card-text>마일리지는 이렇게 하세용</b-card-text></b-tab>
+          <b-tab title="신고"><b-card-text>신고는 이렇게 하세용</b-card-text></b-tab>
+        </b-tabs>
+      <!-- </b-card> -->
+    </b-modal>
+
     <div class="container">
       <div id="maintext" class="row row-cols-2">
         <div id="maintable" class="main-table mt-5 col-12 col-md-12">
@@ -182,6 +209,13 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    linkClass(idx){
+      if (this.tabindex === idx){
+        return ['bg-warning', 'text-light']
+      } else{
+        return ['bg-warning','text-light']
+      }
+    },
     allStudy() {
       axios
         .get(SERVER_URL + "/study/list")
@@ -322,6 +356,17 @@ export default {
 <style scoped>
 * {
   font-family: "IBMPlexSansKR-Text";
+}
+.about{
+  border:1px solid rgba(255,255,255,0.4);
+  background-color:rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.5);
+  font-family: 'Do Hyeon',sans-serif;
+}
+.about:hover{
+  background-color:rgba(255,255,255,0.8);
+  font-family: 'Do Hyeon',sans-serif;
+  color:rgba(0,0,0,0.5)
 }
 #mainimg {
   position: absolute;

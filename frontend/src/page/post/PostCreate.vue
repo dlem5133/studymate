@@ -12,8 +12,8 @@
               type="text"
             ></b-form-input>
           </b-col>
-          <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
-            <div>
+          <b-col sm="12" md="4" class="px-1 pt-4 mb-1" style="height: 57px;">
+            <div v-if="files[0]" class="formtitle3 border rounded-lg">
               <input
                 type="file"
                 id="files"
@@ -23,11 +23,11 @@
               />
               <div v-for="(file, key) in files" :key="file.id">
                 {{ file.name }}
-                <span class="remove-file" @click="removeFile(key)">Remove</span>
+                <span class="remove-file" @click="removeFile(key)"><b-icon icon="trash"></b-icon> </span>
               </div>
             </div>
-            <div v-if="!files[0]">
-              <button @click="addFiles()">Add Files</button>
+            <div v-if="!files[0]" class="text-right border rounded-lg formtitle3">
+              <button @click="addFiles()"><b-icon icon="folder2-open" class="mr-1"></b-icon>Image</button>
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -435,6 +435,12 @@ label {
 .formtitle {
   padding: 0 4px;
   transform: translateY(5px);
+  background-color: white;
+  font-weight: bolder;
+}
+.formtitle3 {
+  padding: 6px 6px;
+  transform: translateY(-3px);
   background-color: white;
   font-weight: bolder;
 }
