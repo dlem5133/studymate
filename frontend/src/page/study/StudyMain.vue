@@ -752,11 +752,13 @@ export default {
           this.tagData = res.data.object[2];
           this.userData = res.data.object[4];
           const tmpdays = [];
-          for (var i = 0; i < this.postData.days.length; ) {
-            tmpdays.push(this.postData.days.slice(i, i + 3));
-            i += 3;
+          if (this.postData.days != null) {
+            for (var i = 0; i < this.postData.days.length; ) {
+              tmpdays.push(this.postData.days.slice(i, i + 3));
+              i += 3;
+            }
+            this.days = tmpdays;
           }
-          this.days = tmpdays;
         })
         .catch((err) => {
           this.$router.go()
