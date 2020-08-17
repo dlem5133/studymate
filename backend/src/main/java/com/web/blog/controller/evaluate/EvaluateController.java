@@ -91,7 +91,6 @@ public class EvaluateController {
         }
         userDao.save(target);
         // 마일리지
-        System.out.println(eva);
         Mileage mileage = mileageDao.findByUid(writer.getUid());
         mileage.setTotal(mileage.getTotal() + 10);
         mileage.setEndpoint(mileage.getEvalpoint() + 1);
