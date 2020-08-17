@@ -6,7 +6,7 @@
         <b-col class="text-right">
           <b-button variant="info" size="sm m-0 py-0 px-1" v-b-modal.modal-1>
             <small class="mr-1">임시저장목록</small>
-            <b-badge variant="light">{{tmpDailyData.length}}</b-badge>
+            <b-badge variant="light">{{tmpNum.length}}</b-badge>
           </b-button>
         </b-col>
         <b-col sm="12" class="px-1 mb-4">
@@ -49,19 +49,21 @@
       </div>
 
       <b-modal id="modal-1" hide-footer title="임시저장 리스트">
-        <div class="card mb-2" v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-          <div class="px-3 py-2 card-body d-flex justify-content-between">
-            <small class="my-auto">{{tmpdaily.title}}</small>
-            <small class="my-auto">
-              {{tmpdaily.posttime}}
-              <b-button
-                size="sm"
-                class="ml-1"
-                style="font-family:'Do Hyeon', sans-serif;"
-                @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
-                variant="outline-success"
-              >작성</b-button>
-            </small>
+        <div v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
+          <div class="card mb-2" v-if="tmpdaily.did!=$route.params.daily_id">
+            <div class="px-3 py-2 card-body d-flex justify-content-between">
+              <small class="my-auto">{{tmpdaily.title}}</small>
+              <small class="my-auto">
+                {{tmpdaily.posttime}}
+                <b-button
+                  size="sm"
+                  class="ml-1"
+                  style="font-family:'Do Hyeon', sans-serif;"
+                  @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
+                  variant="outline-success"
+                >작성</b-button>
+              </small>
+            </div>
           </div>
         </div>
       </b-modal>
@@ -179,6 +181,7 @@ export default {
       profileInfo: [],
       studyLists: [],
       tmpDailyData: [],
+      tmpNum:[],
       preData: [],
       body: "",
     };
@@ -290,6 +293,9 @@ export default {
           const data = res.data.object[0];
           this.tmpDailyData = data.filter(
             (data) => data.uid === this.profileInfo.uid
+          );
+          this.tmpNum = this.tmpDailyData.filter(
+            (data) => data.did != this.$route.params.daily_id
           );
         })
         .catch((err) => {
