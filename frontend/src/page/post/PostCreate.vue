@@ -21,12 +21,12 @@
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
-            <small class="formtitle ml-3 float-left">일정</small>
-            <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
+            <small class="formtitle ml-3 float-left">일정 (주 _회)</small>
+            <b-form-spinbutton v-model="postCreateDate.bindo" min="1" max="7"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton id="demo-sb" v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
+            <b-form-spinbutton v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
@@ -134,7 +134,7 @@ export default {
         start_date: "",
         end_date: "",
         limitp: 3,
-        bindo: "",
+        bindo: 1,
         tmp: 0,
       },
     };
@@ -278,13 +278,19 @@ export default {
           "error"
         );
       } else {
-        this.postCreateDate.background_image = this.files[0].name;
-        console.log(this.postCreateDate);
+        if (this.files[0]) {
+          this.postCreateDate.background_image = this.files[0].name;
+        }
+        else {
+          this.postCreateDate.background_image = null;
+        }
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
-            this.submitFiles(res.data.object.pid);
+            if (this.files[0]) {
+              this.submitFiles(res.data.object.pid);
+            }
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
@@ -311,10 +317,8 @@ export default {
     },
     submitFiles(pid) {
       const formData = new FormData();
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
-        formData.append("file", file);
-      }
+      let file = this.files[0];
+      formData.append("file", file);
       formData.append("pid", pid);
       axios
         .post(SERVER_URL + "/study/detail/fileupload", formData, {
