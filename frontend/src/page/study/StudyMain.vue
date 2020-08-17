@@ -50,7 +50,7 @@
                       >
                         <template v-slot:button-content class>
                           <b-icon icon="gear" variant="dark"></b-icon>
-                          <small style="color:black;">SETTINGS</small>
+                          <small class="ml-1" style="color:black;">SETTINGS</small>
                         </template>
                         <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                         <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
@@ -69,7 +69,7 @@
                           class="border-0"
                         >
                           <i class="fas fa-medal"></i>
-                          <small style="color: black;">EVALUATE</small>
+                          <small class="ml-1" style="color: black;">EVALUATE</small>
                         </b-button>
                         <b-button
                           v-if="finalCheck <= 7"
@@ -80,7 +80,7 @@
                           v-b-modal.modal-multi-1
                         >
                           <i class="fas fa-medal"></i>
-                          <small style="color: black;">EVALUATE</small>
+                          <small class="ml-1" style="color: black;">EVALUATE</small>
                         </b-button>
                       </div>
 
@@ -93,7 +93,7 @@
                           >
                             <span style="line-height: 38px;">{{member.empId.user.nickname}}</span>
                             <b-button
-                              v-if="alreadyEva.includes(member.uid)"
+                              v-if="alreadyEva.indexOf(member.uid)!=-1"
                               class="float-right"
                               @click="onceEva"
                               variant="link"
@@ -203,7 +203,7 @@
                           class="border-0"
                           variant="link"
                         >
-                          <b-icon icon="people" variant="warning"></b-icon>
+                          <b-icon icon="people" variant="warning" class="mr-1"></b-icon>
                           <small style="color:black;">MEMBER</small>
                         </b-button>
                       </div>
@@ -251,7 +251,7 @@
                               </div>
                               <div v-if="profileInfo.uid!=per.empId.user.uid">
                                 <b-button
-                                  v-if="reportList.includes(per.empId.user.uid)"
+                                  v-if="reportList.indexOf(per.empId.user.uid)!=-1"
                                   style="font-family:'Do Hyeon', sans-serif;"
                                   class="btn-sm"
                                   variant="outline-danger"
@@ -348,7 +348,7 @@
                   no-caret
                 >
                   <template v-slot:button-content>
-                    <b-icon icon="gear" variant="dark"></b-icon>
+                    <b-icon class="mr-1" icon="gear" variant="dark"></b-icon>
                     <small style="color:black;">SETTINGS</small>
                   </template>
                   <b-dropdown-item v-b-modal.modal-3>생성</b-dropdown-item>
@@ -452,8 +452,13 @@
             <b-icon icon="pencil"></b-icon>일지 작성
           </b-button>
           <div v-if="profileInfo.uid==postData.uid" v-b-modal.modal-1 class="dailyselect">
-            <b-icon icon="calendar-check" variant="dark" shift-v="-1"></b-icon>
+            <b-icon class="mr-1" icon="calendar-check" variant="dark" shift-v="-1"></b-icon>
             <small style="color:black;font-family: 'Do Hyeon', sans-serif;">요일선택</small>
+          </div>
+          <div v-else class="d-flex dailyselect">
+            <div class="d-flex" v-for="item in postData.days" :key="item.id">
+              <small style="color:black;font-family: 'Do Hyeon', sans-serif;">{{item}}</small>
+            </div>
           </div>
 
           <b-modal @ok="handleOk" id="modal-1" title="일지 작성가능한 요일을 설정하세요." ok-only>
@@ -532,7 +537,7 @@ export default {
         reason: "",
       },
       ismodal: true,
-      reportList: {},
+      reportList: [],
       // 상호 평가
       evalueData: {
         pid: 0,
@@ -576,9 +581,8 @@ export default {
   },
   created() {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
-    this.getDetail();
     this.addprofileInfo();
-    this.memberList();
+    this.getDetail();
     this.DeleteMemberList();
   },
   mounted() {
@@ -590,14 +594,14 @@ export default {
       return time.substring(2, 10) + " " + time.substring(11, 16);
     },
     memberCheck() {
-      // var member = []
-      // for (let i = 0; i < this.memberListData.length; i++) {
-      //   member.push(this.memberListData[i].uid)
-      // }
-      // if (member.indexOf(this.profileInfo.uid) == -1) {
-      //   alert("스터디 맴버가 아닙니다.")
-      //   this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
-      // }
+      var member = []
+      for (let i = 0; i < this.memberListData.length; i++) {
+        member.push(this.memberListData[i].uid)
+      }
+      if (member.indexOf(this.profileInfo.uid) == -1) {
+        alert("스터디 맴버가 아닙니다.")
+        this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
+      }
     },
     postUpdate(post_id) {
       this.$router.push({
@@ -721,6 +725,7 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
+            this.memberList();
           })
           .catch((err) => {
             this.$router.push({
@@ -923,9 +928,9 @@ export default {
         .then(() => {
           this.reportCheck();
           (this.reportdata.pid = ""),
-          (this.reportdata.reporter = ""),
-          (this.reportdata.target = ""),
-          (this.reportdata.reason = "");
+            (this.reportdata.reporter = ""),
+            (this.reportdata.target = ""),
+            (this.reportdata.reason = "");
           this.$router.go();
         })
         .catch((err) => console.log(err));
@@ -1054,7 +1059,7 @@ export default {
           break;
         }
       }
-      if (this.days.indexOf(d) !== -1) {
+      if (this.days.indexOf(d) != -1) {
         alert("일지작성이 불가능한 날입니다.");
         flag = true;
       }
@@ -1143,9 +1148,51 @@ export default {
 @media (max-width: 760px) {
   .fc .fc-button-group {
     position: absolute;
+    top: 13%;
+    left: 38%;
+  }
+  .fc .fc-button-group > .fc-button {
+    color: gray;
+    border: 1px solid gray;
+    padding: 0 0.2rem;
+    background-color: white;
+  }
+  .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+    background-color: white !important;
+    border: 1px solid gray !important;
+  }
+  .fc-daygrid-block-event .fc-event-time,
+  .fc-daygrid-block-event .fc-event-title {
+    font-size: 0.5rem;
+  }
+  .fc .fc-daygrid-day-number {
+    font-size: 0.6rem;
+  }
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.7rem !important;
+  }
+  .fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active,
+  .fc-dayGridWeek-button.fc-button.fc-button-primary.fc-button,
+  .fc-listMonth-button.fc-button.fc-button-primary.fc-button {
+    display: none;
+  }
+  .fc-daygrid-body.fc-daygrid-body-unbalanced {
+    width: 100% !important;
+  }
+  .fc .fc-view-harness {
+    margin: 1rem !important;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .fc .fc-button-group {
+    position: absolute;
     top: 17%;
     left: 33%;
   }
+  
   .fc .fc-button-group > .fc-button {
     color: gray;
     border: 1px solid gray;
