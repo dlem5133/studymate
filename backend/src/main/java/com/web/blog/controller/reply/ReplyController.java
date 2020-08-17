@@ -123,7 +123,6 @@ public class ReplyController {
             // 첫댓글이고
             // 해당 댓글에 답댓글이 있을 때
             if (replyDao.countByReplyparent(reply_rid.getRid()) != 0) {
-                System.out.println(reply_rid.getReply_content());
                 reply_rid.setReply_content("삭제된 댓글입니다.");
                 reply_rid.setReply_writer("");
                 replyDao.save(reply_rid);

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 import javax.validation.Valid;
 
-import org.springframework.web.multipart.MultipartFile;
-
 @Valid
 @Data
 public class StudyRequest {
