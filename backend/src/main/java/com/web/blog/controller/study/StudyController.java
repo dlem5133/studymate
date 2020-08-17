@@ -247,11 +247,14 @@ public class StudyController {
             study.setGugun(gugunCodeDao.findByGuguncode(request.getSigungu_code()));
             study.setEvalcount(0);
             study.setMemnum(1);
+
             Study savedStudy = this.studyDao.save(study);
 
             int pid = savedStudy.getPid();
             if (request.getBackground_image() != null) {
                 savedStudy.setBackground_image(pid+request.getBackground_image());
+            }else{
+                savedStudy.setBackground_image("def.jpg");
             }
             studyDao.save(savedStudy);
             for (int i = 0; i < request.getTag().size(); i++) {
