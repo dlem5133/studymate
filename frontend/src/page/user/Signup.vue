@@ -12,7 +12,11 @@
               <b-form-input type="password" v-model="signupData.password" id="input-password"></b-form-input>
             </b-form-group>
             <b-form-group label="비밀번호 확인" label-for="input-passwordConfirm">
-              <b-form-input type="password" v-model="signupData.passwordConfirm" id="input-passwordConfirm"></b-form-input>
+              <b-form-input
+                type="password"
+                v-model="signupData.passwordConfirm"
+                id="input-passwordConfirm"
+              ></b-form-input>
             </b-form-group>
           </b-card-text>
         </div>
@@ -30,11 +34,22 @@
           <b-card-text>
             <div v-if="!signupData.profile_image">
               <p style="font-family: 'Do Hyeon', sans-serif;color:orange;">Profile Image</p>
-              <b-form-file @change="onChangeImages" v-model="file" ref="file-input" class="w-75 mx-auto mb-3"></b-form-file>
+              <b-form-file
+                @change="onChangeImages"
+                v-model="file"
+                ref="file-input"
+                class="w-75 mx-auto mb-3"
+              ></b-form-file>
             </div>
             <div v-else>
-              <img :src="signupData.profile_image" style="width: 100%;"/>
-              <b-icon class="my-3" @click="removeImage" font-scale="1.5" icon="trash" variant="danger"></b-icon>
+              <img :src="signupData.profile_image" style="width: 100%;" />
+              <b-icon
+                class="my-3"
+                @click="removeImage"
+                font-scale="1.5"
+                icon="trash"
+                variant="danger"
+              ></b-icon>
             </div>
           </b-card-text>
         </div>
@@ -45,7 +60,6 @@
           <b-button v-if="page == 2" @click="doSign" pill variant="success">완료</b-button>
         </div>
       </b-card>
-
     </div>
   </div>
 </template>
@@ -74,21 +88,23 @@ export default {
     };
   },
   created() {
-    this.initlogin()
+    this.initlogin();
   },
   methods: {
     initlogin() {
-      this.signupData.email = this.$route.query.email
-      this.signupData.nickname = this.$route.query.nickname
-      if (this.$route.query.pass === "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc") {
-        this.$router.push('/user/signup')
-      }
-      else {
-        this.$router.push('/duplicate')
+      this.signupData.email = this.$route.query.email;
+      this.signupData.nickname = this.$route.query.nickname;
+      if (
+        this.$route.query.pass ===
+        "A!Hvcidfndkl@RDUWCanklcn3$!nvidh893bqtejfdA*Rdwasc"
+      ) {
+        this.$router.push("/user/signup");
+      } else {
+        this.$router.push("/duplicate");
       }
     },
     pageSwitch(n) {
-      this.page = this.page + n
+      this.page = this.page + n;
     },
     onChangeImages(e) {
       const selectedImage = e.target.files[0];
@@ -103,45 +119,42 @@ export default {
       reader.readAsDataURL(fileObject);
     },
     removeImage: function (e) {
-      this.signupData.profile_image = '';
+      this.signupData.profile_image = "";
     },
     doSign() {
-      if(this.signupData.password == null){
+      if (this.signupData.password == null) {
         this.$swal(
           "가입 실패",
           "비밀번호가 입력되지 않았습니다. 확인해주세요.",
           "error"
         );
-      }
-      else if(this.signupData.passwordConfirm == null){
+      } else if (this.signupData.passwordConfirm == null) {
         this.$swal(
           "가입 실패",
           "비밀번호확인이 입력되지 않았습니다. 확인해주세요.",
           "error"
         );
-        alert("비밀번호확인이 입력되지 않았습니다. 확인해주세요.")
-      }
-      else if(this.signupData.password != this.signupData.passwordConfirm){
+        alert("비밀번호확인이 입력되지 않았습니다. 확인해주세요.");
+      } else if (this.signupData.password != this.signupData.passwordConfirm) {
         this.$swal(
           "가입 실패",
           "비밀번호가 확인값과 틀립니다. 확인해주세요.",
           "error"
         );
+      } else {
+        axios
+          .post(SERVER_URL + "/account/signup", this.signupData)
+          .then((res) => {
+            swal("회원가입되었습니다.", { buttons: false, timer: 1200 });
+            this.$router.push("/");
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
       }
-      else{
-      axios
-        .post(SERVER_URL + "/account/signup", this.signupData)
-        .then(res => {
-          swal("회원가입되었습니다.", { buttons: false, timer: 1200 });
-          this.$router.push("/");
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
-    }
     },
   },
-}
+};
 </script>
 
 <style scoped>

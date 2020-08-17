@@ -23,13 +23,13 @@
           >
             <b-button
               variant="danger"
-              style="border:1px solid white"
+              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
               v-if="!isRequest && !isMember"
               @click="studyRequest((isRequest = true))"
             >신청</b-button>
             <b-button
               variant="danger"
-              style="border:1px solid white"
+              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
               v-if="isRequest && !isMember"
               @click="studyCancel((isRequest = false))"
             >취소</b-button>
@@ -40,13 +40,13 @@
           >
             <b-button
               variant="warning"
-              style="border:1px solid white"
+              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
               v-if="postData.tmp==1||postData.tmp==3"
               @click="studyStart(postData.pid)"
             >시작</b-button>
             <b-button
               variant="warning"
-              style="border:1px solid white"
+              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
               v-if="postData.tmp==0"
               @click="studyMemberPlus(postData.pid)"
             >추가모집</b-button>
@@ -62,31 +62,35 @@
                   <b-icon icon="person-badge"></b-icon>
                   팀장 {{ userData.nickname }}
                 </small>
-                <b-button style="color:black;" v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)" @click="goStudyMain(postData.pid)" size="sm" class="p-0 border-0" variant="link">
-                  <b-icon class="ml-2"  icon="house-door"></b-icon> <small> HOME</small>
-                </b-button>
-              </div>
-              <div class="d-flex" v-else>
-                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
-                      toggle-class="text-decoration-none" no-caret>
-                      <template v-slot:button-content class="">
-                        <b-icon icon="gear" variant="dark"></b-icon><small style="color:black;"> SETTINGS</small>
-                      </template>
-                      <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
-                      <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                      <b-dropdown-item v-if="requestListData.length > 0" v-b-modal.modal-1>스터디 멤버</b-dropdown-item>
-                    </b-dropdown>
-                <!-- <b-button
-                  style="color:orange;"
-                  v-if="profileInfo.uid == postData.uid && requestListData.length > 0"
-                  v-b-modal.modal-1
+                <b-button
+                  style="color:black;"
+                  v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)"
+                  @click="goStudyMain(postData.pid)"
                   size="sm"
                   class="p-0 border-0"
                   variant="link"
                 >
-                  <b-icon icon="people"></b-icon>
-                  <small>MEMBER</small>
-                </b-button> -->
+                  <b-icon class="ml-2" icon="house-door"></b-icon>
+                  <small>HOME</small>
+                </b-button>
+              </div>
+              <div class="d-flex" v-else>
+                <b-dropdown
+                  right
+                  size="sm"
+                  v-if="profileInfo.uid==postData.uid"
+                  variant="link"
+                  toggle-class="text-decoration-none"
+                  no-caret
+                >
+                  <template v-slot:button-content class>
+                    <b-icon icon="gear" class="mr-1" variant="dark"></b-icon>
+                    <small style="color:black;">SETTINGS</small>
+                  </template>
+                  <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
+                  <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
+                  <b-dropdown-item v-if="requestListData.length > 0" v-b-modal.modal-1>스터디 멤버</b-dropdown-item>
+                </b-dropdown>
                 <!-- 팀원 모달 -->
                 <b-modal id="modal-1" title="팀원 승인대기" hide-footer>
                   <div v-for="per in requestListData" :key="per.uid" class="list-group">
@@ -97,6 +101,7 @@
                       </div>
                       <div class="ml-auto">
                         <b-button
+                          style="font-family: 'Do Hyeon', sans-serif;"
                           v-if="profileInfo.uid == postData.uid"
                           @click="approvalStudy(per.uid)"
                           variant="outline-success"
@@ -106,37 +111,24 @@
                     </div>
                   </div>
                 </b-modal>
-                <b-button style="color:black;" v-if="postData.tmp==0 || postData.tmp==3" @click="goStudyMain(postData.pid)" size="sm" class="p-0 border-0" variant="link">
-                  <b-icon class="ml-2"  icon="house-door"></b-icon> <small> HOME</small>
+                <b-button
+                  style="color:black;"
+                  v-if="postData.tmp==0 || postData.tmp==3 && isMember"
+                  @click="goStudyMain(postData.pid)"
+                  size="sm"
+                  class="p-0 border-0"
+                  variant="link"
+                >
+                  <b-icon class="ml-2 mr-1" icon="house-door"></b-icon>
+                  <small>HOME</small>
                 </b-button>
               </div>
-              
             </div>
           </div>
           <div class="d-flex">
             <h5 class="mb-0 text-left">{{ postData.title }}</h5>
             <div class="ml-auto">
-              <!-- <b-icon
-                class="mr-1"
-                variant="danger"
-                v-if="!islike"
-                :icon="icon"
-                @click="likePost(islike = true)"
-              ></b-icon>
-              <b-icon
-                class="mr-1"
-                variant="danger"
-                v-if="islike"
-                :icon="icon"
-                @click="likePost(islike = false)"
-              ></b-icon> -->
-
-              <b-icon
-                class="mr-1"
-                variant="danger"
-                :icon="icon"
-                @click="likePost"
-              ></b-icon>
+              <b-icon class="mr-1" variant="danger" :icon="icon" @click="likePost"></b-icon>
               <small class="mr-2 my-auto">{{ likeData.length }}</small>
               <b-icon class="mr-1" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
             </div>
@@ -373,7 +365,7 @@
                       <small>{{ reReply.reply_content }}</small>
                     </div>
                     <div class="ml-auto">
-                      <small class="text-secondary">{{ changeDatedata(comment.reply_time) }}</small>
+                      <small class="text-secondary">{{ changeDatedata(reReply.reply_time) }}</small>
                     </div>
                   </div>
                 </div>
@@ -415,7 +407,7 @@ export default {
       replyData: {},
       reReplyData: {},
       islike: true,
-      icon:'',
+      icon: "",
       requestListData: {},
       isRequest: false,
 
@@ -440,18 +432,22 @@ export default {
     };
   },
   created() {
-    window.scrollTo(0, 0);
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
     this.getDetail();
     this.userCheck();
   },
   computed: {
-     changeLike() {
+    changeLike() {
       if (this.islike) {
         return "heart-fill";
       } else {
         return "heart";
       }
     },
+  },
+  mounted() {
+    // window.scroll({top:0,left:0,behavior:'smooth'});
+    this.getDetail();
   },
   methods: {
     changeDate(time) {
@@ -497,9 +493,9 @@ export default {
         .get(SERVER_URL + "/study/details", { params: { pid: post_id } })
         .then((res) => {
           var tmp = res.data.object[0];
-          var t = require('@/assets/uploadfile/' + tmp.background_image)
-          tmp.background_image = t
-          this.postData = tmp
+          var t = require("@/assets/uploadfile/" + tmp.background_image);
+          tmp.background_image = t;
+          this.postData = tmp;
           this.tagData = res.data.object[2];
           this.likeData = res.data.object[3];
           this.userData = res.data.object[4];
@@ -510,11 +506,11 @@ export default {
           for (var i = 0; i < this.likeData.length; i++) {
             if (this.likeData[i].uid == this.profileInfo.uid) {
               this.islike = true;
-              this.icon= "heart-fill"
+              this.icon = "heart-fill";
               break;
             } else {
               this.islike = false;
-              this.icon= "heart"
+              this.icon = "heart";
             }
           }
         })
@@ -568,7 +564,7 @@ export default {
       this.$router.push({
         name: constants.URL_TYPE.POST.POSTUPDATE,
         params: {
-          post_id: post_id
+          post_id: post_id,
         },
       });
     },
@@ -577,7 +573,7 @@ export default {
         .post(SERVER_URL + "/study/delete", this.postData)
         .then((res) => {
           this.$router.push({
-            name: constants.URL_TYPE.POST.MAIN
+            name: constants.URL_TYPE.POST.MAIN,
           });
         })
         .catch((err) => console.log(err));
@@ -715,37 +711,39 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    studyMemberPlus(post_id){
-      axios.get(SERVER_URL+'/study/recruitstart',{params:{pid:post_id}})
-      .then(()=>{
-        this.getDetail()
-      })
-      .catch((err)=>console.log(err))
+    studyMemberPlus(post_id) {
+      axios
+        .get(SERVER_URL + "/study/recruitstart", { params: { pid: post_id } })
+        .then(() => {
+          this.getDetail();
+          this.$router.go();
+        })
+        .catch((err) => console.log(err));
     },
-    studyStart(post_id){
-      axios.get(SERVER_URL+'/study/recruitstop',{params:{pid:post_id}})
-      .then(()=>{
-        this.getDetail()
-      })
-      .catch((err)=>console.log(err))
+    studyStart(post_id) {
+      axios
+        .get(SERVER_URL + "/study/recruitstop", { params: { pid: post_id } })
+        .then(() => {
+          this.getDetail();
+          this.$router.go();
+        })
+        .catch((err) => console.log(err));
     },
     likePost() {
       if (this.isLoggedIn) {
         this.likeClickData.pid = this.$route.params.post_id;
         this.likeClickData.uid = this.profileInfo.uid;
-        console.log(this.likeClickData)
         axios
           .post(SERVER_URL + "/likep/likep", this.likeClickData)
           .then((res) => {
-            if (this.islike){
-              this.islike=false
-              this.icon="heart"
+            if (this.islike) {
+              this.islike = false;
+              this.icon = "heart";
             } else {
-              this.islike=true
-              this.icon="heart-fill"
+              this.islike = true;
+              this.icon = "heart-fill";
             }
             this.getDetail();
-            console.log(this.islike)
           })
           .catch((err) => console.log(err));
       } else {
@@ -817,12 +815,12 @@ export default {
 .replywidth2 {
   width: 55rem;
 }
-@media (max-width: 480px) {
+@media (max-width: 760px) {
   .replywidth {
-    width: 13rem;
+    width: 12rem;
   }
   .replywidth2 {
-    width: 12rem;
+    width: 9rem;
   }
 }
 .detail {

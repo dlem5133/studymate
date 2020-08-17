@@ -17,8 +17,15 @@
             @click="kakao"
           >회원가입</div>
         </div>
-        
-        <b-dropdown v-if="isLoggedIn" size="lg" right variant="link" toggle-class="text-decoration-none" no-caret>
+
+        <b-dropdown
+          v-if="isLoggedIn"
+          size="lg"
+          right
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+        >
           <template v-slot:button-content>
             <b-icon icon="person-circle" style="color:orange"></b-icon>
           </template>
@@ -38,7 +45,10 @@
                   class="mt-2 mb-0"
                   style="font-family: 'Do Hyeon', sans-serif;"
                 >{{ profileInfo.nickname }}</h6>
-                <small style="font-family: 'Do Hyeon', sans-serif;" class="email">{{ profileInfo.email }}</small>
+                <small
+                  style="font-family: 'Do Hyeon', sans-serif;"
+                  class="email"
+                >{{ profileInfo.email }}</small>
                 <hr class="m-0" />
                 <small class="email">마일리지: {{ total_mileage }} | 평점: {{ total_score }}</small>
               </div>
@@ -48,7 +58,14 @@
           </div>
         </b-dropdown>
 
-        <b-dropdown v-if="isLoggedIn" size="lg" right variant="link" toggle-class="text-decoration-none" no-caret>
+        <b-dropdown
+          v-if="isLoggedIn"
+          size="lg"
+          right
+          variant="link"
+          toggle-class="text-decoration-none"
+          no-caret
+        >
           <template v-slot:button-content>
             <b-icon icon="book" style="color:orange"></b-icon>
           </template>
@@ -186,11 +203,15 @@ export default {
         document.documentElement.scrollTop > 80
       ) {
         document.getElementById("container").style.backgroundColor = "white";
-        document.getElementById("container").style.borderBottom = "0.7px solid rgba(0,0,0,0.1)";
-        document.getElementById("container").style.boxShadow = "0 3px 3px rgba(0,0,0,0.1)";
+        document.getElementById("container").style.borderBottom =
+          "0.7px solid rgba(0,0,0,0.1)";
+        document.getElementById("container").style.boxShadow =
+          "0 3px 3px rgba(0,0,0,0.1)";
       } else {
-        document.getElementById("container").style.backgroundColor = "rgba(255,255,255,0)";
-        document.getElementById("container").style.borderBottom = "0.7px solid rgba(0,0,0,0)";
+        document.getElementById("container").style.backgroundColor =
+          "rgba(255,255,255,0)";
+        document.getElementById("container").style.borderBottom =
+          "0.7px solid rgba(0,0,0,0)";
         document.getElementById("container").style.boxShadow = "0 0 0";
       }
     },

@@ -3,12 +3,12 @@
     <div class="card border-0 w-75 mx-auto mx-5">
       <div class="card-text">
         <img :src="images" class="logo w-25" alt />
-        <b-row class="">
+        <b-row class>
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
             <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
           </b-col>
-          
+
           <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
             <div>
               <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
@@ -21,18 +21,6 @@
               <button @click="addFiles()">Add Files</button>
             </div>
           </b-col>
-
-          <!-- <b-col sm="12" md="4" class="px-1 mb-4"> -->
-            <!-- <div style="transform: translateY(21px);" v-if="!postCreateDate.background_image">
-              <b-form-file placeholder=" " browse-text="Image" @change="onFileChange"></b-form-file>
-            </div>
-            <div class="d-flex" style="transform: translateY(20px);" v-else>
-              <img :src="postCreateDate.background_image" class="w-25" style="height:30px;" />
-              <b-button class="ml-3" @click="removeImage" variant="border-0">
-                <b-icon icon="trash"></b-icon>
-              </b-button>
-            </div> -->
-          <!-- </b-col> -->
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정</small>
             <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
@@ -88,7 +76,11 @@
           <b-col sm="12" class="px-1">
             <small class="formtitle ml-3 float-left">내용</small>
             <b-form-textarea
-              style="resize:none;" v-model="postCreateDate.data" placeholder="내용" rows="3"></b-form-textarea>
+              style="resize:none;"
+              v-model="postCreateDate.data"
+              placeholder="내용"
+              rows="3"
+            ></b-form-textarea>
           </b-col>
           <b-col>
             <div class="d-flex inline justify-content-center">
@@ -178,7 +170,7 @@ export default {
           } else {
             this.postCreateDate = res.data.object;
           }
-          this.getgungu()
+          this.getgungu();
         })
         .catch((err) => console.log(err.data));
     },
@@ -265,17 +257,16 @@ export default {
         );
       } else {
         if (this.files[0]) {
-          this.postCreateDate.background_image = this.files[0].name
+          this.postCreateDate.background_image = this.files[0].name;
         } else {
-          this.postCreateDate.background_image = null
+          this.postCreateDate.background_image = null;
         }
-        console.log(this.postCreateDate);
         axios
           .post(SERVER_URL + "/study/update", this.postCreateDate)
           .then((res) => {
-            this.$swal("수정 완료","" , "success");
+            this.$swal("수정 완료", "", "success");
             if (this.files[0]) {
-              this.submitFiles()
+              this.submitFiles();
             }
             this.$router.push({
               name: constants.URL_TYPE.STUDY.STUDYMAIN,
@@ -297,28 +288,26 @@ export default {
     },
     addFiles() {
       this.$refs.files.click();
-      console.log(this.files);
     },
     removeFile(key) {
       this.files.splice(key, 1);
     },
     submitFiles() {
       const formData = new FormData();
-      
-        let file = this.files[0]
-        formData.append('file', file)
-      
-      formData.append('pid', this.postCreateDate.pid)
-      console.log(this.postCreateDate.pid);
-      axios.post(SERVER_URL + "/study/detail/fileupload",
-          formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        ).then(() => {})
+
+      let file = this.files[0];
+      formData.append("file", file);
+
+      formData.append("pid", this.postCreateDate.pid);
+      axios
+        .post(SERVER_URL + "/study/detail/fileupload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {})
         .catch(function () {
-          console.log('FAILURE!!');
+          console.log("FAILURE!!");
         });
     },
     getSidoCode() {

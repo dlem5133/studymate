@@ -3,7 +3,7 @@
     <div class="container">
       <img :src="images" class="logo w-25" alt />
       <div class="text-left ml-5" v-if="postDetailData.uid==profileInfo.uid">
-        <b-form-checkbox class="ml-4" v-model="boardData.isNotice" value="1" unchecked-value="0">
+        <b-form-checkbox class="ml-4" v-model="boardData.isnotice" value="1" unchecked-value="0">
           <small style="font-family:'Do Hyeon', sans-serif;">공지</small>
         </b-form-checkbox>
       </div>
@@ -29,13 +29,13 @@
           variant="warning"
           @click="updateBoard(boardData.bid)"
           style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;"
-        >SUBMIT</b-button>
+        >작성</b-button>
         <b-button
           class="ml-2"
           variant="outline-secondary"
           style="font-family:'Do Hyeon',sans-serif;"
           @click="goBoardDetail(boardData.bid)"
-        >CANCEL</b-button>
+        >취소</b-button>
       </div>
     </div>
   </div>
@@ -55,7 +55,6 @@ export default {
       profileInfo: [],
       boardData: [],
       postDetailData: [],
-      isNotice: 0,
     };
   },
   created() {
