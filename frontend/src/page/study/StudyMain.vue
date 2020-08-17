@@ -621,21 +621,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    // reportCheck(target) {
-    //   this.reportdata.target = target;
-    //   this.reportdata.pid = this.$route.params.post_id;
-    //   this.reportdata.reporter = this.profileInfo.uid;
-    //   axios
-    //     .post(SERVER_URL + "/account/reportcheck", this.reportdata)
-    //     .then((res) => {
-    //       if (res.data.status) {
-    //         this.ismodal = true;
-    //       } else {
-    //         this.ismodal = false;
-    //         alert("이미 신고된 회원입니다.");
-    //       }
-    //     });
-    // },
+
     deleteMember(user_id) {
       const deleteData = {
         pid: this.$route.params.post_id,
@@ -839,8 +825,7 @@ export default {
               color: ecolor[i % 5], // an option!
               textColor: "black", // an option!
               url:
-                SERVER_URL +
-                "/#/study/" +
+                "http://i3b205.p.ssafy.io:8081/#/study/"+
                 post_id +
                 "/" +
                 daily_id +
