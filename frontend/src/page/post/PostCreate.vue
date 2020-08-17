@@ -327,6 +327,7 @@ export default {
           .catch((err) => {
             console.log(err.response);
             this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
+            console.log(err)
           });
       }
     },
