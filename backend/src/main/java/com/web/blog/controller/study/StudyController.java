@@ -217,6 +217,7 @@ public class StudyController {
         int cnt = 0;
         boolean flag = false;
         BasicResponse result = new BasicResponse();
+        System.out.println(request);
 
         for (int i = 0; i < check_study.size(); i++) {
             if (check_study.get(i).getPosttime().getMonthValue() == LocalDate.now().getMonthValue()) {
