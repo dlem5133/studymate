@@ -39,7 +39,7 @@
                     <th class="nodisplay" scope="row">{{ui+1}}</th>
                     <td>{{user.nickname}}</td>
                     <td class="nodisplay">{{user.email}}</td>
-                    <td class="nodisplay">{{user.mileage}}</td>
+                    <td class="nodisplay">{{usermileage(user.uid)}}</td>
                     <td class="nodisplay" >{{((user.score1 + user.score2 + user.score3) / 3).toFixed(1)}}</td>
                     <td>{{user.penalty}}</td>
                     <td>
@@ -117,7 +117,7 @@
                     <th class="nodisplay" scope="row">{{ri+1}}</th>
                     <td>{{reportUser[1].nickname}}</td>
                     <td class="nodisplay">{{reportUser[1].email}}</td>
-                    <td class="nodisplay">{{reportUser[1].mileage}}</td>
+                    <td class="nodisplay">{{usermileage(reportUser[1].uid)}}</td>
                     <td class="nodisplay">{{((reportUser[1].score1 + reportUser[1].score2 + reportUser[1].score3) / 3).toFixed(1)}}</td>
                     <td>{{reportUser[1].penalty}}</td>
                   </tr>
@@ -163,7 +163,7 @@
                     <th class="nodisplay" scope="row">{{bi+1}}</th>
                     <td>{{banUser.nickname}}</td>
                     <td class="nodisplay">{{banUser.email}}</td>
-                    <td class="nodisplay">{{banUser.mileage}}</td>
+                    <td class="nodisplay">{{usermileage(banUser.uid)}}</td>
                     <td class="nodisplay">{{((banUser.score1 + banUser.score2 + banUser.score3) / 3).toFixed(1)}}</td>
                     <td>{{banUser.penalty}}</td>
                     <td>
@@ -204,9 +204,22 @@ export default {
   },
   created() {
     this.allUser();
-    this.allStudy()
+    this.getMileage()
   },
   methods: {
+    usermileage(user){
+      for (var i=0;i<this.mileageData.length;i++){
+        if (user == this.mileageData[i].uid){
+          return this.mileageData[i].total
+        }
+      }
+    },
+    getMileage(){
+      axios.get(SERVER_URL + '/mileage/list')
+      .then((res)=>{
+        this.mileageData = res.data.object
+      })
+    },
     allUser() {
       axios.post(SERVER_URL + "/admin/allUser").then((res) => {
         const allUsers = res.data.object;
