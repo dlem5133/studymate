@@ -166,7 +166,6 @@
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
               <small class="text-left ml-2">{{ list1.sentence }}</small>
-              <small class="ml-auto text-secondary">{{list1.user.nickname}}</small>
             </div>
           </div>
           <button
