@@ -13,8 +13,9 @@
                 <b-icon class="my-auto" @click="goBoardMain(boardDetailData.pid, boardDetailData.bid)" icon="house-door"></b-icon>
               </div>
             </div>
-              <small class="float-left mt-1"> {{boardDetailData.user.nickname}}, 
-                {{boardDetailData.date.substring(0,10)}}
+              <small class="float-left mt-1">
+                <span>{{nickName}} </span>
+                <span>{{datesubstring}}</span>
               </small>
           </div>
           <hr class="m-0">
@@ -36,6 +37,8 @@ export default {
     return {
       profileInfo: [],
       boardDetailData: [],
+      nickName: "",
+      datesubstring: "",
     };
   },
   created() {
@@ -68,6 +71,8 @@ export default {
       axios.get(SERVER_URL + "/study/board/details", { params: { bid: board_id }})
       .then(res => {
         this.boardDetailData = res.data.object
+        this.nickName = res.data.object.user.nickname
+        this.datesubstring = res.data.object.date.substring(0,10)
       })
       .catch(err => {
         console.log(err);
