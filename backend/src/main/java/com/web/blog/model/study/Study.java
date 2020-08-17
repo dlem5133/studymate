@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.web.blog.model.user.User;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -34,7 +35,13 @@ public class Study {
     private String title;
     private String category;    
     private String days;    
+
+    @Column(insertable = false, updatable = false)
     private Integer uid;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "uid")
+    private User user;
 
     private String data;
 
