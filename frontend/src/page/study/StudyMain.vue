@@ -839,7 +839,8 @@ export default {
               color: ecolor[i % 5], // an option!
               textColor: "black", // an option!
               url:
-                "http://localhost:3000/#/study/" +
+                SERVER_URL +
+                "/#/study/" +
                 post_id +
                 "/" +
                 daily_id +
