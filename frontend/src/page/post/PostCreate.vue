@@ -6,14 +6,24 @@
         <b-row class>
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
-            <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.title"
+              placeholder="제목"
+              type="text"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
             <div>
-              <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
+              <input
+                type="file"
+                id="files"
+                ref="files"
+                multiple
+                @change="handleFilesUpload()"
+              />
               <div v-for="(file, key) in files" :key="file.id">
                 {{ file.name }}
-                <span class="remove-file" @click="removeFile( key )">Remove</span>
+                <span class="remove-file" @click="removeFile(key)">Remove</span>
               </div>
             </div>
             <div v-if="!files[0]">
@@ -21,21 +31,26 @@
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
-            <small class="formtitle ml-3 float-left">일정</small>
-            <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
+            <small class="formtitle ml-3 float-left">일정 (주 _회)</small>
+            <b-form-spinbutton v-model="postCreateDate.bindo" min="1" max="7"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton id="demo-sb" v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
+            <b-form-spinbutton v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
-            <select @click="getgungu" v-model="postCreateDate.sido_code" class="custom-select">
+            <select
+              @click="getgungu"
+              v-model="postCreateDate.sido_code"
+              class="custom-select"
+            >
               <option
                 v-for="sido in allSidoCode"
                 :key="sido.sidocode"
                 :value="sido.sidocode"
-              >{{ sido.sidoname }}</option>
+                >{{ sido.sidoname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -45,24 +60,39 @@
                 v-for="sido in allGugunCode"
                 :key="sido.guguncode"
                 :value="sido.guguncode"
-              >{{ sido.gugunname }}</option>
+                >{{ sido.gugunname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시작일</small>
-            <b-form-input v-model="postCreateDate.start_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.start_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">종료일</small>
-            <b-form-input v-model="postCreateDate.end_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.end_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">카테고리</small>
-            <b-form-select value="f02c" v-model="postCreateDate.category" :options="options"></b-form-select>
+            <b-form-select
+              value="f02c"
+              v-model="postCreateDate.category"
+              :options="options"
+            ></b-form-select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <b-input-group size="sm" class="taggroup mb-2">
-              <b-icon icon="tags-fill" variant="warning" class="mx-2 mt-2"></b-icon>
+              <b-icon
+                icon="tags-fill"
+                variant="warning"
+                class="mx-2 mt-2"
+              ></b-icon>
               <b-form-tags
                 input-id="tags-basic"
                 tag-variant="warning"
@@ -90,7 +120,8 @@
               style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
               variant="outline-warning"
               class="createbtn"
-            >스터디 생성</b-button>
+              >스터디 생성</b-button
+            >
           </div>
         </div>
       </div>
@@ -134,7 +165,7 @@ export default {
         start_date: "",
         end_date: "",
         limitp: 3,
-        bindo: "",
+        bindo: 1,
         tmp: 0,
       },
     };
@@ -143,6 +174,7 @@ export default {
     this.user_check();
     this.getSidoCode();
   },
+
   methods: {
     user_check() {
       if (this.$cookies.isKey("Auth-Token")) {
@@ -178,7 +210,14 @@ export default {
     },
     postCreate() {
       this.postCreateDate.uid = this.profileInfo.uid;
+
       var date = new Date();
+      var start = new Date(this.postCreateDate.start_date);
+      var end = new Date(this.postCreateDate.end_date);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+      var dueday = Math.floor((end - start) / 1000 / 24 / 60 / 60);
+
       if (this.postCreateDate.title == "") {
         this.$swal(
           "생성 실패",
@@ -259,6 +298,8 @@ export default {
             "일 입니다.",
           "error"
         );
+      } else if (dueday < 14) {
+        this.$swal("가입 실패", "스터디 기간은 2주이상이여야 합니다.", "error");
       } else if (this.postCreateDate.category == null) {
         this.$swal(
           "가입 실패",
@@ -278,13 +319,19 @@ export default {
           "error"
         );
       } else {
-        this.postCreateDate.background_image = this.files[0].name;
-        console.log(this.postCreateDate);
+        if (this.files[0]) {
+          this.postCreateDate.background_image = this.files[0].name;
+        }
+        else {
+          this.postCreateDate.background_image = null;
+        }
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
-            this.submitFiles(res.data.object.pid);
+            if (this.files[0]) {
+              this.submitFiles(res.data.object.pid);
+            }
             this.$router.push({
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
@@ -311,10 +358,8 @@ export default {
     },
     submitFiles(pid) {
       const formData = new FormData();
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
-        formData.append("file", file);
-      }
+      let file = this.files[0];
+      formData.append("file", file);
       formData.append("pid", pid);
       axios
         .post(SERVER_URL + "/study/detail/fileupload", formData, {
@@ -323,7 +368,7 @@ export default {
           },
         })
         .then(() => {})
-        .catch(function () {
+        .catch(function() {
           console.log("FAILURE!!");
         });
     },

@@ -754,13 +754,10 @@ export default {
           this.days = tmpdays;
         })
         .catch((err) => {
-          if (err.response.data.status == 400) {
-            this.$router.push({
-              name: constants.URL_TYPE.POST.MAIN,
-            });
-          } else {
-            console.log(err.response);
-          }
+          this.$router.go()
+          this.$router.push({
+            name: constants.URL_TYPE.POST.MAIN,
+          });
         });
     },
     memberList() {
@@ -926,9 +923,9 @@ export default {
         .then(() => {
           this.reportCheck();
           (this.reportdata.pid = ""),
-            (this.reportdata.reporter = ""),
-            (this.reportdata.target = ""),
-            (this.reportdata.reason = "");
+          (this.reportdata.reporter = ""),
+          (this.reportdata.target = ""),
+          (this.reportdata.reason = "");
           this.$router.go();
         })
         .catch((err) => console.log(err));

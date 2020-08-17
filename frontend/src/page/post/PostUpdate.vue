@@ -22,8 +22,8 @@
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
-            <small class="formtitle ml-3 float-left">일정</small>
-            <b-form-input v-model="postCreateDate.bindo" placeholder="주 _회" type="text"></b-form-input>
+            <small class="formtitle ml-3 float-left">일정 (주 _회)</small>
+            <b-form-spinbutton v-model="postCreateDate.bindo" min="1" max="7"></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>

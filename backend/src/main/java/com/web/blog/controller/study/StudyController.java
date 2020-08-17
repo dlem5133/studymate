@@ -250,8 +250,9 @@ public class StudyController {
             Study savedStudy = this.studyDao.save(study);
 
             int pid = savedStudy.getPid();
-            
-            savedStudy.setBackground_image(pid+request.getBackground_image());
+            if (request.getBackground_image() != null) {
+                savedStudy.setBackground_image(pid+request.getBackground_image());
+            }
             studyDao.save(savedStudy);
             for (int i = 0; i < request.getTag().size(); i++) {
                 Studytag tag = new Studytag();
