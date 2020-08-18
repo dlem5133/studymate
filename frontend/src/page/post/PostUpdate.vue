@@ -6,15 +6,25 @@
         <b-row class>
           <b-col sm="12" md="8" class="px-1">
             <small class="formtitle ml-3 float-left">제목</small>
-            <b-form-input v-model="postCreateDate.title" placeholder="제목" type="text"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.title"
+              placeholder="제목"
+              type="text"
+            ></b-form-input>
           </b-col>
 
           <b-col sm="12" md="4" class="px-1 pt-4" style="height: 57px;">
             <div>
-              <input type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
+              <input
+                type="file"
+                id="files"
+                ref="files"
+                multiple
+                @change="handleFilesUpload()"
+              />
               <div v-for="(file, key) in files" :key="file.id">
                 {{ file.name }}
-                <span class="remove-file" @click="removeFile( key )">Remove</span>
+                <span class="remove-file" @click="removeFile(key)">Remove</span>
               </div>
             </div>
             <div v-if="!files[0]">
@@ -23,20 +33,34 @@
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정 (주 _회)</small>
-            <b-form-spinbutton v-model="postCreateDate.bindo" min="1" max="7"></b-form-spinbutton>
+            <b-form-spinbutton
+              v-model="postCreateDate.bindo"
+              min="1"
+              max="7"
+            ></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton id="demo-sb" v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
+            <b-form-spinbutton
+              id="demo-sb"
+              v-model="postCreateDate.limitp"
+              min="3"
+              max="100"
+            ></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
-            <select @click="getgungu" v-model="postCreateDate.sidocode" class="custom-select">
+            <select
+              @click="getgungu"
+              v-model="postCreateDate.sidocode"
+              class="custom-select"
+            >
               <option
                 v-for="sido in allSidoCode"
                 :key="sido.sidocode"
                 :value="sido.sidocode"
-              >{{sido.sidoname}}</option>
+                >{{ sido.sidoname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
@@ -46,24 +70,39 @@
                 v-for="sido in allGugunCode"
                 :key="sido.guguncode"
                 :value="sido.guguncode"
-              >{{sido.gugunname}}</option>
+                >{{ sido.gugunname }}</option
+              >
             </select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시작일</small>
-            <b-form-input v-model="postCreateDate.start_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.start_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">종료일</small>
-            <b-form-input v-model="postCreateDate.end_date" type="date"></b-form-input>
+            <b-form-input
+              v-model="postCreateDate.end_date"
+              type="date"
+            ></b-form-input>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">카테고리</small>
-            <b-form-select value="f02c" v-model="postCreateDate.category" :options="options"></b-form-select>
+            <b-form-select
+              value="f02c"
+              v-model="postCreateDate.category"
+              :options="options"
+            ></b-form-select>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <b-input-group size="sm" class="taggroup mb-2">
-              <b-icon icon="tags-fill" variant="warning" class="mx-2 mt-2"></b-icon>
+              <b-icon
+                icon="tags-fill"
+                variant="warning"
+                class="mx-2 mt-2"
+              ></b-icon>
               <b-form-tags
                 input-id="tags-basic"
                 tag-variant="warning"
@@ -90,7 +129,8 @@
                   style="border:1.5px solid orange;font-family:'Do Hyeon',sans-serif;"
                   variant="outline-warning"
                   class="createbtn"
-                >스터디 수정</b-button>
+                  >스터디 수정</b-button
+                >
               </div>
             </div>
           </b-col>
@@ -100,11 +140,11 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 import constants from "../../lib/constants";
-
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
@@ -152,7 +192,9 @@ export default {
               params: { code: err.response.data },
             });
           });
-      } else alert("로그인후 이용해주세요."), this.$router.push("/");
+      } else
+        swal("로그인이 필요합니다.", { buttons: false, timer: 1200 }),
+        this.$router.push("/");
     },
     getDetail() {
       const post_id = this.$route.params.post_id;
@@ -282,17 +324,20 @@ export default {
     // 이미지 업로드
     handleFilesUpload() {
       let uploadedFiles = this.$refs.files.files;
-      if (uploadedFiles[0].type != "image/png" && uploadedFiles[0].type != "image/jpeg") {
+      if (
+        uploadedFiles[0].type != "image/png" &&
+        uploadedFiles[0].type != "image/jpeg"
+      ) {
         this.$swal(
-        "사진 업로드 실패",
-        "PNG, JPG 이미지 확장자만 업로드 가능합니다.",
-        "error"
+          "사진 업로드 실패",
+          "PNG, JPG 이미지 확장자만 업로드 가능합니다.",
+          "error"
         );
       } else if (uploadedFiles[0].size > 5000000) {
         this.$swal(
-        "사진 업로드 실패",
-        "5MB 이하 이미지만 업로드 가능합니다.",
-        "error"
+          "사진 업로드 실패",
+          "5MB 이하 이미지만 업로드 가능합니다.",
+          "error"
         );
       } else {
         this.files.push(uploadedFiles[0]);
@@ -318,7 +363,7 @@ export default {
           },
         })
         .then(() => {})
-        .catch(function () {
+        .catch(function() {
           console.log("FAILURE!!");
         });
     },

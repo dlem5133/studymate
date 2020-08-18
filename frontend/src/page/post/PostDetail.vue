@@ -745,7 +745,7 @@ export default {
           .catch((err) => console.log(err));
       } else {
         this.islike = false;
-        alert("로그인이 필요합니다.");
+        swal("로그인이 필요합니다.", { buttons: false, timer: 1200 });
       }
     },
     goStudyMain(post_id) {

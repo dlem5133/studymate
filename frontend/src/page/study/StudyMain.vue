@@ -489,6 +489,8 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 export default {
   name: "PostDetail",
@@ -598,8 +600,8 @@ export default {
       for (let i = 0; i < this.memberListData.length; i++) {
         member.push(this.memberListData[i].uid)
       }
-      if (member.indexOf(this.profileInfo.uid) == -1) {
-        alert("스터디 맴버가 아닙니다.")
+      if (member.indexOf(this.profileInfo.uid) == -1) {  
+        swal("", "스터디 맴버가 아닙니다.");
         this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
       }
     },
@@ -906,7 +908,7 @@ export default {
         .catch((err) => console.log(err));
     },
     alertCheck() {
-      alert("이미 신고된 유저입니다.");
+          swal("", "이미 평가한 회원입니다.");
     },
     reportMember() {
       this.reportdata.pid = this.$route.params.post_id;
@@ -976,7 +978,7 @@ export default {
         });
     },
     onceEva() {
-      alert("이미 평가 하셨습니다.");
+      swal("","이미 평가 하셨습니다.");
     },
     setFinEva() {
       this.evalueData.pid = this.postData.pid;
@@ -1042,13 +1044,13 @@ export default {
           this.allDailyLists[i].posttime === today &&
           this.allDailyLists[i].uid === this.profileInfo.uid
         ) {
-          alert("일지는 하루에 한번만 작성가능 합니다.");
+          swal("", "일지는 하루에 한번만 작성가능 합니다.");
           flag = true;
           break;
         }
       }
       if (this.days.indexOf(d) == -1) {
-        alert("일지작성이 불가능한 날입니다.");
+        swal("", "일지작성이 불가능한 날입니다.");
         flag = true;
       }
       if (!flag) {

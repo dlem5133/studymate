@@ -6,15 +6,27 @@
         <b-col class="text-right">
           <b-button variant="info" size="sm m-0 py-0 px-1" v-b-modal.modal-1>
             <small class="mr-1">임시저장목록</small>
-            <b-badge variant="light">{{tmpNum.length}}</b-badge>
+            <b-badge variant="light">{{ tmpNum.length }}</b-badge>
           </b-button>
         </b-col>
         <b-col sm="12" class="px-1 mb-4">
-          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">제목</small>
-          <b-form-input v-model="preData.title" placeholder="제목" type="text"></b-form-input>
+          <small
+            style="font-family:'Do Hyeon',sans-serif;"
+            class="formtitle ml-3 float-left"
+            >제목</small
+          >
+          <b-form-input
+            v-model="preData.title"
+            placeholder="제목"
+            type="text"
+          ></b-form-input>
         </b-col>
         <b-col sm="12" class="px-1">
-          <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">내용</small>
+          <small
+            style="font-family:'Do Hyeon',sans-serif;"
+            class="formtitle ml-3 float-left"
+            >내용</small
+          >
           <br />
           <editor
             class="p-0 text-left"
@@ -33,35 +45,39 @@
           variant="warning"
           @click="submitDaily(1)"
           style="border:1px solid orange;font-family:'Do Hyeon',sans-serif;"
-        >작성</b-button>
+          >작성</b-button
+        >
         <b-button
           class="bubut ml-2"
           variant="info"
           @click="submitDaily(0)"
           style="font-family:'Do Hyeon',sans-serif;"
-        >임시저장</b-button>
+          >임시저장</b-button
+        >
         <b-button
           class="ml-2"
           variant="outline-secondary"
           style="font-family:'Do Hyeon',sans-serif;"
           @click="goBack"
-        >취소</b-button>
+          >취소</b-button
+        >
       </div>
 
       <b-modal id="modal-1" hide-footer title="임시저장 리스트">
         <div v-for="tmpdaily in tmpDailyData" :key="tmpdaily.did">
-          <div class="card mb-2" v-if="tmpdaily.did!=$route.params.daily_id">
+          <div class="card mb-2" v-if="tmpdaily.did != $route.params.daily_id">
             <div class="px-3 py-2 card-body d-flex justify-content-between">
-              <small class="my-auto">{{tmpdaily.title}}</small>
+              <small class="my-auto">{{ tmpdaily.title }}</small>
               <small class="my-auto">
-                {{tmpdaily.posttime}}
+                {{ tmpdaily.posttime }}
                 <b-button
                   size="sm"
                   class="ml-1"
                   style="font-family:'Do Hyeon', sans-serif;"
                   @click="continueWrite(tmpdaily.pid, tmpdaily.did)"
                   variant="outline-success"
-                >작성</b-button>
+                  >작성</b-button
+                >
               </small>
             </div>
           </div>
@@ -80,6 +96,8 @@ import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import "highlight.js/styles/github.css";
 import hljs from "highlight.js";
 import { Editor } from "@toast-ui/vue-editor";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 const SERVER_URL = constants.ServerUrl;
 const baekjoon = "/백준";
@@ -181,7 +199,7 @@ export default {
       profileInfo: [],
       studyLists: [],
       tmpDailyData: [],
-      tmpNum:[],
+      tmpNum: [],
       preData: [],
       body: "",
     };
@@ -196,7 +214,7 @@ export default {
       setTimeout(() => {
         if (this.preData.uid && this.profileInfo.uid) {
           if (this.preData.uid !== this.profileInfo.uid) {
-            alert("작성자만 수정 할 수 있습니다.");
+            swal("작성자만 수정 할 수 있습니다.", { buttons: false, timer: 1200 });
             this.$router.push({
               name: constants.URL_TYPE.STUDY.DAILYDETAIL,
               params: {
@@ -247,12 +265,12 @@ export default {
     },
     submitDaily(tmpN) {
       if (this.text == "") {
-        alert("제목을 입력해주세요.");
+        swal("제목을 입력해주세요.", { buttons: false, timer: 1200 });
       } else if (
         this.$refs.toastuiEditor.invoke("getMarkdown") == "" ||
         this.$refs.toastuiEditor.invoke("getMarkdown") == initcontent
       ) {
-        alert("새로운 내용을 입력해주세요.");
+        swal("새로운 내용을 입력해주세요.", { buttons: false, timer: 1200 });
       } else {
         const dailydData = {
           title: this.preData.title,
