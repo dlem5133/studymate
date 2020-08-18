@@ -589,7 +589,7 @@ export default {
   },
   mounted() {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
-    this.getPostTime();
+    this.getPostTime(0);
   },
   methods: {
     changeDatedata(time) {
@@ -787,7 +787,7 @@ export default {
           console.log(err);
         });
     },
-    getPostTime() {
+    getPostTime(n) {
       axios
         .get(SERVER_URL + "/diary/list", {
           params: {
@@ -807,34 +807,36 @@ export default {
           } else {
             this.decimalDay = dday;
           }
-          this.allDailyLists = res.data.object[0];
-          var i = 0;
-          const post_id = this.$route.params.post_id;
-          const ecolor = [
-            "#ACBFEA",
-            "#F8DDA9",
-            "#FDAF9B",
-            "#DCCBED",
-            "#B6E3E9",
-          ];
-          while (i < this.allDailyLists.length) {
-            var d = this.allDailyLists[i].title;
-            var s = this.allDailyLists[i].posttime;
-            var daily_id = this.allDailyLists[i].did;
-            const test = {
-              title: d,
-              date: s,
-              color: ecolor[i % 5], // an option!
-              textColor: "black", // an option!
-              url:
-                "http://i3b205.p.ssafy.io:8081/#/study/"+
-                post_id +
-                "/" +
-                daily_id +
-                "/detail",
-            };
-            this.calendarOptions.events.push(test);
-            i++;
+          if (n == 0) {
+            this.allDailyLists = res.data.object[0];
+            var i = 0;
+            const post_id = this.$route.params.post_id;
+            const ecolor = [
+              "#ACBFEA",
+              "#F8DDA9",
+              "#FDAF9B",
+              "#DCCBED",
+              "#B6E3E9",
+            ];
+            while (i < this.allDailyLists.length) {
+              var d = this.allDailyLists[i].title;
+              var s = this.allDailyLists[i].posttime;
+              var daily_id = this.allDailyLists[i].did;
+              const test = {
+                title: d,
+                date: s,
+                color: ecolor[i % 5], // an option!
+                textColor: "black", // an option!
+                url:
+                  "http://i3b205.p.ssafy.io:8081/#/study/"+
+                  post_id +
+                  "/" +
+                  daily_id +
+                  "/detail",
+              };
+              this.calendarOptions.events.push(test);
+              i++;
+            }
           }
         })
         .catch((err) => {
@@ -856,7 +858,16 @@ export default {
           .post(SERVER_URL + "/upcoming/create", this.expectData)
           .then((res) => {
             this.expectTodo = res.data.object;
-            this.getPostTime();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var count = new Date(res.data.object.dodate);
+            count.setHours(0, 0, 0, 0);
+            var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60);
+            if (dday <= 0) {
+              this.decimalDay = "day";
+            } else {
+              this.decimalDay = dday;
+            }
           })
           .catch((err) => console.log(err));
       }
@@ -876,7 +887,16 @@ export default {
           .post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
             this.expectTodo = res.data.object;
-            this.getPostTime();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var count = new Date(res.data.object.dodate);
+            count.setHours(0, 0, 0, 0);
+            var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60);
+            if (dday <= 0) {
+              this.decimalDay = "day";
+            } else {
+              this.decimalDay = dday;
+            }
           })
 
           .catch((err) => console.log(err));
@@ -889,8 +909,7 @@ export default {
       axios
         .post(SERVER_URL + "/upcoming/delete", this.expectData)
         .then((res) => {
-          this.expectTodo = res.data.object;
-          this.getPostTime();
+          this.getPostTime(1)
         })
         .catch((err) => console.log(err));
     },

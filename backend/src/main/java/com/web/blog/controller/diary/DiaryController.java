@@ -207,6 +207,7 @@ public class DiaryController {
         BasicResponse result = new BasicResponse();
         result.status = true;
         result.data = "다가올 스터디 생성 완료";
+        result.object = expectdo;
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
