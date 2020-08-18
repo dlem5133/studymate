@@ -359,6 +359,8 @@ export default {
       }
     },
     addFiles() {
+      console.log(this.files)
+      
       this.$refs.files.click();
     },
     removeFile(key) {
