@@ -203,6 +203,7 @@ public class StudyDetailController {
         leader_indv.setIsleader(0);
         member_indv.setIsleader(1);
         study.setUid(request.getMember());
+        study.setUser(userDao.findUserByUid(request.getMember()));
         indvstudylstDao.save(leader_indv);
         indvstudylstDao.save(member_indv);
         studyDao.save(study);
@@ -219,6 +220,7 @@ public class StudyDetailController {
         }
         return response;
     }
+
     @PostMapping("/study/detail/fileupload")
     @ResponseBody
     @RequestMapping(value = "/study/detail/fileupload", headers = "Content-Type= multipart/form-data", method = RequestMethod.POST) @ApiOperation(value = "파일업로드")
