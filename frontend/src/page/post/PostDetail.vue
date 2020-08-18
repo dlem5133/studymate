@@ -1,14 +1,14 @@
 <template>
   <div class="detail container">
-    <div class="container">
-      <div class="card border px-0">
+    <div id="postwidth" class="container">
+      <div class="card shadow border px-0">
         <div class="cardimg">
           <img
             style="position:relative;"
             :src="postData.background_image"
             alt
             height="270rem"
-            width="100%"
+            width="60%"
           />
           <div style="position:absolute;top:5px;left:10px;">
             <b-badge variant="warning" class="my-auto" v-if="postData.tmp == 1">모집중</b-badge>
@@ -63,15 +63,15 @@
                   팀장 {{ userData.nickname }}
                 </small>
                 <b-button
-                  style="color:black;"
-                  v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)"
-                  @click="goStudyMain(postData.pid)"
+                  style="color:orange;"
+                  v-if="requestListData.length > 0"
+                  v-b-modal.modal-1
                   size="sm"
                   class="p-0 border-0"
                   variant="link"
                 >
-                  <b-icon class="ml-2" icon="house-door"></b-icon>
-                  <small>HOME</small>
+                  <b-icon class="ml-2" icon="person"></b-icon>
+                  <small>MEMBER</small>
                 </b-button>
               </div>
               <div class="d-flex" v-else>
@@ -89,7 +89,6 @@
                   </template>
                   <b-dropdown-item @click="postUpdate(postData.pid)">수정</b-dropdown-item>
                   <b-dropdown-item @click="postDelete">삭제</b-dropdown-item>
-                  <b-dropdown-item v-if="requestListData.length > 0" v-b-modal.modal-1>스터디 멤버</b-dropdown-item>
                 </b-dropdown>
                 <!-- 팀원 모달 -->
                 <b-modal id="modal-1" title="팀원 승인대기" hide-footer>
@@ -112,23 +111,35 @@
                   </div>
                 </b-modal>
                 <b-button
-                  style="color:black;"
-                  v-if="postData.tmp==0 || postData.tmp==3 && isMember"
-                  @click="goStudyMain(postData.pid)"
+                  style="color:orange;"
+                  v-if="requestListData.length > 0"
+                  v-b-modal.modal-1
                   size="sm"
                   class="p-0 border-0"
                   variant="link"
                 >
-                  <b-icon class="ml-2 mr-1" icon="house-door"></b-icon>
-                  <small>HOME</small>
+                  <b-icon class="ml-2" icon="person"></b-icon>
+                  <small>MEMBER</small>
                 </b-button>
               </div>
             </div>
           </div>
           <div class="d-flex">
             <h5 class="mb-0 text-left">{{ postData.title }}</h5>
+            <b-button
+              style="color:orange;"
+              v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)"
+              @click="goStudyMain(postData.pid)"
+              size="sm"
+              class="p-0 border-0"
+              variant="link"
+            >
+              <b-icon class="mx-1" icon="house-door"></b-icon>
+              <small>진행페이지</small>
+            </b-button>
             <div class="ml-auto">
-              <b-icon class="mr-1" variant="danger" :icon="icon" @click="likePost"></b-icon>
+              <b-icon v-if="likeData.length==0" class="mr-1" variant="danger" icon="heart" @click="likePost"></b-icon>
+              <b-icon v-else class="mr-1" variant="danger" :icon="icon" @click="likePost"></b-icon>
               <small class="mr-2 my-auto">{{ likeData.length }}</small>
               <b-icon class="mr-1" @click="test" id="kakao-link" icon="share-fill" size="sm"></b-icon>
             </div>
@@ -193,7 +204,7 @@
       <br />
 
       <!-- 댓글 -->
-      <div class="card mb-5 mb-1">
+      <div class="card shadow mb-5 mb-1">
         <p class="text-left m-0 px-3 py-3">
           <b-icon icon="chat-dots" class="mr-1 my-auto" flip-h></b-icon>댓글
         </p>
@@ -810,9 +821,20 @@ export default {
 }
 .replywidth,
 .replywidth2 {
-  width: 55rem;
+  width: 40rem;
+}
+#postwidth{
+  padding:0 10rem;
+}
+@media (max-width:480px){
+  #postwidth{
+    padding:0 1rem;
+  }
 }
 @media (max-width: 760px) {
+  #postwidth{
+    padding:0 1rem;
+  }
   .replywidth {
     width: 12rem;
   }

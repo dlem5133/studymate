@@ -242,6 +242,7 @@ export default {
                 name: constants.URL_TYPE.STUDY.DAILYDETAIL,
                 params: {
                   post_id: this.$route.params.post_id,
+                  daily_id: res.data.object.did
                 },
               });
             } else {
