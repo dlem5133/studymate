@@ -916,10 +916,9 @@ export default {
         .then(() => {
           this.reportCheck();
           (this.reportdata.pid = ""),
-            (this.reportdata.reporter = ""),
-            (this.reportdata.target = ""),
-            (this.reportdata.reason = "");
-          this.$router.go();
+          (this.reportdata.reporter = ""),
+          (this.reportdata.target = ""),
+          (this.reportdata.reason = "");
         })
         .catch((err) => console.log(err));
     },
@@ -1048,7 +1047,7 @@ export default {
           break;
         }
       }
-      if (this.days.indexOf(d) != -1) {
+      if (this.days.indexOf(d) == -1) {
         alert("일지작성이 불가능한 날입니다.");
         flag = true;
       }
