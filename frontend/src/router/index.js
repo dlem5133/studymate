@@ -19,7 +19,7 @@ import StudyMain from "../page/study/StudyMain";
 import DailyDetail from "../page/study/DailyDetail";
 import DailyCreate from "../page/study/DailyCreate";
 import DailyUpdate from "../page/study/DailyUpdate";
-import FileUpload from "../page/study/fileupload"
+
 // 게시판
 import BoardMain from "../page/board/BoardMain.vue"
 import BoardCreate from "../page/board/BoardCreate.vue"
@@ -100,11 +100,6 @@ export default new Router({
       path: "/study/:post_id/:daily_id/update",
       name: constants.URL_TYPE.STUDY.DAILYUPDATE,
       component: DailyUpdate,
-    },
-    {
-      path: "/fileupload",
-      name: constants.URL_TYPE.STUDY.FILEUPLOAD,
-      component: FileUpload,
     },
     // 게시판
     {

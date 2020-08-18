@@ -17,7 +17,7 @@
           <small style="font-family:'Do Hyeon',sans-serif;" class="formtitle ml-3 float-left">내용</small>
           <br />
           <editor
-            class="p-0"
+            class="p-0 text-left"
             :initialEditType="initialEditType()"
             ref="toastuiEditor"
             :options="editorOptions"
