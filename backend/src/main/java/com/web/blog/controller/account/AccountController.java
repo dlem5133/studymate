@@ -187,7 +187,8 @@ public class AccountController {
             user.setNickname(request.getNickname());
             user.setIntro(request.getIntro());
             user.setProfile_image(request.getProfile_image());
-
+            user.setMileage(1000);
+            user.setPenalty(0);
             User saveduser = this.userDao.save(user);
 
             Mileage mileage = new Mileage();
@@ -196,6 +197,7 @@ public class AccountController {
             mileage.setDiarypoint(0);
             mileage.setEndpoint(0);
             mileage.setEvalpoint(0);
+            
             mileage.setTotal(1000);
             mileageDao.save(mileage);
 
