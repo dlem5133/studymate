@@ -193,6 +193,7 @@ export default {
       users: {},
       searchuser: {},
       studies: {},
+      mileageData: {},
       searchstudies: {},
       reports: {},
       banUsers: {},
