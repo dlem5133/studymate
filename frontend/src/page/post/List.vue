@@ -228,7 +228,8 @@
 import "../../assets/css/post.scss";
 import axios from "axios";
 import constants from "../../lib/constants";
-
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
