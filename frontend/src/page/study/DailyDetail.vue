@@ -2,30 +2,56 @@
   <div style="margin-top:6rem;" class="container">
     <div class="container">
       <div class="card">
-          <div class="p-4">
-            <div class="d-flex">
-              <h5 class="font-weight-bold text-left p-0 m-0">{{ dailyDetailData.title }}</h5>
-              <div class="d-flex ml-auto">
-                <div class="d-flex my-auto" v-if="profileInfo.uid === dailyDetailData.uid">
-                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="dailyUpdate(dailyDetailData.did)" class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect">수정</button>
-                  <button style="font-family:'Do Hyeon',sans-serif;" type="button" @click="dailyDelete(dailyDetailData.did)" class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect">삭제</button>
-                </div>
-                <b-icon class="my-auto" @click="goStudyMain" icon="house-door"></b-icon>
+        <div class="p-4">
+          <div class="d-flex">
+            <h5 class="font-weight-bold text-left p-0 m-0">
+              {{ dailyDetailData.title }}
+            </h5>
+            <div class="d-flex ml-auto">
+              <div
+                class="d-flex my-auto"
+                v-if="profileInfo.uid === dailyDetailData.uid"
+              >
+                <button
+                  style="font-family:'Do Hyeon',sans-serif;"
+                  type="button"
+                  @click="dailyUpdate(dailyDetailData.did)"
+                  class="mr-2 btn btn-outline-primary btn-sm btn-rounded waves-effect"
+                >
+                  수정
+                </button>
+                <button
+                  style="font-family:'Do Hyeon',sans-serif;"
+                  type="button"
+                  @click="dailyDelete(dailyDetailData.did)"
+                  class="mr-2 btn btn-outline-danger btn-sm btn-rounded waves-effect"
+                >
+                  삭제
+                </button>
               </div>
+              <b-icon
+                class="my-auto"
+                @click="goStudyMain"
+                icon="house-door"
+              ></b-icon>
             </div>
-              <small class="float-left mt-1"> {{dailyDetailData.writer}}, 
-                {{dailyDetailData.posttime}}
-              </small>
           </div>
-          <hr class="m-0">
-          <Viewer class="p-2 text-left" style="min-height:58vh;" 
-            v-if="dailyDetailData.body != null"
-            :initialValue="dailyDetailData.body"
-            :options="viewerOptions"
-          />
-        </div>      
+          <small class="float-left mt-1">
+            {{ dailyDetailData.writer }},
+            {{ dailyDetailData.posttime }}
+          </small>
+        </div>
+        <hr class="m-0" />
+        <Viewer
+          class="p-2 text-left"
+          style="min-height:58vh;"
+          v-if="dailyDetailData.body != null"
+          :initialValue="dailyDetailData.body"
+          :options="viewerOptions"
+        />
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -139,7 +165,7 @@ export default {
       this.$router.push({
         name: constants.URL_TYPE.STUDY.STUDYMAIN,
         params: {
-          post_id: this.$route.params.post_id
+          post_id: this.$route.params.post_id,
         },
       });
     },
@@ -169,20 +195,28 @@ export default {
         did: this.$route.params.daily_id,
         uid: this.profileInfo.uid,
       };
-      axios
-        .post(SERVER_URL + "/diary/delete", deleteData)
-        .then((res) => {
-          alert("삭제되었습니다.");
-          this.$router.push({
-            name: constants.URL_TYPE.STUDY.STUDYMAIN,
-            params: {
-              post_id: this.$route.params.post_id,
-            },
-          });
-        })
-        .catch((err) => {
-          console.log(err.data);
-        });
+      swal({
+        text: "댓글을 삭제하시겠습니까?",
+        dangerMode: true,
+        buttons: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios
+            .post(SERVER_URL + "/diary/delete", deleteData)
+            .then((res) => {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.STUDYMAIN,
+                params: {
+                  post_id: this.$route.params.post_id,
+                },
+                a,
+              });
+            })
+            .catch((err) => {
+              console.log(err.data);
+            });
+        }
+      });
     },
   },
 };

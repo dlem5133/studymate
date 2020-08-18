@@ -197,6 +197,7 @@ public class AccountController {
             mileage.setDiarypoint(0);
             mileage.setEndpoint(0);
             mileage.setEvalpoint(0);
+            
             mileage.setTotal(1000);
             mileageDao.save(mileage);
 
