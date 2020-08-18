@@ -18,7 +18,7 @@
               </small>
           </div>
           <hr class="m-0">
-          <Viewer class="p-2" style="min-height:58vh;" 
+          <Viewer class="p-2 text-left" style="min-height:58vh;" 
             v-if="dailyDetailData.body != null"
             :initialValue="dailyDetailData.body"
             :options="viewerOptions"
