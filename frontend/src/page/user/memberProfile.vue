@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="m-3 row rounded-lg border">
-            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
+            <div class="col-12 col-md-4 py-3 border-bottom border-right">
               <div class="d-flex">
                 <b-icon icon="calendar-3"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">일지</p>
@@ -71,7 +71,7 @@
               </div>
             </div>
 
-            <div class="col-12 col-md-4 py-3 border-bottom border-right" style="cursor:pointer;">
+            <div class="col-12 col-md-4 py-3 border-bottom border-right" >
               <div class="d-flex">
                 <b-icon icon="award"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">평가</p>
@@ -82,7 +82,7 @@
               </div>
             </div>
 
-            <div class="col-12 col-md-4 py-3" style="cursor:pointer;">
+            <div class="col-12 col-md-4 py-3">
               <div class="d-flex">
                 <b-icon icon="book-half"></b-icon>
                 <p class="mb-0 ml-2" style="font-family: 'Do Hyeon', sans-serif;">스터디 완료</p>
@@ -160,8 +160,6 @@
             v-for="(list1, n) in evalistdata"
             :key="list1.id"
             class="card m-3 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-            style="cursor:pointer;"
           >
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
