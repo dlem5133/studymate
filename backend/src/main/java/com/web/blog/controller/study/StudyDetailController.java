@@ -227,19 +227,21 @@ public class StudyDetailController {
     public Object fileupload(
         HttpServletRequest request, @RequestParam(value = "pid", required = true) Integer pid, @RequestParam(value = "file", required = true) MultipartFile file)
     throws IllegalStateException, IOException {
-        FileOutputStream fos;
         byte fileData[] = file.getBytes();
+        System.out.println("저장 확인");
         File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
         if (!ff.getParentFile().exists())
             ff.getParentFile().mkdirs();
-        System.out.println("저장 확인");
-        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
-        fos.write(fileData);
         System.out.println("저장 완료: "+ff.getAbsolutePath());
+        file.transferTo(ff);
+        
+        // fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
+        // fos.write(fileData);
+        
         //        file.transferTo(ff);
         // System.out.println("file is ");
         // System.out.println("name is " + file.getName());
-        fos.close();
+       
         return file.getName();
     }
 
