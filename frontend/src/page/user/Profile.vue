@@ -280,8 +280,6 @@
             v-for="(list1, n) in evalistdata"
             :key="list1.id"
             class="card m-3 px-2 p-2"
-            @click="goStudyMain(list.pid)"
-            style="cursor:pointer;"
           >
             <div v-if="n < showEvalist" class="d-flex inline">
               <b-badge class="my-auto" variant="secondary">{{list1.study.category}}</b-badge>
