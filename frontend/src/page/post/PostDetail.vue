@@ -472,8 +472,8 @@ export default {
         );
       }
     },
-    changeDatedata(time) {
-      return time.substring(5, 10) 
+     changeDatedata(time) {
+      return time.substring(5, 10) + time.substring(11,16)
     },
     userCheck() {
       if (this.$cookies.isKey("Auth-Token")) {
