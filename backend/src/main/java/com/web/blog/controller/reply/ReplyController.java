@@ -56,6 +56,8 @@ public class ReplyController {
         reply.setPid(replyRequest.getPid());
         reply.setStudy(studyDao.findStudyByPid(replyRequest.getPid()));
         reply.setReplyparent(replyRequest.getReply_parent());
+        reply.setReply_time(LocalDateTime.now());
+
 
         final Reply saveReply = this.replyDao.save(reply);
         final BasicResponse result = new BasicResponse();
