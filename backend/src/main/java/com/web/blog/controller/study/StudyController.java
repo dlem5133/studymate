@@ -96,7 +96,7 @@ public class StudyController {
         List<Studylikep> studylikep = studylikepDao.findStudylikepByPid(pid);
         User user = userDao.findUserByUid(study.getUid());
         ArrayList<Object> studyAndreply = new ArrayList<>();
-        study.setMemnum(indvstudylstDao.countByPid(pid));
+        study.setMemnum(indvstudylstDao.countByPidAndIsjoin(pid,1));
         studyDao.save(study);
         studyAndreply.add(study);
         studyAndreply.add(reply);
@@ -126,7 +126,7 @@ public class StudyController {
         for (int i = 0; i < studylist.size(); i++) {
             // 태그 매칭
             studylist.get(i).setLikep(studylikepDao.findStudylikepByPid(studylist.get(i).getPid()).size());
-            studylist.get(i).setMemnum(indvstudylstDao.countByPid(studylist.get(i).getPid()));
+            studylist.get(i).setMemnum(indvstudylstDao.countByPidAndIsjoin(studylist.get(i).getPid(),1));
             studyDao.save(studylist.get(i));
             ArrayList<Object> tmp = new ArrayList<>();
             tmp.add(studylist.get(i));
