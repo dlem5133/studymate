@@ -4,7 +4,11 @@ export default {
     "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     ServerUrl: "http://i3b205.p.ssafy.io:8080",
+=======
+   ServerUrl: "http://i3b205.p.ssafy.io:8080",
+>>>>>>> 4ae42a714c3fe9823787b67780aa37dfd923015b
 //   ServerUrl: "http://localhost:8080",
 =======
   ServerUrl: "http://i3b205.p.ssafy.io:8080",
