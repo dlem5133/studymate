@@ -229,7 +229,7 @@ public class StudyDetailController {
     throws IllegalStateException, IOException {
         byte fileData[] = file.getBytes();
         System.out.println("저장 확인");
-        File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid + file.getOriginalFilename());
+        File ff = new File("/home/ubuntu/studymate/s03p13b205/frontend/src/assets/uploadfile/" + pid + file.getOriginalFilename());
         System.out.println(ff.getAbsolutePath());
         ff.getParentFile().mkdirs(); // Will create parent directories if not exists
         ff.createNewFile();
