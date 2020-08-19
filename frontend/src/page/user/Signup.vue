@@ -36,8 +36,15 @@
               <b-form-input
                 type="password"
                 v-model="signupData.passwordConfirm"
-                id="input-passwordConfirm"
+                id="input-passwordConfirm passwordconfirm-live"
+                :state="passwordconfirmState"
+                aria-describedby="passwordconfirm-live-feedback passwordconfirm-live-help"
+                trim
               ></b-form-input>
+              <b-form-invalid-feedback id="password-live-feedback"
+                >비밀번호와 틀립니다.</b-form-invalid-feedback
+              >
+              <b-form-text id="password-live-help">비밀번호와 동일합니다.</b-form-text>
             </b-form-group>
           </b-card-text>
         </div>
@@ -118,6 +125,9 @@ export default {
     passwordState() {
       return this.signupData.password.length > 4 ? true : false;
     },
+    passwordconfirmState(){
+      return this.signupData.passwordState === this.signupData.passwordConfirm? true: false;
+    }
   },
   data: () => {
     return {
