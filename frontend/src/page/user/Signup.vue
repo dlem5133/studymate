@@ -1,17 +1,38 @@
 <template>
   <div style="margin-top:6rem;" class="container">
     <div class="d-flex justify-content-center">
-      <b-card style="font-family: 'Do Hyeon', sans-serif;width: 500px;" class="my-5">
+      <b-card
+        style="font-family: 'Do Hyeon', sans-serif;width: 500px;"
+        class="my-5"
+      >
         <h3 style="font-family: 'Do Hyeon', sans-serif;">JOIN</h3>
         <div class="mt-4" v-if="page == 0">
           <b-card-text>
             <b-form-group label="이메일" label-for="input-email">
-              <b-card class="baseInput" no-body id="input-email">{{signupData.email}}</b-card>
+              <b-card class="baseInput" no-body id="input-email">{{
+                signupData.email
+              }}</b-card>
             </b-form-group>
             <b-form-group label="비밀번호" label-for="input-password">
-              <b-form-input type="password" v-model="signupData.password" id="input-password"></b-form-input>
+              <b-form-input
+                id="password-live live-password"
+                type="password"
+                v-model="signupData.password"
+                :state="passwordState"
+                aria-describedby="password-live-feedback password-live-help"
+                placeholder="영어 대소문자, 숫자, 특수기호 포함 8자 이상"
+                trim
+              ></b-form-input>
+              <b-form-invalid-feedback id="password-live-feedback"
+                >영어 대소문자, 숫자, 특수기호를 포함하여 8자 이상을
+                입력해주세요.</b-form-invalid-feedback
+              >
+              <b-form-text id="password-live-help">확인</b-form-text>
             </b-form-group>
-            <b-form-group label="비밀번호 확인" label-for="input-passwordConfirm">
+            <b-form-group
+              label="비밀번호 확인"
+              label-for="input-passwordConfirm"
+            >
               <b-form-input
                 type="password"
                 v-model="signupData.passwordConfirm"
@@ -23,17 +44,26 @@
         <div class="mt-4" v-if="page == 1">
           <b-card-text>
             <b-form-group label="닉네임" label-for="input-nickname">
-              <b-card class="baseInput" no-body id="input-nickname">{{signupData.nickname}}</b-card>
+              <b-card class="baseInput" no-body id="input-nickname">{{
+                signupData.nickname
+              }}</b-card>
             </b-form-group>
             <b-form-group label="자기소개" label-for="input-intro">
-              <b-form-textarea id="input-intro" v-model="signupData.intro" rows="3" max-rows="6"></b-form-textarea>
+              <b-form-textarea
+                id="input-intro"
+                v-model="signupData.intro"
+                rows="3"
+                max-rows="6"
+              ></b-form-textarea>
             </b-form-group>
           </b-card-text>
         </div>
         <div class="mt-4" v-if="page == 2">
           <b-card-text>
             <div v-if="!signupData.profile_image">
-              <p style="font-family: 'Do Hyeon', sans-serif;color:orange;">Profile Image</p>
+              <p style="font-family: 'Do Hyeon', sans-serif;color:orange;">
+                Profile Image
+              </p>
               <b-form-file
                 @change="onChangeImages"
                 v-model="file"
@@ -55,9 +85,19 @@
         </div>
 
         <div class="d-flex justify-content-between">
-          <b-button v-if="0 < page && page < 3" @click="pageSwitch(-1)" pill>이전</b-button>
-          <b-button v-if="page < 2" @click="pageSwitch(1)" pill variant="primary">다음</b-button>
-          <b-button v-if="page == 2" @click="doSign" pill variant="success">완료</b-button>
+          <b-button v-if="0 < page && page < 3" @click="pageSwitch(-1)" pill
+            >이전</b-button
+          >
+          <b-button
+            v-if="page < 2"
+            @click="pageSwitch(1)"
+            pill
+            variant="primary"
+            >다음</b-button
+          >
+          <b-button v-if="page == 2" @click="doSign" pill variant="success"
+            >완료</b-button
+          >
         </div>
       </b-card>
     </div>
@@ -74,6 +114,11 @@ const SERVER_URL = constants.ServerUrl;
 
 export default {
   name: "Signup",
+  computed: {
+    passwordState() {
+      return this.signupData.password.length > 4 ? true : false;
+    },
+  },
   data: () => {
     return {
       page: 0,
@@ -118,7 +163,7 @@ export default {
       };
       reader.readAsDataURL(fileObject);
     },
-    removeImage: function (e) {
+    removeImage: function(e) {
       this.signupData.profile_image = "";
     },
     doSign() {
