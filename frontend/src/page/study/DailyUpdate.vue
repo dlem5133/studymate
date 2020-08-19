@@ -264,6 +264,18 @@ export default {
         .catch((err) => console.log(err.data));
     },
     submitDaily(tmpN) {
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (day < 10) {
+        day = "0" + day;
+      }
+      var today = year + "-" + month + "-" + day;
+
       if (this.text == "") {
         swal("제목을 입력해주세요.", { buttons: false, timer: 1200 });
       } else if (
@@ -279,6 +291,7 @@ export default {
           did: this.$route.params.daily_id,
           uid: this.profileInfo.uid,
           tmp: tmpN,
+          posttime: today
         };
         axios
           .post(SERVER_URL + "/diary/update", dailydData)
