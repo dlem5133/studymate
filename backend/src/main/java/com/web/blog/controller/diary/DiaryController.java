@@ -103,7 +103,7 @@ public class DiaryController {
     public Object details(@RequestParam(required = true) final int did) {
         Diary diary = diaryDao.findDiaryByDid(did);
         ResponseEntity<Object> response = null;
-
+        System.out.println(diary.getPosttime());
         if (diary != null) {
             BasicResponse result = new BasicResponse();
             result.status = true;
