@@ -275,7 +275,6 @@ export default {
         .get(SERVER_URL + "/study/list")
         .then((res) => {
           this.allStudyList = res.data.object;
-          console.log(res.data)
           var tmp = this.allStudyList;
           for (let i = 0; i < tmp.length; i++) {
             if (tmp[i][0].background_image != "") {
