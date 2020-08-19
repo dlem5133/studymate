@@ -230,6 +230,7 @@ public class StudyDetailController {
         byte fileData[] = file.getBytes();
         System.out.println("저장 확인");
         File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid + file.getOriginalFilename());
+        System.out.println(ff.getAbsolutePath());
         ff.getParentFile().mkdirs(); // Will create parent directories if not exists
         ff.createNewFile();
         FileOutputStream s = new FileOutputStream(ff, false);
