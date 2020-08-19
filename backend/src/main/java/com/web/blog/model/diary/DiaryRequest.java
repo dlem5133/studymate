@@ -30,7 +30,7 @@ public class DiaryRequest {
     private String writer;
 
     @ApiModelProperty(required = true)
-    private Date posttime;
+    private String posttime;
 
     @ApiModelProperty(required = true)
     private Integer tmp;

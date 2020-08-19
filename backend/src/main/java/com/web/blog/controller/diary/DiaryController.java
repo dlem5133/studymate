@@ -130,6 +130,7 @@ public class DiaryController {
         diary.setPid(request.getPid());
         diary.setUid(request.getUid());
         diary.setTmp(request.getTmp());
+        diary.setPosttime(request.getPosttime());
         Diary savedDiary = this.diaryDao.save(diary);
         BasicResponse result = new BasicResponse();
         Mileage mileage = mileageDao.findByUid(user.getUid());
@@ -161,6 +162,8 @@ public class DiaryController {
         diary.setPid(request.getPid());
         diary.setUid(request.getUid());
         diary.setTmp(request.getTmp());
+        diary.setPosttime(request.getPosttime());
+
         this.diaryDao.save(diary);
 
         BasicResponse result = new BasicResponse();
