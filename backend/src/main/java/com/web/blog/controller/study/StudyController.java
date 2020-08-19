@@ -127,7 +127,6 @@ public class StudyController {
             // 태그 매칭
             studylist.get(i).setLikep(studylikepDao.findStudylikepByPid(studylist.get(i).getPid()).size());
             studylist.get(i).setMemnum(indvstudylstDao.countByPid(studylist.get(i).getPid()));
-            System.out.println(indvstudylstDao.countByPid(studylist.get(i).getPid()));
             studyDao.save(studylist.get(i));
             ArrayList<Object> tmp = new ArrayList<>();
             tmp.add(studylist.get(i));
