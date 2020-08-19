@@ -137,7 +137,7 @@ export default {
 
       if (this.signupData.password.length > 7){
         for (let index = 0; index < this.signupData.password.length; index++) {
-          if(this.signupData.password[index] in speical){
+          if(this.signupData.password[index] in special){
             isSpecial= true;
           }
           if(this.signupData.password[index]in eng){
