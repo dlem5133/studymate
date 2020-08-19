@@ -229,7 +229,7 @@ public class StudyDetailController {
     throws IllegalStateException, IOException {
         FileOutputStream fos;
         byte fileData[] = file.getBytes();
-        File ff = new File("frontend\\src\\uploadfile\\" + pid+file.getOriginalFilename());
+        File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
         if (!ff.getParentFile().exists())
             ff.getParentFile().mkdirs();
         // System.out.println(ff.getParentFile().getAbsolutePath());

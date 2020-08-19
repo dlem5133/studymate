@@ -347,6 +347,7 @@ export default {
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
+       
             if (this.files[0]) {
               this.submitFiles(res.data.object.pid);
             }
