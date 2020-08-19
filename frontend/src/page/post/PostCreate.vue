@@ -356,6 +356,8 @@ export default {
             swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
           })
           .catch((err) => {
+            console.log(err);
+            console.log(err==TypeError);
             if (err==TypeError) {
               this.$swal("스터디 생성 실패", "스터디는 한달에 3번만 생성 할 수 있어요", "error");
             } else {
