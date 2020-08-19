@@ -135,21 +135,19 @@ export default {
       var isDigit = false;
 
 
-      if (this.signupData.password.length > 7){
-        for (let index = 0; index < this.signupData.password.length; index++) {
-          if(this.signupData.password[index] in special){
-            isSpecial= true;
-          }
-          if(this.signupData.password[index]in eng){
-            isEng= true;
-          }
-          if(this.signupData.password[index]in digit){
-            isDigit= true;
-          }
+    for (let index = 0; index < this.signupData.password.length; index++) {
+        if(this.signupData.password[index] in speical){
+          isSpecial= true;
+        }
+        if(this.signupData.password[index]in eng){
+          isEng= true;
+        }
+        if(this.signupData.password[index]in digit){
+          isDigit= true;
         }
       }
-
-      if(isSpecial && isEng && isDigit){
+      
+      if(this.signupData.password.length > 7 && isSpecial && isEng && isDigit){
         return true;
       }else{
         return false;
