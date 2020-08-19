@@ -232,17 +232,16 @@ public class StudyDetailController {
         File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
         if (!ff.getParentFile().exists())
             ff.getParentFile().mkdirs();
-        // System.out.println(ff.getParentFile().getAbsolutePath());
-        String mainpath = ff.getPath();
-        // System.out.println(mainpath);
-        String path = file.getOriginalFilename();
+        System.out.println("저장 확인");
         fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
         fos.write(fileData);
+        System.out.println("저장 완료: "+ff.getAbsolutePath());
         //        file.transferTo(ff);
         // System.out.println("file is ");
         // System.out.println("name is " + file.getName());
         fos.close();
-        return file.getName();}
+        return file.getName();
+    }
 
 
 
