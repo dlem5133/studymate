@@ -2,22 +2,8 @@ export default {
   TITLE: "스터디메이트",
   baseUrl:
     "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    ServerUrl: "http://i3b205.p.ssafy.io:8080",
-=======
-   ServerUrl: "http://i3b205.p.ssafy.io:8080",
->>>>>>> 4ae42a714c3fe9823787b67780aa37dfd923015b
-//   ServerUrl: "http://localhost:8080",
-=======
-  ServerUrl: "http://i3b205.p.ssafy.io:8080",
-  //  ServerUrl: "http://localhost:8080",
->>>>>>> dd1a4a6c9594acbd03e67df27cd5f10b8a790ac6
-=======
     ServerUrl: "http://i3b205.p.ssafy.io:8080",
 //   ServerUrl: "http://localhost:8080",
->>>>>>> 79b6c94ebd6b5cf606eae4cedef28ec9b834b92e
   LS_KEY: {
     USER_TOKEN: "userToken",
   },
