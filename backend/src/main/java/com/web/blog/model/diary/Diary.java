@@ -36,8 +36,7 @@ public class Diary {
 
     private String writer;
 
-    @Column(insertable = false, updatable = false)
-    private Date posttime;
+    private String posttime;
 
     private Integer tmp;
 

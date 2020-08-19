@@ -1,6 +1,7 @@
 package com.web.blog.controller.reply;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 import com.web.blog.dao.post.ReplyDao;
 import com.web.blog.dao.study.StudyDao;
@@ -56,6 +57,8 @@ public class ReplyController {
         reply.setPid(replyRequest.getPid());
         reply.setStudy(studyDao.findStudyByPid(replyRequest.getPid()));
         reply.setReplyparent(replyRequest.getReply_parent());
+        reply.setReply_time(LocalDateTime.now());
+
 
         final Reply saveReply = this.replyDao.save(reply);
         final BasicResponse result = new BasicResponse();

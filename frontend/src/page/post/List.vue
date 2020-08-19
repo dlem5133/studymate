@@ -228,7 +228,8 @@
 import "../../assets/css/post.scss";
 import axios from "axios";
 import constants from "../../lib/constants";
-
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
@@ -274,7 +275,6 @@ export default {
         .get(SERVER_URL + "/study/list")
         .then((res) => {
           this.allStudyList = res.data.object;
-          console.log(res.data)
           var tmp = this.allStudyList;
           for (let i = 0; i < tmp.length; i++) {
             if (tmp[i][0].background_image != "") {

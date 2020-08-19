@@ -489,6 +489,8 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 
 export default {
   name: "PostDetail",
@@ -587,7 +589,7 @@ export default {
   },
   mounted() {
     window.scroll({ top: 0, left: 0, behavior: "smooth" });
-    this.getPostTime();
+    this.getPostTime(0);
   },
   methods: {
     changeDatedata(time) {
@@ -598,8 +600,8 @@ export default {
       for (let i = 0; i < this.memberListData.length; i++) {
         member.push(this.memberListData[i].uid)
       }
-      if (member.indexOf(this.profileInfo.uid) == -1) {
-        alert("스터디 맴버가 아닙니다.")
+      if (member.indexOf(this.profileInfo.uid) == -1) {  
+        swal("", "스터디 맴버가 아닙니다.");
         this.$router.push({ name: constants.URL_TYPE.POST.MAIN})
       }
     },
@@ -785,7 +787,7 @@ export default {
           console.log(err);
         });
     },
-    getPostTime() {
+    getPostTime(n) {
       axios
         .get(SERVER_URL + "/diary/list", {
           params: {
@@ -805,34 +807,36 @@ export default {
           } else {
             this.decimalDay = dday;
           }
-          this.allDailyLists = res.data.object[0];
-          var i = 0;
-          const post_id = this.$route.params.post_id;
-          const ecolor = [
-            "#ACBFEA",
-            "#F8DDA9",
-            "#FDAF9B",
-            "#DCCBED",
-            "#B6E3E9",
-          ];
-          while (i < this.allDailyLists.length) {
-            var d = this.allDailyLists[i].title;
-            var s = this.allDailyLists[i].posttime;
-            var daily_id = this.allDailyLists[i].did;
-            const test = {
-              title: d,
-              date: s,
-              color: ecolor[i % 5], // an option!
-              textColor: "black", // an option!
-              url:
-                "http://i3b205.p.ssafy.io:8081/#/study/"+
-                post_id +
-                "/" +
-                daily_id +
-                "/detail",
-            };
-            this.calendarOptions.events.push(test);
-            i++;
+          if (n == 0) {
+            this.allDailyLists = res.data.object[0];
+            var i = 0;
+            const post_id = this.$route.params.post_id;
+            const ecolor = [
+              "#ACBFEA",
+              "#F8DDA9",
+              "#FDAF9B",
+              "#DCCBED",
+              "#B6E3E9",
+            ];
+            while (i < this.allDailyLists.length) {
+              var d = this.allDailyLists[i].title;
+              var s = this.allDailyLists[i].posttime;
+              var daily_id = this.allDailyLists[i].did;
+              const test = {
+                title: d,
+                date: s,
+                color: ecolor[i % 5], // an option!
+                textColor: "black", // an option!
+                url:
+                  "http://i3b205.p.ssafy.io:8081/#/study/"+
+                  post_id +
+                  "/" +
+                  daily_id +
+                  "/detail",
+              };
+              this.calendarOptions.events.push(test);
+              i++;
+            }
           }
         })
         .catch((err) => {
@@ -854,7 +858,16 @@ export default {
           .post(SERVER_URL + "/upcoming/create", this.expectData)
           .then((res) => {
             this.expectTodo = res.data.object;
-            this.getPostTime();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var count = new Date(res.data.object.dodate);
+            count.setHours(0, 0, 0, 0);
+            var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60);
+            if (dday <= 0) {
+              this.decimalDay = "day";
+            } else {
+              this.decimalDay = dday;
+            }
           })
           .catch((err) => console.log(err));
       }
@@ -874,7 +887,16 @@ export default {
           .post(SERVER_URL + "/upcoming/update", this.expectData)
           .then((res) => {
             this.expectTodo = res.data.object;
-            this.getPostTime();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var count = new Date(res.data.object.dodate);
+            count.setHours(0, 0, 0, 0);
+            var dday = Math.floor((count - today) / 1000 / 24 / 60 / 60);
+            if (dday <= 0) {
+              this.decimalDay = "day";
+            } else {
+              this.decimalDay = dday;
+            }
           })
 
           .catch((err) => console.log(err));
@@ -887,8 +909,7 @@ export default {
       axios
         .post(SERVER_URL + "/upcoming/delete", this.expectData)
         .then((res) => {
-          this.expectTodo = res.data.object;
-          this.getPostTime();
+          this.getPostTime(1)
         })
         .catch((err) => console.log(err));
     },
@@ -906,7 +927,7 @@ export default {
         .catch((err) => console.log(err));
     },
     alertCheck() {
-      alert("이미 신고된 유저입니다.");
+          swal("", "이미 평가한 회원입니다.");
     },
     reportMember() {
       this.reportdata.pid = this.$route.params.post_id;
@@ -976,7 +997,7 @@ export default {
         });
     },
     onceEva() {
-      alert("이미 평가 하셨습니다.");
+      swal("","이미 평가 하셨습니다.");
     },
     setFinEva() {
       this.evalueData.pid = this.postData.pid;
@@ -1042,13 +1063,13 @@ export default {
           this.allDailyLists[i].posttime === today &&
           this.allDailyLists[i].uid === this.profileInfo.uid
         ) {
-          alert("일지는 하루에 한번만 작성가능 합니다.");
+          swal("", "일지는 하루에 한번만 작성가능 합니다.");
           flag = true;
           break;
         }
       }
       if (this.days.indexOf(d) == -1) {
-        alert("일지작성이 불가능한 날입니다.");
+        swal("", "일지작성이 불가능한 날입니다.");
         flag = true;
       }
       if (!flag) {

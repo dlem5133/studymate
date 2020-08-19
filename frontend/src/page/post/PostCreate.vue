@@ -16,21 +16,43 @@
             <div v-if="files[0]" class="formtitle3 border rounded-lg">
               <div v-for="(file, key) in files" :key="file.id">
                 {{ file.name }}
-                <span class="remove-file" @click="removeFile(key)"><b-icon icon="trash"></b-icon></span>
+                <span class="remove-file" @click="removeFile(key)"
+                  ><b-icon icon="trash"></b-icon
+                ></span>
               </div>
             </div>
-            <div v-if="!files[0]" class="text-right border rounded-lg formtitle3">
-              <input hidden type="file" id="files" ref="files" multiple @change="handleFilesUpload()" />
-              <button @click="addFiles"><b-icon icon="folder2-open" class="mr-1"></b-icon>Image</button>
+            <div
+              v-if="!files[0]"
+              class="text-right border rounded-lg formtitle3"
+            >
+              <input
+                hidden
+                type="file"
+                id="files"
+                ref="files"
+                multiple
+                @change="handleFilesUpload()"
+              />
+              <button @click="addFiles">
+                <b-icon icon="folder2-open" class="mr-1"></b-icon>Image
+              </button>
             </div>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">일정 (주 _회)</small>
-            <b-form-spinbutton v-model="postCreateDate.bindo" min="1" max="7"></b-form-spinbutton>
+            <b-form-spinbutton
+              v-model="postCreateDate.bindo"
+              min="1"
+              max="7"
+            ></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle1 ml-3 float-left">인원수 (3명 이상)</small>
-            <b-form-spinbutton v-model="postCreateDate.limitp" min="3" max="100"></b-form-spinbutton>
+            <b-form-spinbutton
+              v-model="postCreateDate.limitp"
+              min="3"
+              max="100"
+            ></b-form-spinbutton>
           </b-col>
           <b-col sm="12" md="6" class="px-1">
             <small class="formtitle ml-3 float-left">시/도</small>
@@ -126,7 +148,8 @@
 <script>
 import axios from "axios";
 import constants from "../../lib/constants";
-
+import "sweetalert2/dist/sweetalert2.min.css";
+import swal from "sweetalert";
 const SERVER_URL = constants.ServerUrl;
 
 export default {
@@ -188,7 +211,9 @@ export default {
               params: { code: err.response.data },
             });
           });
-      } else alert("로그인후 이용해주세요."), this.$router.push("/");
+      } else
+        swal("로그인이 필요합니다.", { buttons: false, timer: 1200 }),
+          this.$router.push("/");
     },
     postTmp() {
       this.postCreateDate.uid = this.profileInfo.uid;
@@ -315,14 +340,12 @@ export default {
       } else {
         if (this.files[0]) {
           this.postCreateDate.background_image = this.files[0].name;
-        }
-        else {
+        } else {
           this.postCreateDate.background_image = null;
         }
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
-            swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
             if (this.files[0]) {
               this.submitFiles(res.data.object.pid);
             }
@@ -330,27 +353,36 @@ export default {
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
             });
+            swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
           })
           .catch((err) => {
-            console.log(err.response);
-            this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
+            console.log(err);
+            console.log(err==TypeError);
+            if (err==TypeError) {
+              this.$swal("스터디 생성 실패", "스터디는 한달에 3번만 생성 할 수 있어요", "error");
+            } else {
+              this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
+            }
           });
       }
     },
     // 이미지 업로드
     handleFilesUpload() {
       let uploadedFiles = this.$refs.files.files;
-      if (uploadedFiles[0].type != "image/png" && uploadedFiles[0].type != "image/jpeg") {
+      if (
+        uploadedFiles[0].type != "image/png" &&
+        uploadedFiles[0].type != "image/jpeg"
+      ) {
         this.$swal(
-        "사진 업로드 실패",
-        "PNG, JPG 이미지 확장자만 업로드 가능합니다.",
-        "error"
+          "사진 업로드 실패",
+          "PNG, JPG 이미지 확장자만 업로드 가능합니다.",
+          "error"
         );
       } else if (uploadedFiles[0].size > 5000000) {
         this.$swal(
-        "사진 업로드 실패",
-        "5MB 이하 이미지만 업로드 가능합니다.",
-        "error"
+          "사진 업로드 실패",
+          "5MB 이하 이미지만 업로드 가능합니다.",
+          "error"
         );
       } else {
         for (var i = 0; i < uploadedFiles.length; i++) {
@@ -359,8 +391,6 @@ export default {
       }
     },
     addFiles() {
-      console.log(this.files)
-      
       this.$refs.files.click();
     },
     removeFile(key) {

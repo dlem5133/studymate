@@ -3,7 +3,7 @@ export default {
   baseUrl:
     "http://ec2-54-180-116-157.ap-northeast-2.compute.amazonaws.com:8888",
   ServerUrl: "http://i3b205.p.ssafy.io:8080",
-//   ServerUrl: "http://localhost:8080",
+  // ServerUrl: "http://localhost:8080",
   LS_KEY: {
     USER_TOKEN: "userToken",
   },

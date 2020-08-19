@@ -227,22 +227,31 @@ public class StudyDetailController {
     public Object fileupload(
         HttpServletRequest request, @RequestParam(value = "pid", required = true) Integer pid, @RequestParam(value = "file", required = true) MultipartFile file)
     throws IllegalStateException, IOException {
-        FileOutputStream fos;
         byte fileData[] = file.getBytes();
-        File ff = new File("frontend\\src\\uploadfile\\" + pid+file.getOriginalFilename());
-        if (!ff.getParentFile().exists())
-            ff.getParentFile().mkdirs();
-        // System.out.println(ff.getParentFile().getAbsolutePath());
-        String mainpath = ff.getPath();
-        // System.out.println(mainpath);
-        String path = file.getOriginalFilename();
-        fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
-        fos.write(fileData);
+        System.out.println("저장 확인");
+        File ff = new File("/home/ubuntu/studymate/s03p13b205/frontend/src/assets/uploadfile/" + pid + file.getOriginalFilename());
+        System.out.println(ff.getAbsolutePath());
+        ff.getParentFile().mkdirs(); // Will create parent directories if not exists
+        ff.createNewFile();
+        FileOutputStream s = new FileOutputStream(ff, false);
+        s.write(fileData);
+        s.close();
+        // fos.close();
+        // File ff = new File("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
+        // if (!ff.getParentFile().exists())
+        //     ff.getParentFile().mkdirs();
+        // System.out.println("저장 완료: "+ff.getAbsolutePath());
+        // file.transferTo(ff);
+
+        // fos = new FileOutputStream("frontend\\src\\assets\\uploadfile\\" + pid+file.getOriginalFilename());
+        // fos.write(fileData);
+
         //        file.transferTo(ff);
         // System.out.println("file is ");
         // System.out.println("name is " + file.getName());
-        fos.close();
-        return file.getName();}
+
+        return file.getName();
+    }
 
 
 

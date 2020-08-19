@@ -102,7 +102,7 @@ const initcontent =
   "\n|----------------|-------------------------------|-----------------------------|" +
   "\n|1회|2019.01| 홍길동           |" +
   "\n \n *** \n \n### 추가 명령어\n 명령어를 통해 해당 문제/메인으로 이동할 수 있습니다. \n" +
-  "/백준3000\n" +
+  "/백준14891\n" +
   "/백준\n" +
   "/swea\n" +
   "/깃\n" +
@@ -217,6 +217,18 @@ export default {
       }
     },
     submitDaily(tmpN) {
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (day < 10) {
+        day = "0" + day;
+      }
+      var today = year + "-" + month + "-" + day;
+
       if (this.text == "") {
         swal("제목을 입력해주세요", { buttons: false, timer: 1200 });
       } else if (
@@ -233,6 +245,7 @@ export default {
           pid: this.$route.params.post_id,
           uid: this.profileInfo.uid,
           tmp: tmpN,
+          posttime: today
         };
         axios
           .post(SERVER_URL + "/diary/write", dailydData)
@@ -242,6 +255,7 @@ export default {
                 name: constants.URL_TYPE.STUDY.DAILYDETAIL,
                 params: {
                   post_id: this.$route.params.post_id,
+                  daily_id: res.data.object.did
                 },
               });
             } else {
