@@ -41,10 +41,10 @@
                 aria-describedby="passwordconfirm-live-feedback passwordconfirm-live-help"
                 trim
               ></b-form-input>
-              <b-form-invalid-feedback id="password-live-feedback"
+              <b-form-invalid-feedback id="passwordconfirm-live-feedback"
                 >비밀번호와 틀립니다.</b-form-invalid-feedback
               >
-              <b-form-text id="password-live-help">비밀번호와 동일합니다.</b-form-text>
+              <b-form-text id="passwordconfirm-live-help">비밀번호와 동일합니다.</b-form-text>
             </b-form-group>
           </b-card-text>
         </div>
