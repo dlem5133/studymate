@@ -8,29 +8,30 @@
         <h3 style="font-family: 'Do Hyeon', sans-serif;">JOIN</h3>
         <div class="mt-4" v-if="page == 0">
           <b-card-text>
-            <b-form-group label="이메일" label-for="input-email">
+            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="이메일" label-for="input-email">
               <b-card class="baseInput" no-body id="input-email">{{
                 signupData.email
               }}</b-card>
             </b-form-group>
 
-            <b-form-group label="비밀번호" label-for="input-password">
+            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="비밀번호" label-for="input-password">
               <b-form-input
                 id="password-live live-password"
                 type="password"
                 v-model="signupData.password"
+                
                 :state="passwordState"
                 aria-describedby="password-live-feedback password-live-help"
                 trim
               ></b-form-input>
-              <b-form-invalid-feedback id="password-live-feedback"
-                >영어 대소문자, 숫자, 특수기호를 포함하여 8자 이상을
+              <b-form-invalid-feedback  id="password-live-feedback"
+                >영어 대소문자, 숫자, 특수기호(!,@,#,$,%,^,&,*,(,))를 포함하여 8자 이상을
                 입력해주세요.</b-form-invalid-feedback
               >
               <b-form-text id="password-live-help">확인</b-form-text>
             </b-form-group>
 
-            <b-form-group
+            <b-form-group 
               label="비밀번호 확인"
               label-for="input-passwordConfirm"
             >
@@ -51,12 +52,12 @@
         </div>
         <div class="mt-4" v-if="page == 1">
           <b-card-text>
-            <b-form-group label="닉네임" label-for="input-nickname">
+            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="닉네임" label-for="input-nickname">
               <b-card class="baseInput" no-body id="input-nickname">{{
                 signupData.nickname
               }}</b-card>
             </b-form-group>
-            <b-form-group label="자기소개" label-for="input-intro">
+            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="자기소개" label-for="input-intro">
               <b-form-textarea
                 id="input-intro"
                 v-model="signupData.intro"
@@ -124,7 +125,35 @@ export default {
   name: "Signup",
   computed: {
     passwordState() {
-      return this.signupData.password.length > 4 ? true : false;
+      var special = ['!', '@', '/', '#', '$', '%', '^', '&', '*', '(', ')']
+      var eng = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+      var digit = ['1','2','3','4','5','6','7','8','9','0']
+
+      var isSpeical = false;
+      var isEng = false;
+      var isDigit = false;
+
+
+      if (this.signupData.password.length > 7){
+        for (let index = 0; index < this.signupData.password.length; index++) {
+          if(this.signupData.password[index] in speical){
+            isSpecial= true;
+          }
+          if(this.signupData.password[index]in eng){
+            isEng= true;
+          }
+          if(this.signupData.password[index]in digit){
+            isDigit= true;
+          }
+        }
+      }
+
+      if(isSpecial && isEng && isDigit){
+        return true;
+      }else{
+        return false;
+      }
     },
     passwordconfirmState() {
       return this.signupData.password === this.signupData.passwordConfirm
