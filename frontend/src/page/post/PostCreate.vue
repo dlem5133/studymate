@@ -346,7 +346,6 @@ export default {
         axios
           .post(SERVER_URL + "/study/write", this.postCreateDate)
           .then((res) => {
-            swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
             if (this.files[0]) {
               this.submitFiles(res.data.object.pid);
             }
@@ -354,10 +353,14 @@ export default {
               name: constants.URL_TYPE.POST.POSTDETAIL,
               params: { post_id: res.data.object.pid },
             });
+            swal("스터디가 생성되었습니다.", { buttons: false, timer: 1200 });
           })
           .catch((err) => {
-            console.log(err.response);
-            this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
+            if (err==TypeError) {
+              this.$swal("스터디 생성 실패", "스터디는 한달에 3번만 생성 할 수 있어요", "error");
+            } else {
+              this.$swal("스터디 생성 실패", "입력정보를 확인해주세요", "error");
+            }
           });
       }
     },
@@ -386,8 +389,6 @@ export default {
       }
     },
     addFiles() {
-      console.log(this.files);
-
       this.$refs.files.click();
     },
     removeFile(key) {
