@@ -45,12 +45,8 @@
               <b-form-invalid-feedback id="passwordconfirm-live-feedback"
                 >비밀번호와 틀립니다.</b-form-invalid-feedback
               >
-              <b-form-text id="passwordconfirm-live-help"
-                >비밀번호와 동일합니다.</b-form-text
-              >
+              <b-form-text id="passwordconfirm-live-help">비밀번호와 동일합니다.</b-form-text>
             </b-form-group>
-
-
           </b-card-text>
         </div>
         <div class="mt-4" v-if="page == 1">
@@ -131,7 +127,7 @@ export default {
       return this.signupData.password.length > 4 ? true : false;
     },
     passwordconfirmState() {
-      return this.signupData.passwordState == this.signupData.passwordConfirm
+      return this.signupData.password === this.signupData.passwordConfirm
         ? true
         : false;
     },
