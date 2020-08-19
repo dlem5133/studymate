@@ -130,13 +130,16 @@ export default {
       "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
       var digit = ["1","2","3","4","5","6","7","8","9","0"]
 
-      const isSpecial = false;
-      const isEng = false;
-      const isDigit = false;
+      let isSpecial = false;
+      let isEng = false;
+      let isDigit = false;
 
 
     for (let index = 0; index < this.signupData.password.length; index++) {
       console.log(this.signupData.password[index])
+      for (let X = 0; X < special.length; X++) {
+        
+      }
         if(this.signupData.password[index] in special){
           isSpecial= true;
         }
@@ -152,7 +155,8 @@ export default {
     console.log(isEng)
     console.log(isDigit)
     console.log(this.signupData.password.length)
-      if(isSpecial === true&& isEng === true && isDigit ===true && this.signupData.password.length > 7){
+    
+      if(isSpecial == true&& isEng == true && isDigit == true && this.signupData.password.length > 7){
         return true;
       }else{
         return false;
