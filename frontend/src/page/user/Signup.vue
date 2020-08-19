@@ -134,13 +134,10 @@ export default {
       var isEng = false;
       var isDigit = false;
 
-      console.log(isSpecial)
-      console.log(isEng)
-      console.log(isDigit)
-      console.log(this.signupData.password.length)
+
     for (let index = 0; index < this.signupData.password.length; index++) {
+      console.log(this.signupData.password[index])
         if(this.signupData.password[index] in special){
-          console.log(this.signupData.password[index])
           isSpecial= true;
         }
         if(this.signupData.password[index]in eng){
@@ -151,6 +148,10 @@ export default {
         }
       }
       
+    console.log(isSpecial)
+    console.log(isEng)
+    console.log(isDigit)
+    console.log(this.signupData.password.length)
       if(isSpecial && isEng && isDigit && this.signupData.password.length > 7){
         return true;
       }else{
