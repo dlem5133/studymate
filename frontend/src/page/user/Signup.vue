@@ -8,13 +8,13 @@
         <h3 style="font-family: 'Do Hyeon', sans-serif;">JOIN</h3>
         <div class="mt-4" v-if="page == 0">
           <b-card-text>
-            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="이메일" label-for="input-email">
+            <b-form-group label="이메일" label-for="input-email">
               <b-card class="baseInput" no-body id="input-email">{{
                 signupData.email
               }}</b-card>
             </b-form-group>
 
-            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="비밀번호" label-for="input-password">
+            <b-form-group label="비밀번호" label-for="input-password">
               <b-form-input
                 id="password-live live-password"
                 type="password"
@@ -52,12 +52,12 @@
         </div>
         <div class="mt-4" v-if="page == 1">
           <b-card-text>
-            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="닉네임" label-for="input-nickname">
+            <b-form-group label="닉네임" label-for="input-nickname">
               <b-card class="baseInput" no-body id="input-nickname">{{
                 signupData.nickname
               }}</b-card>
             </b-form-group>
-            <b-form-group style="font-family: 'Do Hyeon', sans-serif;color:orange;" label="자기소개" label-for="input-intro">
+            <b-form-group  label="자기소개" label-for="input-intro">
               <b-form-textarea
                 id="input-intro"
                 v-model="signupData.intro"
@@ -133,12 +133,6 @@ export default {
       var isSpecial = false;
       var isEng = false;
       var isDigit = false;
-
-      // var word = this.signupData.password
-      // for (let i = 0; i < word.length; i++) {
-      //   if (special.indexOf(word[i]) == -1)
-      // }
-
 
     for (let index = 0; index < this.signupData.password.length; index++) {
         if(special.indexOf(this.signupData.password[index]) != -1){
