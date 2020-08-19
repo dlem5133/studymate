@@ -472,7 +472,7 @@ export default {
         );
       }
     },
-    changeDatedata(time) {
+     changeDatedata(time) {
       return time.substring(5, 10) + time.substring(11,16)
     },
     userCheck() {
