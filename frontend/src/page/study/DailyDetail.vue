@@ -149,7 +149,6 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
-            this.addStudyList();
           })
           .catch((err) => {
             this.$router.push({
