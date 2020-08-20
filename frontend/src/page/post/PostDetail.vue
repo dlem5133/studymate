@@ -63,7 +63,7 @@
                 <b-button style="color:orange;" v-if="requestListData.length > 0" v-b-modal.modal-1 size="sm"
                   class="p-0 border-0" variant="link">
                   <b-icon class="ml-2" icon="person"></b-icon>
-                  <small>MEMBER</small>
+                  <small>승인대기</small>
                 </b-button>
               </div>
             </div>
