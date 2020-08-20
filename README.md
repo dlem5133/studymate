@@ -1,11 +1,11 @@
-# <img src="https://user-images.githubusercontent.com/29462979/89599346-43aa0300-d89a-11ea-8325-b6bcc69e899f.png" width="300" height="80">
+# <img src="https://user-images.githubusercontent.com/29462979/89599346-43aa0300-d89a-11ea-8325-b6bcc69e899f.png" width="300" height="80"> [바로가기](http://i3b205.p.ssafy.io:8081/#/rank/ranking)
 
 
 <br>
 
 #### :one:  스터디를 가입할 수 있습니다!
 
-자신에게 맞는 지역 / 스터디 유형 / 기술 스택에 맞춰 스터디원을 모집하고 가입해보세요!
+자신에게 맞는 지역 / 스터디 유형 / 기술 스택에 맞는 스터디원을 모집하고 가입해보세요!
 
 
 <br>
@@ -68,24 +68,9 @@ __:heart: 이제 스터디의 모든 것들은 스터디 메이트에서 해결�
 
 <br>
 
-2. __사용방법 (현재 서버 2개 구동 => 추후, AWS 서버로 도메인 제공 예정)__
-
-   2-1. frontend 폴더에서
-
-   ```bash
-   npm i
-   npm run serve -- --port 3000
-   ```
-
-   
-
-   2-2. backend 폴더에서 run 
-   
-
-<br>
 
 
-3. __팀원__ 
+2. __팀원__ 
 
    |  Name  |     Role      | Detail                                             |
    | :----: | :-----------: | -------------------------------------------------- |
