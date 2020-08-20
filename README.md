@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/29462979/89599346-43aa0300-d89a-11ea-8325-b6bcc69e899f.png" width="300" height="80"> [바로가기](http://i3b205.p.ssafy.io:8081/#/rank/ranking)
+# <img src="https://user-images.githubusercontent.com/29462979/89599346-43aa0300-d89a-11ea-8325-b6bcc69e899f.png" width="300" height="80"> [바로가기](http://i3b205.p.ssafy.io:8081/#/)
 
 
 <br>
