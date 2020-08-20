@@ -725,7 +725,7 @@ export default {
           //프로필 버튼 누르면 메인으로 가게끔 설정해놓음
           description: "",
           imageUrl:
-            "https://user-images.githubusercontent.com/29462979/90759637-aaf49800-e31b-11ea-9ae6-db12661d2f69.png",
+            "https://user-images.githubusercontent.com/29462979/90759886-0a52a800-e31c-11ea-9579-f14bd21bd416.png",
         link: {
             mobileWebUrl:
               "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
