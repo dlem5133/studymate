@@ -195,7 +195,7 @@ export default {
         uid: this.profileInfo.uid,
       };
       swal({
-        text: "댓글을 삭제하시겠습니까?",
+        text: "게시물을 삭제하시겠습니까?",
         dangerMode: true,
         buttons: true,
       }).then((willDelete) => {
@@ -205,10 +205,7 @@ export default {
             .then((res) => {
               this.$router.push({
                 name: constants.URL_TYPE.STUDY.STUDYMAIN,
-                params: {
-                  post_id: this.$route.params.post_id,
-                },
-                a,
+                params: { post_id: post_id },
               });
             })
             .catch((err) => {
