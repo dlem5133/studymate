@@ -3,53 +3,25 @@
     <div id="postwidth" class="container">
       <div class="card shadow border px-0">
         <div class="cardimg">
-          <img
-            style="position:relative;"
-            :src="postData.background_image"
-            alt
-            height="270rem"
-            width="60%"
-          />
+          <img style="position:relative;" :src="postData.background_image" alt height="270rem" width="60%" />
           <div style="position:absolute;top:5px;left:10px;">
             <b-badge variant="warning" class="my-auto" v-if="postData.tmp == 1">모집중</b-badge>
             <b-badge variant="success" class="my-auto" v-if="postData.tmp == 0">진행중</b-badge>
             <b-badge variant="info" class="my-auto" v-if="postData.tmp == 3">추가모집중</b-badge>
           </div>
-          <div
-            style="position:absolute;top:13.5rem;right:1rem;"
-            v-if="
+          <div style="position:absolute;top:13.5rem;right:1rem;" v-if="
               profileInfo.uid != postData.uid && isLoggedIn && (postData.tmp==3 || postData.tmp == 1)
-            "
-          >
-            <b-button
-              variant="danger"
-              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
-              v-if="!isRequest && !isMember"
-              @click="studyRequest((isRequest = true))"
-            >신청</b-button>
-            <b-button
-              variant="danger"
-              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
-              v-if="isRequest && !isMember"
-              @click="studyCancel((isRequest = false))"
-            >취소</b-button>
+            ">
+            <b-button variant="danger" style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
+              v-if="!isRequest && !isMember" @click="studyRequest((isRequest = true))">신청</b-button>
+            <b-button variant="danger" style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
+              v-if="isRequest && !isMember" @click="studyCancel((isRequest = false))">취소</b-button>
           </div>
-          <div
-            style="position:absolute;top:13.5rem;right:1rem;"
-            v-if="profileInfo.uid == postData.uid && isLoggedIn"
-          >
-            <b-button
-              variant="warning"
-              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
-              v-if="postData.tmp==1||postData.tmp==3"
-              @click="studyStart(postData.pid)"
-            >시작</b-button>
-            <b-button
-              variant="warning"
-              style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
-              v-if="postData.tmp==0"
-              @click="studyMemberPlus(postData.pid)"
-            >추가모집</b-button>
+          <div style="position:absolute;top:13.5rem;right:1rem;" v-if="profileInfo.uid == postData.uid && isLoggedIn">
+            <b-button variant="warning" style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
+              v-if="postData.tmp==1||postData.tmp==3" @click="studyStart(postData.pid)">시작</b-button>
+            <b-button variant="warning" style="font-family: 'Do Hyeon', sans-serif;border:1px solid white"
+              v-if="postData.tmp==0" @click="studyMemberPlus(postData.pid)">추가모집</b-button>
           </div>
         </div>
         <div class="p-3">
@@ -62,27 +34,10 @@
                   <b-icon icon="person-badge"></b-icon>
                   팀장 {{ userData.nickname }}
                 </small>
-                <b-button
-                  style="color:orange;"
-                  v-if="requestListData.length > 0"
-                  v-b-modal.modal-1
-                  size="sm"
-                  class="p-0 border-0"
-                  variant="link"
-                >
-                  <b-icon class="ml-2" icon="person"></b-icon>
-                  <small>MEMBER</small>
-                </b-button>
               </div>
               <div class="d-flex" v-else>
-                <b-dropdown
-                  right
-                  size="sm"
-                  v-if="profileInfo.uid==postData.uid"
-                  variant="link"
-                  toggle-class="text-decoration-none"
-                  no-caret
-                >
+                <b-dropdown right size="sm" v-if="profileInfo.uid==postData.uid" variant="link"
+                  toggle-class="text-decoration-none" no-caret>
                   <template v-slot:button-content class>
                     <b-icon icon="gear" class="mr-1" variant="dark"></b-icon>
                     <small style="color:black;">SETTINGS</small>
@@ -99,25 +54,14 @@
                         <b-icon variant="warning" class="ml-1 my-auto" icon="person"></b-icon>
                       </div>
                       <div class="ml-auto">
-                        <b-button
-                          style="font-family: 'Do Hyeon', sans-serif;"
-                          v-if="profileInfo.uid == postData.uid"
-                          @click="approvalStudy(per.uid)"
-                          variant="outline-success"
-                          class="btn-sm"
-                        >승인</b-button>
+                        <b-button style="font-family: 'Do Hyeon', sans-serif;" v-if="profileInfo.uid == postData.uid"
+                          @click="approvalStudy(per.uid)" variant="outline-success" class="btn-sm">승인</b-button>
                       </div>
                     </div>
                   </div>
                 </b-modal>
-                <b-button
-                  style="color:orange;"
-                  v-if="requestListData.length > 0"
-                  v-b-modal.modal-1
-                  size="sm"
-                  class="p-0 border-0"
-                  variant="link"
-                >
+                <b-button style="color:orange;" v-if="requestListData.length > 0" v-b-modal.modal-1 size="sm"
+                  class="p-0 border-0" variant="link">
                   <b-icon class="ml-2" icon="person"></b-icon>
                   <small>MEMBER</small>
                 </b-button>
@@ -126,14 +70,8 @@
           </div>
           <div class="d-flex">
             <h5 class="mb-0 text-left">{{ postData.title }}</h5>
-            <b-button
-              style="color:orange;"
-              v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)"
-              @click="goStudyMain(postData.pid)"
-              size="sm"
-              class="p-0 border-0"
-              variant="link"
-            >
+            <b-button style="color:orange;" v-if="isLoggedIn && (postData.tmp==0 || postData.tmp==3)"
+              @click="goStudyMain(postData.pid)" size="sm" class="p-0 border-0" variant="link">
               <b-icon class="mx-1" icon="house-door"></b-icon>
               <small>진행페이지</small>
             </b-button>
@@ -188,13 +126,8 @@
           </div>
           <br />
           <div class="my-5 px-3">
-            <b-button
-              class="float-left mr-2 my-1 px-1 py-0"
-              variant="outline-secondary"
-              size="sm"
-              v-for="tag in tagData"
-              :key="tag.tid"
-            >
+            <b-button class="float-left mr-2 my-1 px-1 py-0" variant="outline-secondary" size="sm"
+              v-for="tag in tagData" :key="tag.tid">
               <small># {{ tag.tagname }}</small>
             </b-button>
           </div>
@@ -211,13 +144,8 @@
         <div v-if="isLoggedIn" class="mx-3 mb-3">
           <hr class="mt-0" />
           <div class="d-flex inline">
-            <textarea
-              style="resize:none;"
-              type="text"
-              v-model="newReply.reply_content"
-              id="content"
-              class="p-2 border rounded-lg w-100"
-            />
+            <textarea style="resize:none;" type="text" v-model="newReply.reply_content" id="content"
+              class="p-2 border rounded-lg w-100" />
             <div class="buttonitems border rounded-lg px-1 ml-2 my-auto">
               <b-icon icon="pencil" @click="replyCreate(replyparent)"></b-icon>
             </div>
@@ -688,12 +616,18 @@ export default {
     approvalStudy(uid) {
       this.approvalData.pid = this.$route.params.post_id;
       this.approvalData.uid = uid;
-      axios
+      if(this.postData.memnum<this.postData.limitp)
+      {
+              axios
         .post(SERVER_URL + "/study/approval", this.approvalData)
         .then(() => {
           this.requestPeopleList();
         })
         .catch((err) => console.log(err));
+      }
+      else{
+        alert("인원이 가득찼습니다.")
+      }
     },
     studyRequest() {
       this.requestData.pid = this.postData.pid;
