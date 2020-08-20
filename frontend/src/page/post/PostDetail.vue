@@ -725,8 +725,8 @@ export default {
           //프로필 버튼 누르면 메인으로 가게끔 설정해놓음
           description: "",
           imageUrl:
-            "https://cdn.a1news.co.kr/news/photo/202003/5196_6089_1728.png",
-          link: {
+            this.postData.background_image,
+        link: {
             mobileWebUrl:
               "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
             webUrl: "http://i3b205.p.ssafy.io:8081/#/post/" + this.postData.pid,
