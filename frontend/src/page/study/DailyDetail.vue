@@ -200,17 +200,12 @@ export default {
         buttons: true,
       }).then((willDelete) => {
         if (willDelete) {
-          axios
-            .post(SERVER_URL + "/diary/delete", deleteData)
-            .then((res) => {
-              this.$router.push({
-                name: constants.URL_TYPE.STUDY.STUDYMAIN,
-                params: { post_id: post_id },
-              });
-            })
-            .catch((err) => {
-              console.log(err.data);
-            });
+          this.$router.push({
+            name: constants.URL_TYPE.STUDY.STUDYMAIN,
+            params: {
+              post_id: this.$route.params.post_id,
+            },
+          });
         }
       });
     },
