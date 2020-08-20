@@ -626,7 +626,7 @@ export default {
         .catch((err) => console.log(err));
       }
       else{
-        alert("인원이 가득찼습니다.")
+        swal("","인원이 가득찼습니다.")
       }
     },
     studyRequest() {
