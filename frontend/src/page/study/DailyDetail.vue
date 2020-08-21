@@ -149,7 +149,6 @@ export default {
           })
           .then((res) => {
             this.profileInfo = res.data.object;
-            this.addStudyList();
           })
           .catch(() => {});
       }
@@ -189,7 +188,7 @@ export default {
         uid: this.profileInfo.uid,
       };
       swal({
-        text: "일지를 삭제하시겠습니까?",
+        text: "게시물을 삭제하시겠습니까?",
         dangerMode: true,
         buttons: true,
       }).then((willDelete) => {

@@ -243,9 +243,18 @@ export default {
           .get(SERVER_URL + "/account/profile", { params: { Token: token } })
           .then((res) => {
             this.profileInfo = res.data.object;
+            if(this.profileInfo.penalty<3){
             this.addReadyList();
             this.addStudyList();
             this.mileageList();
+          }
+          else{
+        this.$swal(
+          "로그인 실패",
+          "패널티를 3회 이상 받아 더 이상 로그인이 불가합니다.",
+          "error"
+        );            this.isLoggedIn=false;
+          }
           })
           .catch((err) => {
             console.log(err);
