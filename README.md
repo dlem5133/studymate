@@ -1,5 +1,5 @@
 # <img src="https://user-images.githubusercontent.com/29462979/90838974-52f87880-e391-11ea-8f33-d7565a2def1c.png" width="100" height="120">  
-#### [:star: 웹사이트로 바로가기 :star:](http://i3b205.p.ssafy.io:8081/#/)
+#### [ 스터디메이트로 바로가기](http://i3b205.p.ssafy.io:8081/#/)
 
 
 <br>
