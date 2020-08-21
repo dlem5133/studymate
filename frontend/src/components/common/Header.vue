@@ -243,9 +243,15 @@ export default {
           .get(SERVER_URL + "/account/profile", { params: { Token: token } })
           .then((res) => {
             this.profileInfo = res.data.object;
+            if(this.profileInfo.penalty<3){
             this.addReadyList();
             this.addStudyList();
             this.mileageList();
+          }
+          else{
+            swal("악성회원으로 분류되어 더 이상 해당 게정으로 로그인하실 수 없습니다.")
+            this.isLoggedIn=false;
+          }
           })
           .catch((err) => {
             console.log(err);
