@@ -249,8 +249,11 @@ export default {
             this.mileageList();
           }
           else{
-            swal("악성회원으로 분류되어 더 이상 해당 게정으로 로그인하실 수 없습니다.")
-            this.isLoggedIn=false;
+        this.$swal(
+          "로그인 실패",
+          "패널티를 3회 이상 받아 더 이상 로그인이 불가합니다.",
+          "error"
+        );            this.isLoggedIn=false;
           }
           })
           .catch((err) => {
