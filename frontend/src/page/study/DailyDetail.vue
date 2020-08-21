@@ -150,14 +150,7 @@ export default {
           .then((res) => {
             this.profileInfo = res.data.object;
           })
-          .catch((err) => {
-            this.$router.push({
-              name: constants.URL_TYPE.ERROR.ERRORPAGE,
-              params: {
-                code: err.response.data,
-              },
-            });
-          });
+          .catch(() => {});
       }
     },
     goStudyMain() {
@@ -200,12 +193,17 @@ export default {
         buttons: true,
       }).then((willDelete) => {
         if (willDelete) {
-          this.$router.push({
-            name: constants.URL_TYPE.STUDY.STUDYMAIN,
-            params: {
-              post_id: this.$route.params.post_id,
-            },
-          });
+          axios
+            .post(SERVER_URL + "/diary/delete", deleteData)
+            .then((res) => {
+              this.$router.push({
+                name: constants.URL_TYPE.STUDY.STUDYMAIN,
+                params: {
+                  post_id: this.$route.params.post_id,
+                },
+              });
+            })
+            .catch(() => {});
         }
       });
     },
