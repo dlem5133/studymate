@@ -64,7 +64,7 @@
                 </small>
                 <b-button
                   style="color:orange;"
-                  v-if="requestListData.length > 0"
+                  v-if="requestListData.length > 0 && profileInfo.uid==postData.uid"
                   v-b-modal.modal-1
                   size="sm"
                   class="p-0 border-0"
@@ -704,7 +704,6 @@ export default {
           this.requestLists = res.data.object;
           this.requestPeopleList();
           this.getDetail();
-          this.$router.go();
         })
         .catch((err) => console.log(err));
     },
@@ -715,7 +714,6 @@ export default {
         .post(SERVER_URL + "/study/cancel", this.cancelData)
         .then(() => {
           this.requestPeopleList();
-          this.$router.go();
         })
         .catch((err) => console.log(err));
     },
@@ -724,7 +722,6 @@ export default {
         .get(SERVER_URL + "/study/recruitstart", { params: { pid: post_id } })
         .then(() => {
           this.getDetail();
-          this.$router.go();
         })
         .catch((err) => console.log(err));
     },
@@ -733,7 +730,6 @@ export default {
         .get(SERVER_URL + "/study/recruitstop", { params: { pid: post_id } })
         .then(() => {
           this.getDetail();
-          this.$router.go();
         })
         .catch((err) => console.log(err));
     },

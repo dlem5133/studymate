@@ -11,7 +11,7 @@
           style="position:relative;width:14rem;box-shadow:0px 0px 5px #C0C0C0;"
         >
           <div class="cardprofile">
-            <div style="margin:0.4rem;" v-if="!RankData1[1].user.profile_image">
+            <div style="margin:0.4rem;" v-if="!RankUser2.profile_image">
               <img
                 class="profileimg rounded-circle border"
                 src="../../assets/img/defualt_image.png"
@@ -22,16 +22,16 @@
               ></i>
             </div>
             <div style="margin:0.4rem;" v-else>
-              <img class="profileimg rounded-circle border" :src="RankData1[1].user.profile_image" />
+              <img class="profileimg rounded-circle border" :src="RankUser2.profile_image" />
               <i
                 style="color:#C0C0C0;position:absolute;top:2%;left:2%;font-size:1.5rem;text-shadow: 2px 2px 4px gray;"
                 class="fas fa-trophy"
               ></i>
             </div>
-            <p style="font-family:'Do Hyeon',sans-serif;">{{RankData1[1].user.nickname}}</p>
+            <p style="font-family:'Do Hyeon',sans-serif;">{{RankUser2.nickname}}</p>
             <p
               style="font-size:1.2rem;color:orange;font-family:'Do Hyeon',sans-serif;"
-            >{{RankData1[1].total}}점</p>
+            >{{RankData2.total}}점</p>
           </div>
           <div class="mileage w-100">
             <div
@@ -41,17 +41,17 @@
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">일지</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[1].diarypoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData2.diarypoint}}</small>
               </div>
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">평가</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[1].evalpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData2.evalpoint}}</small>
               </div>
               <div class="col p-1">
                 <small style="font-family:'Do Hyeon',sans-serif;">스터디</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[1].endpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData2.endpoint}}</small>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@
           style="position:relative;width:14rem;box-shadow:0px 0px 5px gold;"
         >
           <div class="cardprofile">
-            <div style="margin:0.4rem;" v-if="!RankData1[0].user.profile_image">
+            <div style="margin:0.4rem;" v-if="!RankUser1.profile_image">
               <img
                 class="profileimg rounded-circle border"
                 src="../../assets/img/defualt_image.png"
@@ -73,16 +73,16 @@
               ></i>
             </div>
             <div style="margin:0.4rem;" v-else>
-              <img class="profileimg rounded-circle border" :src="RankData1[0].user.profile_image" />
+              <img class="profileimg rounded-circle border" :src="RankUser1.profile_image" />
               <i
                 style="color:gold;position:absolute;top:2%;left:2%;font-size:1.5rem;text-shadow: 2px 2px 4px gray;"
                 class="fas fa-trophy"
               ></i>
             </div>
-            <p style="font-family:'Do Hyeon',sans-serif;">{{RankData1[0].user.nickname}}</p>
+            <p style="font-family:'Do Hyeon',sans-serif;">{{RankUser1.nickname}}</p>
             <p
               style="font-size:1.2rem;color:orange;font-family:'Do Hyeon',sans-serif;"
-            >{{RankData1[0].total}}점</p>
+            >{{RankData1.total}}점</p>
           </div>
           <div class="mileage w-100">
             <div
@@ -92,17 +92,17 @@
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">일지</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[0].diarypoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1.diarypoint}}</small>
               </div>
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">평가</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[0].evalpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1.evalpoint}}</small>
               </div>
               <div class="col p-1">
                 <small style="font-family:'Do Hyeon',sans-serif;">스터디</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[0].endpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1.endpoint}}</small>
               </div>
             </div>
           </div>
@@ -113,7 +113,7 @@
           style="position:relative;width:14rem;box-shadow:0px 0px 5px #cd7f32;"
         >
           <div class="cardprofile">
-            <div style="margin:0.4rem;" v-if="!RankData1[2].user.profile_image">
+            <div style="margin:0.4rem;" v-if="!RankUser3.profile_image">
               <img
                 class="profileimg rounded-circle border"
                 src="../../assets/img/defualt_image.png"
@@ -124,16 +124,16 @@
               ></i>
             </div>
             <div style="margin:0.4rem;" v-else>
-              <img class="profileimg rounded-circle border" :src="RankData1[2].user.profile_image" />
+              <img class="profileimg rounded-circle border" :src="RankUser3.profile_image" />
               <i
                 style="color: #cd7f32;position:absolute;top:2%;left:2%;font-size:1.5rem;text-shadow: 2px 2px 4px gray;"
                 class="fas fa-trophy"
               ></i>
             </div>
-            <p style="font-family:'Do Hyeon',sans-serif;">{{RankData1[2].user.nickname}}</p>
+            <p style="font-family:'Do Hyeon',sans-serif;">{{RankUser3.nickname}}</p>
             <p
               style="font-size:1.2rem;color:orange;font-family:'Do Hyeon',sans-serif;"
-            >{{RankData1[2].total}}점</p>
+            >{{RankData3.total}}점</p>
           </div>
           <div class="mileage w-100">
             <div
@@ -143,17 +143,17 @@
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">일지</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[2].diarypoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData3.diarypoint}}</small>
               </div>
               <div class="col p-1 border-right">
                 <small style="font-family:'Do Hyeon',sans-serif;">평가</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[2].evalpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData3.evalpoint}}</small>
               </div>
               <div class="col p-1">
                 <small style="font-family:'Do Hyeon',sans-serif;">스터디</small>
                 <br />
-                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData1[2].endpoint}}</small>
+                <small style="font-family:'Do Hyeon',sans-serif;">{{RankData3.endpoint}}</small>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(list, i) in RankData2" :key="list.id">
+            <tr v-for="(list, i) in RankData" :key="list.id">
               <td class="ranking">{{i+4}}</td>
               <td class="ranking">{{list.user.nickname}}</td>
               <td class="ranking mileage">{{list.diarypoint}}</td>
@@ -198,7 +198,12 @@ export default {
   data: () => {
     return {
       RankData1: [],
+      RankUser1: [],
       RankData2: [],
+      RankUser2: [],
+      RankData3: [],
+      RankUser3: [],
+      RankData: [],
     };
   },
   components: {
@@ -213,11 +218,17 @@ export default {
       axios
         .get(SERVER_URL + "/mileage/list")
         .then((res) => {
-          for (var i = 0; i < res.data.object.length; i++) {
+          this.RankData1 = res.data.object
+          for (var i = 2; i < res.data.object.length; i++) {
             if (i < 3) {
-              this.RankData1.push(res.data.object[i]);
+              this.RankData1 = res.data.object[0]
+              this.RankUser1 = res.data.object[0].user
+              this.RankData2 = res.data.object[1]
+              this.RankUser2 = res.data.object[1].user
+              this.RankData3 = res.data.object[2]
+              this.RankUser3 = res.data.object[2].user
             } else {
-              this.RankData2.push(res.data.object[i]);
+              this.RankData.push(res.data.object[i]);
             }
           }
         })

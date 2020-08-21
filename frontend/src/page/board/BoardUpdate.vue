@@ -96,12 +96,10 @@ export default {
     },
     getpostDetailData() {
       const post_id = this.$route.params.post_id;
-      console.log(post_id);
       axios
         .get(SERVER_URL + "/study/details", { params: { pid: post_id } })
         .then((res) => {
           this.postDetailData = res.data.object[0];
-          console.log(this.postDetailData);
         })
         .catch((err) => {
           console.log(err);

@@ -67,7 +67,7 @@
           no-caret
         >
           <template v-slot:button-content>
-            <b-icon icon="book" style="color:orange"></b-icon>
+            <b-icon @click="addprofileInfo" icon="book" style="color:orange"></b-icon>
           </template>
 
           <div class="text-center text-nowrap" style="width: auto;">

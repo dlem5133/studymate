@@ -206,14 +206,7 @@ export default {
             this.profileInfo = res.data.object;
             this.getTmpDaily();
           })
-          .catch((err) => {
-            this.$router.push({
-              name: constants.URL_TYPE.ERROR.ERRORPAGE,
-              params: {
-                code: err.response.data,
-              },
-            });
-          });
+          .catch(() => {});
       }
     },
     submitDaily(tmpN) {

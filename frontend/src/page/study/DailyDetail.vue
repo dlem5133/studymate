@@ -151,14 +151,7 @@ export default {
             this.profileInfo = res.data.object;
             this.addStudyList();
           })
-          .catch((err) => {
-            this.$router.push({
-              name: constants.URL_TYPE.ERROR.ERRORPAGE,
-              params: {
-                code: err.response.data,
-              },
-            });
-          });
+          .catch(() => {});
       }
     },
     goStudyMain() {
@@ -196,7 +189,7 @@ export default {
         uid: this.profileInfo.uid,
       };
       swal({
-        text: "댓글을 삭제하시겠습니까?",
+        text: "일지를 삭제하시겠습니까?",
         dangerMode: true,
         buttons: true,
       }).then((willDelete) => {
@@ -209,12 +202,9 @@ export default {
                 params: {
                   post_id: this.$route.params.post_id,
                 },
-                a,
               });
             })
-            .catch((err) => {
-              console.log(err.data);
-            });
+            .catch(() => {});
         }
       });
     },
