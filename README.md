@@ -83,6 +83,9 @@
    | 정다솜 |   FrontEnd    | 스터디, 댓글, 신고 기능 / UI,UX 담당               |
 
    
+   <br>
+3. ERD
+![erd](https://user-images.githubusercontent.com/29462979/91273666-8fc0d700-e7b8-11ea-8a48-8a0a1970d5f2.png)
 
    
 
